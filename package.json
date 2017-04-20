@@ -1,12 +1,12 @@
 {
-    "name": "vsts-react-widgets",
+    "name": "vsts-extension-react-widgets",
     "version": "0.0.1",
     "description": "Reusable React components based on office fabric for building VSTS extensions.",
     "main": "lib/index.js",
     "typings": "lib/index.d.ts",
     "repository": {
         "type": "git",
-        "url": "https://github.com/mohitbagra/vsts-react"
+        "url": "https://github.com/mohitbagra/vsts-extension-react-widgets"
     },
     "license": "MIT",
     "author": "mohitbagra",
@@ -14,7 +14,7 @@
         "clean": "rimraf lib dist",
         "cleanall": "npm run clean && rimraf typings node_modules",
         "build:lib": "webpack --display-error-details --progress --colors --output-path ./lib -p",
-        "build": "npm run clean && mkdir lib && mkdir dist && npm run build:lib && copy lib\\index.js dist\\vsts-react-widgets.min.js",
+        "build": "npm run clean && mkdir lib && mkdir dist && npm run build:lib && copy lib\\index.js dist\\vsts-extension-react-widgets.min.js",
         "postinstall": "typings install"
     },
     "devDependencies": {

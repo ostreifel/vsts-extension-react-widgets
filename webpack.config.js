@@ -10,6 +10,8 @@ module.exports = {
         InputError: "./src/InputError.tsx",
         Loading: "./src/Loading.tsx",
         MessagePanel: "./src/MessagePanel.tsx",
+        AutoResizableComponent: "./src/AutoResizableComponent.tsx",
+        ExtensionDataManager: "./src/ExtensionDataManager.ts",
         index: "./src/index.ts"
     },
     output: {
