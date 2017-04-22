@@ -1,4 +1,4 @@
-import "./css/MessagePanel.scss";
+import "../css/MessagePanel.scss";
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";

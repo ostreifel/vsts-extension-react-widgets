@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import "./css/InfoLabel.scss";
+import "../css/InfoLabel.scss";
 import * as React from "react";
 export interface IInfoLabelProps {
     label: string;

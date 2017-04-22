@@ -1,4 +1,4 @@
-import "./css/IdentityView.scss";
+import "../css/IdentityView.scss";
 
 import * as React from "react";
 import Utils_String = require("VSS/Utils/String");

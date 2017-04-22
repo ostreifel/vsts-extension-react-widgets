@@ -1,4 +1,4 @@
-import "./css/InputError.scss";
+import "../css/InputError.scss";
 
 import * as React from "react";
 import {Icon} from "OfficeFabric/Icon";

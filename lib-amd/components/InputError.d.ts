@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import "./css/InputError.scss";
+import "../css/InputError.scss";
 import * as React from "react";
 export interface IInputErrorProps {
     error: string;

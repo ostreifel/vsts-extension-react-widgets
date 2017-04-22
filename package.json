@@ -2,8 +2,8 @@
     "name": "vsts-extension-react-widgets",
     "version": "0.0.2",
     "description": "Reusable React components based on office fabric for building VSTS extensions.",
-    "main": "lib/index.js",
-    "typings": "lib/index.d.ts",
+    "main": "lib-amd/index.js",
+    "typings": "lib-amd/index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/mohitbagra/vsts-extension-react-widgets"
@@ -11,10 +11,9 @@
     "license": "MIT",
     "author": "mohitbagra",
     "scripts": {
-        "clean": "rimraf lib dist",
-        "cleanall": "npm run clean && rimraf typings node_modules",
-        "build:lib": "webpack --display-error-details --progress --colors --output-path ./lib -p",
-        "build": "npm run clean && mkdir lib && mkdir dist && npm run build:lib && copy lib\\index.js dist\\vsts-extension-react-widgets.min.js",
+        "clean": "rimraf lib-amd dist",
+        "cleanall": "npm run clean && rimraf typings node_modules",        
+        "build": "npm run clean && tsc -d true --outDir ./lib-amd && webpack --display-error-details --progress --colors --output-path ./dist -p",
         "postinstall": "typings install"
     },
     "devDependencies": {
@@ -22,7 +21,6 @@
         "@types/react-dom": "^0.14.23",
         "@types/jquery": "^2.0.41",
         "webpack": "^2.4.1",
-        "webpack-dev-server": "^2.4.2",
         "rimraf": "^2.6.1",
         "sass-loader": "^6.0.3",
         "style-loader": "^0.16.1",
@@ -32,7 +30,8 @@
         "typescript": "^2.2.2",
         "typings": "^2.1.0",
         "vss-web-extension-sdk": "^2.115.0",
-        "uglifyjs-webpack-plugin": "^0.4.3"
+        "uglifyjs-webpack-plugin": "^0.4.3",
+        "copy-webpack-plugin": "4.0.1"
     },
     "dependencies": {
         "office-ui-fabric-react": "^2.20.2"

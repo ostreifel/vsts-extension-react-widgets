@@ -1,18 +1,19 @@
 var path = require("path");
 var webpack = require("webpack");
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+var UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     target: "web",
     entry: {
-        IdentityView: "./src/IdentityView.tsx",
-        InfoLabel: "./src/InfoLabel.tsx",
-        InputError: "./src/InputError.tsx",
-        Loading: "./src/Loading.tsx",
-        MessagePanel: "./src/MessagePanel.tsx",
-        AutoResizableComponent: "./src/AutoResizableComponent.tsx",
-        ExtensionDataManager: "./src/ExtensionDataManager.ts",
-        index: "./src/index.ts"
+        IdentityView: "./src/components/IdentityView.tsx",
+        InfoLabel: "./src/components/InfoLabel.tsx",
+        InputError: "./src/components/InputError.tsx",
+        Loading: "./src/components/Loading.tsx",
+        MessagePanel: "./src/components/MessagePanel.tsx",
+        AutoResizableComponent: "./src/components/AutoResizableComponent.tsx",
+        ExtensionDataManager: "./src/utilities/ExtensionDataManager.ts",
+        "vsts-extension-react-widgets.min": "./src/index.ts"
     },
     output: {
         filename: "[name].js",
@@ -53,6 +54,9 @@ module.exports = {
             output: {
                 comments: false
             }
-        })
+        }),
+        new CopyWebpackPlugin([
+            { from: "./src/css", to: "../lib-amd/css" }
+        ])
     ]
 }

@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import "./css/IdentityView.scss";
+import "../css/IdentityView.scss";
 import * as React from "react";
 export interface IIdentityViewProps {
     identityDistinctName: string;

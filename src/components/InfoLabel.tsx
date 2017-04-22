@@ -1,4 +1,4 @@
-import "./css/InfoLabel.scss";
+import "../css/InfoLabel.scss";
 
 import * as React from "react";
 import {Label} from "OfficeFabric/Label";
