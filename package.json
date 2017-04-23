@@ -1,6 +1,6 @@
 {
     "name": "vsts-extension-react-widgets",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Reusable React components based on office fabric for building VSTS extensions.",
     "main": "lib-amd/index.js",
     "typings": "lib-amd/index.d.ts",
@@ -12,28 +12,29 @@
     "author": "mohitbagra",
     "scripts": {
         "clean": "rimraf lib-amd dist",
-        "cleanall": "npm run clean && rimraf typings node_modules",        
+        "cleanall": "npm run clean && rimraf typings node_modules",  
         "build": "npm run clean && tsc -d true --outDir ./lib-amd && webpack --display-error-details --progress --colors --output-path ./dist -p",
         "postinstall": "typings install"
     },
     "devDependencies": {
-        "@types/react": "^15.0.16",
-        "@types/react-dom": "^0.14.23",
+        "@types/react": "^15.0.22",
+        "@types/react-dom": "^15.5.0",
         "@types/jquery": "^2.0.41",
         "webpack": "^2.4.1",
+        "webpack-dev-server": "^2.4.2",
         "rimraf": "^2.6.1",
         "sass-loader": "^6.0.3",
         "style-loader": "^0.16.1",
         "css-loader": "^0.28.0",
-        "awesome-typescript-loader": "^3.1.2",
+        "ts-loader": "^2.0.3",
         "node-sass": "^4.5.2",
         "typescript": "^2.2.2",
-        "typings": "^2.1.0",
+        "typings": "^2.1.1",
         "vss-web-extension-sdk": "^2.115.0",
         "uglifyjs-webpack-plugin": "^0.4.3",
         "copy-webpack-plugin": "4.0.1"
     },
     "dependencies": {
-        "office-ui-fabric-react": "^2.20.2"
+        "office-ui-fabric-react": "^2.21.0"
     }
 }
