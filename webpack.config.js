@@ -6,13 +6,14 @@ var CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = {
     target: "web",
     entry: {
-        IdentityView: "./src/components/IdentityView.tsx",
-        InfoLabel: "./src/components/InfoLabel.tsx",
-        InputError: "./src/components/InputError.tsx",
-        Loading: "./src/components/Loading.tsx",
-        MessagePanel: "./src/components/MessagePanel.tsx",
-        AutoResizableComponent: "./src/components/AutoResizableComponent.tsx",
-        ExtensionDataManager: "./src/utilities/ExtensionDataManager.ts",
+        IdentityView: "./src/Components/Common/IdentityView.tsx",
+        InfoLabel: "./src/Components/Common/InfoLabel.tsx",
+        InputError: "./src/Components/Common/InputError.tsx",
+        Loading: "./src/Components/Common/Loading.tsx",
+        MessagePanel: "./src/Components/Common/MessagePanel.tsx",
+        AutoResizableComponent: "./src/Components/Common/AutoResizableComponent.tsx",
+        ExtensionDataManager: "./src/Utilities/ExtensionDataManager.ts",
+        WorkItemsGrid: "./src/Components/WorkItemsGrid/WorkItemsGrid",
         "vsts-extension-react-widgets.min": "./src/index.ts"
     },
     output: {

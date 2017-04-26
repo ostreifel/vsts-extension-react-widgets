@@ -1,0 +1,11 @@
+.overflow-ellipsis {
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.callout-container {
+    max-height: 200px;
+}
