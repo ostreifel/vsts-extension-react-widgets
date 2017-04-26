@@ -5,3 +5,5 @@ tsconfig.json
 .vscode
 .gitignore
 typings.json
+*.vsix
+npm-debug.log

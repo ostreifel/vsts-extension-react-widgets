@@ -1,0 +1,51 @@
+{
+    "manifestVersion": 1,
+    "id": "react-widgets-demo",
+    "version": "1.0.0",
+    "name": "React widgets demo",
+    "publisher": "mohitbagra",
+    "public": false,
+    "baseUri": "https://localhost:8888",
+    "scopes": [ 
+    	"vso.work"
+	 ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        }
+    ],
+    "tags": [
+        "Work Item"
+    ],
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/mohitbagra/vsts-extension-react-widgets"
+    },  
+    "branding": {
+        "color": "#106ebe",
+        "theme": "dark"
+    },
+    "files": [
+        {
+            "path": "index.html",
+            "addressable": true
+        }
+    ],
+    "categories": [
+        "Plan and track"
+    ],
+    "contributions": [
+        {
+            "id": "react-widgets-workitems-form-page",
+            "type": "ms.vss-work-web.work-item-form-page",
+            "description": "React Widgets Demo",
+            "targets": [
+                "ms.vss-work-web.work-item-form"
+            ],
+            "properties": {
+                "name": "React Widgets Demo",
+                "uri": "demo/index.html"
+            }
+        }
+    ]
+}
