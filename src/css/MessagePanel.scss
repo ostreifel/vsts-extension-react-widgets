@@ -2,13 +2,23 @@
     padding: 16px;
     display: flex;
     justify-content: center;
-    
+    position: relative;
+
     .icon {
         padding-top: 8px;
     }
 
+    .close-icon {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        cursor: pointer;
+    }
+
     .message-text {
         margin-left: 5px;
+        word-break: break-word;
+        word-wrap: break-word;
     }
 
     &.message-info {

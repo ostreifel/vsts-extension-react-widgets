@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import {MessagePanel, MessageType} from "../src/Components/Common/MessagePanel";
+import {Pivot, PivotItem} from "OfficeFabric/Pivot";
+import {CommonComponentsDemo} from "./CommonComponentsDemo";
 
 interface IDemoState {
 }
@@ -16,7 +17,16 @@ export class Demo extends React.Component<void, IDemoState> {
     }
 
     public render(): JSX.Element {
-        return <MessagePanel message="Hello." messageType={MessageType.Info} />;
+        return (
+            <Pivot>
+            <PivotItem linkText='Common'>
+                <CommonComponentsDemo />
+            </PivotItem>
+            <PivotItem linkText='Work item grid'>
+                <div>Pivot #2</div>
+            </PivotItem>
+            </Pivot>
+        );
     }
 }
 

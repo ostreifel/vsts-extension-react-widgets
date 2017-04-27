@@ -5,14 +5,10 @@ import * as React from "react";
 import {Icon, IconName} from "OfficeFabric/Icon";
 import {Label} from "OfficeFabric/Label";
 
-export interface IMessagePanelInputs {
-    Message: string;
-    MessageType: string;
-}
-
 export interface IMessagePanelProps {
     message: string;
     messageType: MessageType;
+    closeable?: boolean;
 }
 
 export enum MessageType {
@@ -50,6 +46,12 @@ export var MessagePanel: React.StatelessComponent<IMessagePanelProps> =
             <div className={className}>
                 <Icon className="icon" iconName={iconName} />
                 <Label className="message-text">{props.message}</Label>
+                { 
+                    props.closeable && 
+                    <span title="Close" className="close-icon" onClick={}>
+                        <Icon iconName="Cancel" />
+                    </span>
+                }
             </div>
         );
 }
