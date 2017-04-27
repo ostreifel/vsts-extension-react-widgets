@@ -32,6 +32,8 @@ export class CommonComponentsDemo extends React.Component<void, ICommonComponent
                 </div>
                 <div className="flex-child">
                     <InputError error="This is an input error" />
+                    <IdentityView identityDistinctName="Mohit Bagra <mbagra@microsoft.com>" />
+                    <InfoLabel info="Information" label="Info" />
                 </div>
             </div>
         );

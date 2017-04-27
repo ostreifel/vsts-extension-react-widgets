@@ -1,8 +1,9 @@
 import "../../css/InfoLabel.scss";
 
 import * as React from "react";
-import {Label} from "OfficeFabric/Label";
-import {Icon} from "OfficeFabric/Icon";
+import { Label } from "OfficeFabric/Label";
+import { Icon } from "OfficeFabric/Icon";
+import { TooltipHost, TooltipDelay, DirectionalHint } from "OfficeFabric/Tooltip";
 
 export interface IInfoLabelProps {
     label: string;
@@ -14,11 +15,15 @@ export var InfoLabel: React.StatelessComponent<IInfoLabelProps> =
         return (
             <div className="info-label">
                 <Label className="info-label-text">{props.label}</Label>
-                <div className="info-icon-container">
-                    <span className="rich-tooltipped rich-tooltipped-se" aria-label={props.info}>
+                <TooltipHost 
+                    content={ props.info }
+                    delay={ TooltipDelay.zero }
+                    directionalHint={ DirectionalHint.bottomCenter }
+                    >
+                    <span>
                         <Icon className="info-icon" iconName="Info" />
                     </span>
-                </div>
+                </TooltipHost>
             </div>
         );
 }

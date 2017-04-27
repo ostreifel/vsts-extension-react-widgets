@@ -1,6 +1,9 @@
 import "../../css/IdentityView.scss";
 
 import * as React from "react";
+
+import { TooltipHost, TooltipDelay, DirectionalHint } from "OfficeFabric/Tooltip";
+
 import Utils_String = require("VSS/Utils/String");
 
 export interface IIdentityViewProps {
@@ -21,10 +24,16 @@ export var IdentityView: React.StatelessComponent<IIdentityViewProps> =
         }
         else {
             return (
-                <div className="identity-view overflow-ellipsis" title={props.identityDistinctName}>
-                    {imageUrl !== "" && (<img src={imageUrl} />)}
-                    <span>{displayName}</span>
-                </div>
+                <TooltipHost 
+                    content={ props.identityDistinctName }
+                    delay={ TooltipDelay.zero }
+                    directionalHint={ DirectionalHint.bottomCenter }
+                    >
+                    <span className="identity-view overflow-ellipsis">
+                        {imageUrl !== "" && (<img src={imageUrl} />)}
+                        <span>{displayName}</span>
+                    </span>
+                </TooltipHost>
             );
         }
 }
