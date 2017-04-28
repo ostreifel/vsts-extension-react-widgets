@@ -1,13 +1,13 @@
 /// <reference types="react" />
 import "../../css/WorkItemsGrid.scss";
 import * as React from "react";
-import { IWorkItemsGridProps, IWorkItemsGridState } from "./WorkItemsGrid.Props";
-export declare class WorkItemsGrid extends React.Component<IWorkItemsGridProps, IWorkItemsGridState> {
-    static defaultProps: IWorkItemsGridProps;
+import { IWorkItemGridProps, IWorkItemGridState } from "./WorkItemGrid.Props";
+export declare class WorkItemGrid extends React.Component<IWorkItemGridProps, IWorkItemGridState> {
+    static defaultProps: IWorkItemGridProps;
     private _selection;
     private _searchTimeout;
     private _context;
-    constructor(props: IWorkItemsGridProps, context: any);
+    constructor(props: IWorkItemGridProps, context: any);
     private _initializeState();
     componentDidMount(): void;
     componentWillUnmount(): void;

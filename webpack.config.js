@@ -11,9 +11,11 @@ module.exports = {
         InputError: "./src/Components/Common/InputError.tsx",
         Loading: "./src/Components/Common/Loading.tsx",
         MessagePanel: "./src/Components/Common/MessagePanel.tsx",
-        AutoResizableComponent: "./src/Components/Common/AutoResizableComponent.tsx",
+        AutoResizableComponent: "./src/Components/WorkItemFormControls/AutoResizableComponent.tsx",
+        FieldControl: "./src/Components/WorkItemFormControls/FieldControl.tsx",
         ExtensionDataManager: "./src/Utilities/ExtensionDataManager.ts",
-        WorkItemsGrid: "./src/Components/WorkItemsGrid/WorkItemsGrid",
+        WorkItemGrid: "./src/Components/WorkItemGrid/WorkItemGrid",
+        QueryResultGrid: "./src/Components/WorkItemGrid/QueryResultGrid",
         "vsts-extension-react-widgets.min": "./src/index.ts"
     },
     output: {

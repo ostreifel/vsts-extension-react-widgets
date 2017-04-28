@@ -1,13 +1,13 @@
 /// <reference types="react" />
 import "../../css/MessagePanel.scss";
 import * as React from "react";
-export interface IMessagePanelInputs {
-    Message: string;
-    MessageType: string;
-}
 export interface IMessagePanelProps {
     message: string;
     messageType: MessageType;
+    closeable?: boolean;
+}
+export interface IMessagePanelState {
+    isClosed?: boolean;
 }
 export declare enum MessageType {
     Error = 0,
@@ -15,4 +15,7 @@ export declare enum MessageType {
     Info = 2,
     Success = 3,
 }
-export declare var MessagePanel: React.StatelessComponent<IMessagePanelProps>;
+export declare class MessagePanel extends React.Component<IMessagePanelProps, IMessagePanelState> {
+    constructor(props: IMessagePanelProps, context?: any);
+    render(): JSX.Element;
+}

@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import {Pivot, PivotItem} from "OfficeFabric/Pivot";
 import {CommonComponentsDemo} from "./CommonComponentsDemo";
+import {QueryResultGridDemo} from "./QueryResultGridDemo";
 
 interface IDemoState {
 }
@@ -23,7 +24,7 @@ export class Demo extends React.Component<void, IDemoState> {
                 <CommonComponentsDemo />
             </PivotItem>
             <PivotItem linkText='Work item grid'>
-                <div>Pivot #2</div>
+                <QueryResultGridDemo />
             </PivotItem>
             </Pivot>
         );

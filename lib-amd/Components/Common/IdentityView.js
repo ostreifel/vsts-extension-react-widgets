@@ -1,4 +1,4 @@
-define(["require", "exports", "react", "VSS/Utils/String", "../../css/IdentityView.scss"], function (require, exports, React, Utils_String) {
+define(["require", "exports", "react", "OfficeFabric/Tooltip", "OfficeFabric/Label", "VSS/Utils/String", "../../css/IdentityView.scss"], function (require, exports, React, Tooltip_1, Label_1, Utils_String) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.IdentityView = function (props) {
@@ -8,12 +8,13 @@ define(["require", "exports", "react", "VSS/Utils/String", "../../css/IdentityVi
         displayName = identityRef.displayName;
         imageUrl = identityRef.imageUrl;
         if (!displayName) {
-            return React.createElement("div", { className: "overflow-ellipsis", title: "" });
+            return null;
         }
         else {
-            return (React.createElement("div", { className: "identity-view overflow-ellipsis", title: props.identityDistinctName },
-                imageUrl !== "" && (React.createElement("img", { src: imageUrl })),
-                React.createElement("span", null, displayName)));
+            return (React.createElement(Label_1.Label, { className: "identity-view overflow-ellipsis" },
+                React.createElement(Tooltip_1.TooltipHost, { content: props.identityDistinctName, delay: Tooltip_1.TooltipDelay.zero, directionalHint: Tooltip_1.DirectionalHint.bottomCenter },
+                    imageUrl !== "" && (React.createElement("img", { src: imageUrl })),
+                    React.createElement("span", { className: "display-name" }, displayName))));
         }
     };
     function parseUniquefiedIdentityName(name) {

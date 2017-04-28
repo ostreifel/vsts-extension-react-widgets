@@ -1,7 +1,9 @@
 import "../../css/InputError.scss";
 
 import * as React from "react";
-import {Icon} from "OfficeFabric/Icon";
+
+import { Icon } from "OfficeFabric/Icon";
+import { Label } from "OfficeFabric/Label";
 
 export interface IInputErrorProps {
     error: string;
@@ -12,7 +14,7 @@ export var InputError: React.StatelessComponent<IInputErrorProps> =
         return (
             <div className="input-error">
                 <Icon className="error-icon" iconName="Error" />
-                <span>{props.error}</span>
+                <Label className="error-text">{props.error}</Label>
             </div>
         );
 }

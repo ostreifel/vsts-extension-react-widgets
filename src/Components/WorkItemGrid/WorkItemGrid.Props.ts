@@ -1,20 +1,48 @@
 import * as React from "react";
 
-import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
+import { WorkItem, WorkItemField, WorkItemFieldReference } from "TFS/WorkItemTracking/Contracts";
 
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
 import { IColumn } from "OfficeFabric/DetailsList";
 
-export interface IWorkItemsGridProps {    
-    fieldColumns: WorkItemField[];
-    items: WorkItem[];
-    refreshWorkItems?: () => Promise<WorkItem[]>;
+export interface IBaseWorkItemGridProps {
     columnsProps?: IColumnsProps    
     commandBarProps?: ICommandBarProps;
     contextMenuProps?: IContextMenuProps;
     onItemInvoked?: (workItem: WorkItem, index: number) => void;
-    selectionMode?: SelectionMode;    
+    selectionMode?: SelectionMode;
+}
+
+export interface IWorkItemGridProps extends IBaseWorkItemGridProps {    
+    fieldColumns: WorkItemField[];
+    items: WorkItem[];
+    refreshWorkItems?: () => Promise<WorkItem[]>;    
+}
+
+export interface IQueryResultGridProps extends IBaseWorkItemGridProps  {
+    wiql: string;
+    top?: number;
+    project?: string;
+}
+
+export interface IWorkItemGridState {
+    filteredItems?: WorkItem[];
+    items?: WorkItem[];
+    loading?: boolean; 
+    isContextMenuVisible?: boolean;
+    contextMenuTarget?: MouseEvent;
+    workItemTypeAndStateColors?: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;
+    sortColumn?: IColumn;
+    sortOrder?: SortOrder;
+    filterText?: string;
+}
+
+export interface IQueryResultGridState {
+    areResultsLoaded?: boolean;
+    items?: WorkItem[];
+    fieldColumns?: WorkItemFieldReference[];
+    fieldsMap?: IDictionaryStringTo<WorkItemField>;
 }
 
 export interface IColumnsProps {
@@ -48,18 +76,6 @@ export interface ICommandBarProps {
 export interface IContextMenuProps {
     disableContextMenu?: boolean;
     extraContextMenuItems?: (selectedRows: WorkItem[]) => IContextualMenuItem[];
-}
-
-export interface IWorkItemsGridState {
-    filteredItems?: WorkItem[];
-    items?: WorkItem[];
-    loading?: boolean; 
-    isContextMenuVisible?: boolean;
-    contextMenuTarget?: MouseEvent;
-    workItemTypeAndStateColors?: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;
-    sortColumn?: IColumn;
-    sortOrder?: SortOrder;
-    filterText?: string;
 }
 
 export enum SortOrder {

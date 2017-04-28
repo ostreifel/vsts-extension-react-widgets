@@ -1,6 +1,7 @@
 import "../../css/InfoLabel.scss";
 
 import * as React from "react";
+
 import { Label } from "OfficeFabric/Label";
 import { Icon } from "OfficeFabric/Icon";
 import { TooltipHost, TooltipDelay, DirectionalHint } from "OfficeFabric/Tooltip";

@@ -2,7 +2,7 @@
 import * as React from "react";
 import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 import { IColumn } from "OfficeFabric/DetailsList";
-import { SortOrder } from "./WorkItemsGrid.Props";
+import { SortOrder } from "./WorkItemGrid.Props";
 export interface workItemFieldCellRendererOptions {
     workItemTypeAndStateColors?: IDictionaryStringTo<{
         color: string;

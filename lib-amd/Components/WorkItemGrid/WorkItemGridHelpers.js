@@ -33,17 +33,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "./WorkItemsGrid.Props", "../Common/IdentityView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, WorkItemsGrid_Props_1, IdentityView_1) {
+define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "./WorkItemGrid.Props", "../Common/IdentityView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, WorkItemGrid_Props_1, IdentityView_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function workItemFieldValueComparer(w1, w2, fieldRefName, sortOrder) {
         if (Utils_String.equals(fieldRefName, "System.Id", true)) {
-            return sortOrder === WorkItemsGrid_Props_1.SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
+            return sortOrder === WorkItemGrid_Props_1.SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
         }
         else {
             var v1 = w1.fields[fieldRefName];
             var v2 = w2.fields[fieldRefName];
-            return sortOrder === WorkItemsGrid_Props_1.SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
+            return sortOrder === WorkItemGrid_Props_1.SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
         }
     }
     exports.workItemFieldValueComparer = workItemFieldValueComparer;

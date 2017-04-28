@@ -12,18 +12,18 @@ import { SearchBox } from "OfficeFabric/SearchBox";
 import Utils_String = require("VSS/Utils/String");
 import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 
-import { IWorkItemsGridProps, IWorkItemsGridState, SortOrder, ColumnPosition, ColumnType, IColumnProps } from "./WorkItemsGrid.Props";
+import { IWorkItemGridProps, IWorkItemGridState, SortOrder, ColumnPosition, ColumnType, IColumnProps } from "./WorkItemGrid.Props";
 import { Loading } from "../Common/Loading";
 import { MessagePanel, MessageType } from "../Common/MessagePanel";
 import { FluxContext } from "../../Flux/FluxContext";
-import * as WorkItemsHelpers from "./WorkItemsGridHelpers";
+import * as WorkItemHelpers from "./WorkItemGridHelpers";
 
-export class WorkItemsGrid extends React.Component<IWorkItemsGridProps, IWorkItemsGridState> {
+export class WorkItemGrid extends React.Component<IWorkItemGridProps, IWorkItemGridState> {
     static defaultProps = {
         refreshWorkItems: null,
         selectionMode: SelectionMode.multiple,
         onItemInvoked: (item: WorkItem, index: number) => {
-            WorkItemsHelpers.openWorkItemDialog(null, item);
+            WorkItemHelpers.openWorkItemDialog(null, item);
         },
         columnsProps: {
             disableSort: false,
@@ -40,13 +40,13 @@ export class WorkItemsGrid extends React.Component<IWorkItemsGridProps, IWorkIte
             disableContextMenu: false,
             extraContextMenuItems: null
         }
-    } as IWorkItemsGridProps;
+    } as IWorkItemGridProps;
 
     private _selection: Selection;
     private _searchTimeout: any
     private _context: FluxContext;
 
-    constructor(props: IWorkItemsGridProps, context: any) {
+    constructor(props: IWorkItemGridProps, context: any) {
         super(props, context);
         this._selection = new Selection();
         this._context = FluxContext.get();
@@ -268,12 +268,12 @@ export class WorkItemsGrid extends React.Component<IWorkItemsGridProps, IWorkIte
         }
 
         columns = columns.concat(this.props.fieldColumns.map(f => {
-            const columnSize = WorkItemsHelpers.getColumnSize(f);
+            const columnSize = WorkItemHelpers.getColumnSize(f);
             return {
                 fieldName: f.referenceName,
                 key: f.referenceName,
                 name: f.name,
-                data: { type: ColumnType.Field, renderer: WorkItemsHelpers.workItemFieldCellRenderer, comparer: WorkItemsHelpers.workItemFieldValueComparer },
+                data: { type: ColumnType.Field, renderer: WorkItemHelpers.workItemFieldCellRenderer, comparer: WorkItemHelpers.workItemFieldValueComparer },
                 minWidth: columnSize.minWidth,
                 maxWidth: columnSize.maxWidth,
                 isResizable: !this.props.columnsProps.disableColumnResize,
@@ -350,7 +350,7 @@ export class WorkItemsGrid extends React.Component<IWorkItemsGridProps, IWorkIte
         this._updateState({contextMenuTarget: null, isContextMenuVisible: false});
     }
 
-    private _updateState(updatedStates: IWorkItemsGridState) {
+    private _updateState(updatedStates: IWorkItemGridState) {
         this.setState({...this.state, ...updatedStates});
     }
 

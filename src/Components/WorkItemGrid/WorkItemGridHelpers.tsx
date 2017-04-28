@@ -6,7 +6,7 @@ import Utils_String = require("VSS/Utils/String");
 
 import { IColumn } from "OfficeFabric/DetailsList";
 
-import { SortOrder } from "./WorkItemsGrid.Props";
+import { SortOrder } from "./WorkItemGrid.Props";
 import { IdentityView } from "../Common/IdentityView";
 
 export interface workItemFieldCellRendererOptions {
