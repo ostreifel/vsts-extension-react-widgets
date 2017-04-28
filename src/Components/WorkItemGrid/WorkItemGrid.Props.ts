@@ -48,7 +48,7 @@ export interface IQueryResultGridState {
 export interface IColumnsProps {
     disableSort?: boolean;
     disableColumnResize?: boolean;
-    extraColumns: IColumnProps[];
+    extraColumns?: IColumnProps[];
 }
 
 export interface IColumnProps {    

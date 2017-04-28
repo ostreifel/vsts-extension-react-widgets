@@ -2,13 +2,20 @@ import "../../css/IdentityView.scss";
 
 import * as React from "react";
 
-import { TooltipHost, TooltipDelay, DirectionalHint } from "OfficeFabric/Tooltip";
 import { Label } from "OfficeFabric/Label";
 
 import Utils_String = require("VSS/Utils/String");
 
+export enum IdentitySize {
+    Small,
+    Medium,
+    Large
+}
+
 export interface IIdentityViewProps {
     identityDistinctName: string;
+    size?: IdentitySize;
+    className?: string;
 }
 
 export var IdentityView: React.StatelessComponent<IIdentityViewProps> =
@@ -24,16 +31,18 @@ export var IdentityView: React.StatelessComponent<IIdentityViewProps> =
             return null;
         }
         else {
+            let sizeClassName = "small";
+            if (props.size && props.size === IdentitySize.Medium) {
+                sizeClassName = "medium";
+            }
+            else if (props.size && props.size === IdentitySize.Large) {
+                sizeClassName = "large";
+            }
+
             return (
-                <Label className="identity-view overflow-ellipsis">
-                    <TooltipHost 
-                        content={ props.identityDistinctName }
-                        delay={ TooltipDelay.zero }
-                        directionalHint={ DirectionalHint.bottomCenter }
-                        >
-                        {imageUrl !== "" && (<img src={imageUrl} />)}
-                        <span className="display-name">{displayName}</span>
-                    </TooltipHost>
+                <Label className={`identity-view ${sizeClassName} ${props.className || ""}`}>
+                    {imageUrl !== "" && (<img src={imageUrl} />)}
+                    <span className="display-name">{displayName}</span>                
                 </Label>                
             );
         }

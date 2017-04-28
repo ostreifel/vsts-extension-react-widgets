@@ -33,7 +33,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "./WorkItemGrid.Props", "../Common/IdentityView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, WorkItemGrid_Props_1, IdentityView_1) {
+define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "OfficeFabric/Tooltip", "OfficeFabric/Label", "./WorkItemGrid.Props", "../Common/IdentityView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Tooltip_1, Label_1, WorkItemGrid_Props_1, IdentityView_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function workItemFieldValueComparer(w1, w2, fieldRefName, sortOrder) {
@@ -48,19 +48,22 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
     }
     exports.workItemFieldValueComparer = workItemFieldValueComparer;
     function workItemFieldCellRenderer(item, index, column, extraData) {
-        var text;
+        var text = item.fields[column.fieldName];
+        var className = "work-item-grid-cell";
+        var innerElement;
         switch (column.fieldName.toLowerCase()) {
             case "system.id":
                 text = item.id.toString();
+                innerElement = React.createElement(Label_1.Label, { className: className }, text);
                 break;
             case "system.title":
                 var witColor = extraData && extraData.workItemTypeAndStateColors &&
                     extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
                     extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
-                return (React.createElement("div", { className: "title-cell", title: item.fields[column.fieldName] },
-                    React.createElement("span", { className: "overflow-ellipsis", onClick: function (e) { return openWorkItemDialog(e, item); }, style: { borderColor: witColor ? "#" + witColor : "#000" } }, item.fields[column.fieldName])));
+                innerElement = (React.createElement(Label_1.Label, { className: className + " title-cell", onClick: function (e) { return openWorkItemDialog(e, item); }, style: { borderColor: witColor ? "#" + witColor : "#000" } }, item.fields[column.fieldName]));
+                break;
             case "system.state":
-                return (React.createElement("div", { className: "state-cell", title: item.fields[column.fieldName] },
+                innerElement = (React.createElement(Label_1.Label, { className: className + " state-cell" },
                     extraData &&
                         extraData.workItemTypeAndStateColors &&
                         extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
@@ -70,14 +73,16 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                                 backgroundColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
                                 borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
                             } }),
-                    React.createElement("span", { className: "overflow-ellipsis" }, item.fields[column.fieldName])));
+                    React.createElement("span", { className: "state-name" }, item.fields[column.fieldName])));
+                break;
             case "system.assignedto":
-                return React.createElement(IdentityView_1.IdentityView, { identityDistinctName: item.fields[column.fieldName] });
+                innerElement = React.createElement(IdentityView_1.IdentityView, { className: className, identityDistinctName: item.fields[column.fieldName] });
+                break;
             default:
-                text = item.fields[column.fieldName];
+                innerElement = React.createElement(Label_1.Label, { className: className }, item.fields[column.fieldName]);
                 break;
         }
-        return React.createElement("div", { className: "overflow-ellipsis", title: text }, text);
+        return (React.createElement(Tooltip_1.TooltipHost, { content: text, delay: Tooltip_1.TooltipDelay.zero, overflowMode: Tooltip_1.TooltipOverflowMode.Parent, directionalHint: Tooltip_1.DirectionalHint.bottomLeftEdge }, innerElement));
     }
     exports.workItemFieldCellRenderer = workItemFieldCellRenderer;
     function getColumnSize(field) {
@@ -85,13 +90,13 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
             return { minWidth: 40, maxWidth: 70 };
         }
         else if (Utils_String.equals(field.referenceName, "System.WorkItemType", true)) {
-            return { minWidth: 80, maxWidth: 100 };
+            return { minWidth: 50, maxWidth: 100 };
         }
         else if (Utils_String.equals(field.referenceName, "System.Title", true)) {
             return { minWidth: 150, maxWidth: 300 };
         }
         else if (Utils_String.equals(field.referenceName, "System.State", true)) {
-            return { minWidth: 70, maxWidth: 120 };
+            return { minWidth: 50, maxWidth: 100 };
         }
         else if (field.type === Contracts_1.FieldType.TreePath) {
             return { minWidth: 150, maxWidth: 350 };

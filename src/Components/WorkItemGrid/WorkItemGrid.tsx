@@ -8,13 +8,13 @@ import { autobind } from "OfficeFabric/Utilities";
 import { ContextualMenu, IContextualMenuItem, ContextualMenuItemType } from "OfficeFabric/ContextualMenu";
 import { CommandBar } from "OfficeFabric/CommandBar";
 import { SearchBox } from "OfficeFabric/SearchBox";
+import { MessageBar, MessageBarType } from 'OfficeFabric/MessageBar';
 
 import Utils_String = require("VSS/Utils/String");
 import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 
 import { IWorkItemGridProps, IWorkItemGridState, SortOrder, ColumnPosition, ColumnType, IColumnProps } from "./WorkItemGrid.Props";
 import { Loading } from "../Common/Loading";
-import { MessagePanel, MessageType } from "../Common/MessagePanel";
 import { FluxContext } from "../../Flux/FluxContext";
 import * as WorkItemHelpers from "./WorkItemGridHelpers";
 
@@ -147,7 +147,7 @@ export class WorkItemGrid extends React.Component<IWorkItemGridProps, IWorkItemG
         let menuItems: IContextualMenuItem[] = [
             {
                 key: "resultCount", 
-                name: `${this.state.filteredItems.length} results`, 
+                name: this.state.loading ? "Loading ..." : `${this.state.filteredItems.length} results`, 
                 className: this._getClassName("result-count")
             }
         ];
@@ -189,16 +189,15 @@ export class WorkItemGrid extends React.Component<IWorkItemGridProps, IWorkItemG
             return <Loading />;
         }
         else if (this.state.filteredItems.length === 0) {
-            return <MessagePanel message="No results" messageType={MessageType.Info} />;
+            return <MessageBar messageBarType={MessageBarType.info}>No results</MessageBar>;
         }
         else {
-            const selectionMode = this.props.selectionMode || SelectionMode.multiple;
             return <DetailsList 
                         layoutMode={DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.horizontalConstrained}
-                        selectionMode={selectionMode}
+                        selectionMode={this.props.selectionMode}
                         isHeaderVisible={true}
-                        checkboxVisibility={selectionMode === SelectionMode.none ? CheckboxVisibility.hidden : CheckboxVisibility.onHover}
+                        checkboxVisibility={this.props.selectionMode === SelectionMode.none ? CheckboxVisibility.hidden : CheckboxVisibility.onHover}
                         columns={this._getColumns()}
                         onRenderItemColumn={this._onRenderCell}
                         items={this.state.filteredItems}
@@ -259,7 +258,7 @@ export class WorkItemGrid extends React.Component<IWorkItemGridProps, IWorkItemG
         }
 
         if (this.props.columnsProps.extraColumns && this.props.columnsProps.extraColumns.length > 0) {
-            leftColumns = this.props.columnsProps.extraColumns.map(extraColumnMapper);
+            leftColumns = this.props.columnsProps.extraColumns.filter(ec => ec.position === ColumnPosition.FarLeft).map(extraColumnMapper);
             rightColumns = this.props.columnsProps.extraColumns.filter(ec => ec.position !== ColumnPosition.FarLeft).map(extraColumnMapper);            
         }
 

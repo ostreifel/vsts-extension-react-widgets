@@ -57,7 +57,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "OfficeFabric/DetailsList", "OfficeFabric/utilities/selection", "OfficeFabric/Utilities", "OfficeFabric/ContextualMenu", "OfficeFabric/CommandBar", "OfficeFabric/SearchBox", "VSS/Utils/String", "./WorkItemGrid.Props", "../Common/Loading", "../Common/MessagePanel", "../../Flux/FluxContext", "./WorkItemGridHelpers", "../../css/WorkItemsGrid.scss"], function (require, exports, React, DetailsList_1, selection_1, Utilities_1, ContextualMenu_1, CommandBar_1, SearchBox_1, Utils_String, WorkItemGrid_Props_1, Loading_1, MessagePanel_1, FluxContext_1, WorkItemHelpers) {
+define(["require", "exports", "react", "OfficeFabric/DetailsList", "OfficeFabric/utilities/selection", "OfficeFabric/Utilities", "OfficeFabric/ContextualMenu", "OfficeFabric/CommandBar", "OfficeFabric/SearchBox", "OfficeFabric/MessageBar", "VSS/Utils/String", "./WorkItemGrid.Props", "../Common/Loading", "../../Flux/FluxContext", "./WorkItemGridHelpers", "../../css/WorkItemsGrid.scss"], function (require, exports, React, DetailsList_1, selection_1, Utilities_1, ContextualMenu_1, CommandBar_1, SearchBox_1, MessageBar_1, Utils_String, WorkItemGrid_Props_1, Loading_1, FluxContext_1, WorkItemHelpers) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemGrid = (function (_super) {
@@ -141,7 +141,7 @@ define(["require", "exports", "react", "OfficeFabric/DetailsList", "OfficeFabric
             var menuItems = [
                 {
                     key: "resultCount",
-                    name: this.state.filteredItems.length + " results",
+                    name: this.state.loading ? "Loading ..." : this.state.filteredItems.length + " results",
                     className: this._getClassName("result-count")
                 }
             ];
@@ -178,11 +178,10 @@ define(["require", "exports", "react", "OfficeFabric/DetailsList", "OfficeFabric
                 return React.createElement(Loading_1.Loading, null);
             }
             else if (this.state.filteredItems.length === 0) {
-                return React.createElement(MessagePanel_1.MessagePanel, { message: "No results", messageType: MessagePanel_1.MessageType.Info });
+                return React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.info }, "No results");
             }
             else {
-                var selectionMode = this.props.selectionMode || selection_1.SelectionMode.multiple;
-                return React.createElement(DetailsList_1.DetailsList, { layoutMode: DetailsList_1.DetailsListLayoutMode.justified, constrainMode: DetailsList_1.ConstrainMode.horizontalConstrained, selectionMode: selectionMode, isHeaderVisible: true, checkboxVisibility: selectionMode === selection_1.SelectionMode.none ? DetailsList_1.CheckboxVisibility.hidden : DetailsList_1.CheckboxVisibility.onHover, columns: this._getColumns(), onRenderItemColumn: this._onRenderCell, items: this.state.filteredItems, className: this._getClassName("grid"), onItemInvoked: function (item, index) {
+                return React.createElement(DetailsList_1.DetailsList, { layoutMode: DetailsList_1.DetailsListLayoutMode.justified, constrainMode: DetailsList_1.ConstrainMode.horizontalConstrained, selectionMode: this.props.selectionMode, isHeaderVisible: true, checkboxVisibility: this.props.selectionMode === selection_1.SelectionMode.none ? DetailsList_1.CheckboxVisibility.hidden : DetailsList_1.CheckboxVisibility.onHover, columns: this._getColumns(), onRenderItemColumn: this._onRenderCell, items: this.state.filteredItems, className: this._getClassName("grid"), onItemInvoked: function (item, index) {
                         _this.props.onItemInvoked(item, index);
                     }, selection: this._selection, onItemContextMenu: this._showContextMenu, onColumnHeaderClick: this._onColumnHeaderClick });
             }
@@ -230,7 +229,7 @@ define(["require", "exports", "react", "OfficeFabric/DetailsList", "OfficeFabric
                 };
             };
             if (this.props.columnsProps.extraColumns && this.props.columnsProps.extraColumns.length > 0) {
-                leftColumns = this.props.columnsProps.extraColumns.map(extraColumnMapper);
+                leftColumns = this.props.columnsProps.extraColumns.filter(function (ec) { return ec.position === WorkItemGrid_Props_1.ColumnPosition.FarLeft; }).map(extraColumnMapper);
                 rightColumns = this.props.columnsProps.extraColumns.filter(function (ec) { return ec.position !== WorkItemGrid_Props_1.ColumnPosition.FarLeft; }).map(extraColumnMapper);
             }
             if (leftColumns.length > 0) {

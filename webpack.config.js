@@ -10,7 +10,6 @@ module.exports = {
         InfoLabel: "./src/Components/Common/InfoLabel.tsx",
         InputError: "./src/Components/Common/InputError.tsx",
         Loading: "./src/Components/Common/Loading.tsx",
-        MessagePanel: "./src/Components/Common/MessagePanel.tsx",
         AutoResizableComponent: "./src/Components/WorkItemFormControls/AutoResizableComponent.tsx",
         FieldControl: "./src/Components/WorkItemFormControls/FieldControl.tsx",
         ExtensionDataManager: "./src/Utilities/ExtensionDataManager.ts",

@@ -4,7 +4,9 @@ import { WorkItem, WorkItemField, FieldType } from "TFS/WorkItemTracking/Contrac
 import { WorkItemFormNavigationService } from "TFS/WorkItemTracking/Services";
 import Utils_String = require("VSS/Utils/String");
 
+import { TooltipHost, TooltipDelay, DirectionalHint, TooltipOverflowMode } from "OfficeFabric/Tooltip";
 import { IColumn } from "OfficeFabric/DetailsList";
+import { Label } from "OfficeFabric/Label";
 
 import { SortOrder } from "./WorkItemGrid.Props";
 import { IdentityView } from "../Common/IdentityView";
@@ -25,29 +27,32 @@ export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, fieldRefN
 }
 
 export function workItemFieldCellRenderer(item: WorkItem, index: number, column: IColumn, extraData?: workItemFieldCellRendererOptions): JSX.Element {
-    let text: string;
+    let text: string = item.fields[column.fieldName];
+    let className = "work-item-grid-cell";
+    let innerElement: JSX.Element;
+    
     switch (column.fieldName.toLowerCase()) {
         case "system.id":  
             text = item.id.toString();
+            innerElement = <Label className={className}>{text}</Label>;            
             break;
         case "system.title":
             let witColor = extraData && extraData.workItemTypeAndStateColors && 
                         extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] && 
                         extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
-            return (
-                <div className={"title-cell"} title={item.fields[column.fieldName]}>
-                    <span 
-                        className="overflow-ellipsis" 
-                        onClick={(e) => openWorkItemDialog(e, item)}
-                        style={{borderColor: witColor ? "#" + witColor : "#000"}}>
+            innerElement = (
+                <Label 
+                    className={`${className} title-cell`}
+                    onClick={(e) => openWorkItemDialog(e, item)}
+                    style={{borderColor: witColor ? "#" + witColor : "#000"}}>
 
-                        {item.fields[column.fieldName]}
-                    </span>
-                </div>
+                    {item.fields[column.fieldName]}
+                </Label>
             );
+            break;
         case "system.state":
-            return (
-                <div className={"state-cell"} title={item.fields[column.fieldName]}>
+            innerElement = (
+                <Label className={`${className} state-cell`}>
                     {
                         extraData &&
                         extraData.workItemTypeAndStateColors &&
@@ -61,17 +66,28 @@ export function workItemFieldCellRenderer(item: WorkItem, index: number, column:
                                 borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
                             }} />
                     }
-                    <span className="overflow-ellipsis">{item.fields[column.fieldName]}</span>
-                </div>
+                    <span className="state-name">{item.fields[column.fieldName]}</span>
+                </Label>
             );
+            break;
         case "system.assignedto":  // check isidentity flag
-            return <IdentityView identityDistinctName={item.fields[column.fieldName]} />;                      
+            innerElement = <IdentityView className={className} identityDistinctName={item.fields[column.fieldName]} />;
+            break;                    
         default:
-            text = item.fields[column.fieldName];  
+            innerElement = <Label className={className}>{item.fields[column.fieldName]}</Label>;
             break;          
     }
 
-    return <div className="overflow-ellipsis" title={text}>{text}</div>;
+    return (
+        <TooltipHost 
+            content={text}
+            delay={TooltipDelay.zero}
+            overflowMode={TooltipOverflowMode.Parent}
+            directionalHint={DirectionalHint.bottomLeftEdge}
+            >
+            {innerElement}
+        </TooltipHost>
+    );
 }
 
 export function getColumnSize(field: WorkItemField): {minWidth: number, maxWidth: number} {
@@ -79,13 +95,13 @@ export function getColumnSize(field: WorkItemField): {minWidth: number, maxWidth
         return { minWidth: 40, maxWidth: 70}
     }
     else if (Utils_String.equals(field.referenceName, "System.WorkItemType", true)) {
-        return { minWidth: 80, maxWidth: 100}
+        return { minWidth: 50, maxWidth: 100}
     }
     else if (Utils_String.equals(field.referenceName, "System.Title", true)) {
         return { minWidth: 150, maxWidth: 300}
     }
     else if (Utils_String.equals(field.referenceName, "System.State", true)) {
-        return { minWidth: 70, maxWidth: 120}
+        return { minWidth: 50, maxWidth: 100}
     }
     else if (field.type === FieldType.TreePath) {
         return { minWidth: 150, maxWidth: 350}

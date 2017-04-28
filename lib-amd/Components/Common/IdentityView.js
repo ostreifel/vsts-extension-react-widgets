@@ -1,6 +1,12 @@
-define(["require", "exports", "react", "OfficeFabric/Tooltip", "OfficeFabric/Label", "VSS/Utils/String", "../../css/IdentityView.scss"], function (require, exports, React, Tooltip_1, Label_1, Utils_String) {
+define(["require", "exports", "react", "OfficeFabric/Label", "VSS/Utils/String", "../../css/IdentityView.scss"], function (require, exports, React, Label_1, Utils_String) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var IdentitySize;
+    (function (IdentitySize) {
+        IdentitySize[IdentitySize["Small"] = 0] = "Small";
+        IdentitySize[IdentitySize["Medium"] = 1] = "Medium";
+        IdentitySize[IdentitySize["Large"] = 2] = "Large";
+    })(IdentitySize = exports.IdentitySize || (exports.IdentitySize = {}));
     exports.IdentityView = function (props) {
         var displayName = "";
         var imageUrl = "";
@@ -11,10 +17,16 @@ define(["require", "exports", "react", "OfficeFabric/Tooltip", "OfficeFabric/Lab
             return null;
         }
         else {
-            return (React.createElement(Label_1.Label, { className: "identity-view overflow-ellipsis" },
-                React.createElement(Tooltip_1.TooltipHost, { content: props.identityDistinctName, delay: Tooltip_1.TooltipDelay.zero, directionalHint: Tooltip_1.DirectionalHint.bottomCenter },
-                    imageUrl !== "" && (React.createElement("img", { src: imageUrl })),
-                    React.createElement("span", { className: "display-name" }, displayName))));
+            var sizeClassName = "small";
+            if (props.size && props.size === IdentitySize.Medium) {
+                sizeClassName = "medium";
+            }
+            else if (props.size && props.size === IdentitySize.Large) {
+                sizeClassName = "large";
+            }
+            return (React.createElement(Label_1.Label, { className: "identity-view " + sizeClassName + " " + (props.className || "") },
+                imageUrl !== "" && (React.createElement("img", { src: imageUrl })),
+                React.createElement("span", { className: "display-name" }, displayName)));
         }
     };
     function parseUniquefiedIdentityName(name) {
