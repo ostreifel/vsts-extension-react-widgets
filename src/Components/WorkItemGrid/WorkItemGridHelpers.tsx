@@ -71,8 +71,8 @@ export function workItemFieldCellRenderer(item: WorkItem, index: number, column:
             );
             break;
         case "system.assignedto":  // check isidentity flag
-            innerElement = <IdentityView className={className} identityDistinctName={item.fields[column.fieldName]} />;
-            break;                    
+            innerElement = <IdentityView className="identity-cell" identityDistinctName={item.fields[column.fieldName]} />;
+            break;
         default:
             innerElement = <Label className={className}>{item.fields[column.fieldName]}</Label>;
             break;          
@@ -82,7 +82,7 @@ export function workItemFieldCellRenderer(item: WorkItem, index: number, column:
         <TooltipHost 
             content={text}
             delay={TooltipDelay.zero}
-            overflowMode={TooltipOverflowMode.Parent}
+            overflowMode={TooltipOverflowMode.Parent}   // use null for identity fields
             directionalHint={DirectionalHint.bottomLeftEdge}
             >
             {innerElement}

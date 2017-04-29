@@ -39,6 +39,6 @@
         "tfx-cli": "^0.4.5"
     },
     "dependencies": {
-        "office-ui-fabric-react": "^2.21.0"        
+        "office-ui-fabric-react": "^2.23.2"        
     }
 }

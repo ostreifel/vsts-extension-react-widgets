@@ -3,19 +3,13 @@ import "../../css/IdentityView.scss";
 import * as React from "react";
 
 import { Label } from "OfficeFabric/Label";
-import { Persona } from "OfficeFabric/Persona";
+import { Persona, PersonaSize } from "OfficeFabric/Persona";
 
 import Utils_String = require("VSS/Utils/String");
 
-export enum IdentitySize {
-    Small,
-    Medium,
-    Large
-}
-
 export interface IIdentityViewProps {
     identityDistinctName: string;
-    size?: IdentitySize;
+    size?: PersonaSize;
     className?: string;
 }
 
@@ -26,16 +20,14 @@ export var IdentityView: React.StatelessComponent<IIdentityViewProps> =
             return null;
         }
 
-        const displayName = identityRef.displayName;
-        const uniqueName = identityRef.uniqueName;;
-        
         return <Persona 
+                    className={props.className || ""}
+                    size={props.size || PersonaSize.extraExtraSmall}
                     imageUrl={identityRef.imageUrl}
                     primaryText={identityRef.displayName}
                     secondaryText={identityRef.uniqueName}
                 />
-    }    
-}
+    }; 
 
 function parseUniquefiedIdentityName(name: string): {displayName: string, uniqueName: string, imageUrl: string} {
     if (!name) { 

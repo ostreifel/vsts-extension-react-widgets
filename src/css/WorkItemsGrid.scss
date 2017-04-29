@@ -32,11 +32,22 @@
         overflow: auto;
         flex: 1;
 
+        .identity-cell {
+            font-size: 12px;
+            height: 16px;
+            line-height: 16px;
+            margin-right: 0;
+
+            .ms-Persona-details {
+                padding: 0 0 0 5px;
+            }
+        }
+
         .work-item-grid-cell {
             padding: 0;
             margin: 0;
-            display: inherit;
-            font-size: 12px;
+            display: inline;
+            font-size: 13px;
 
             &.title-cell {
                 cursor: pointer;
