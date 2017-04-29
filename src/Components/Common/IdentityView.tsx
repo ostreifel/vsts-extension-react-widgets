@@ -3,6 +3,7 @@ import "../../css/IdentityView.scss";
 import * as React from "react";
 
 import { Label } from "OfficeFabric/Label";
+import { Persona } from "OfficeFabric/Persona";
 
 import Utils_String = require("VSS/Utils/String");
 
@@ -19,33 +20,21 @@ export interface IIdentityViewProps {
 }
 
 export var IdentityView: React.StatelessComponent<IIdentityViewProps> =
-    (props: IIdentityViewProps): JSX.Element => {
-        let displayName = "";
-        let imageUrl = "";
-
-        let identityRef = parseUniquefiedIdentityName(props.identityDistinctName);
-            displayName = identityRef.displayName;
-            imageUrl = identityRef.imageUrl;
-        
-        if (!displayName) {
+    (props: IIdentityViewProps): JSX.Element => {        
+        const identityRef = parseUniquefiedIdentityName(props.identityDistinctName);
+        if (!identityRef || !identityRef.displayName) {
             return null;
         }
-        else {
-            let sizeClassName = "small";
-            if (props.size && props.size === IdentitySize.Medium) {
-                sizeClassName = "medium";
-            }
-            else if (props.size && props.size === IdentitySize.Large) {
-                sizeClassName = "large";
-            }
 
-            return (
-                <Label className={`identity-view ${sizeClassName} ${props.className || ""}`}>
-                    {imageUrl !== "" && (<img src={imageUrl} />)}
-                    <span className="display-name">{displayName}</span>                
-                </Label>                
-            );
-        }
+        const displayName = identityRef.displayName;
+        const uniqueName = identityRef.uniqueName;;
+        
+        return <Persona 
+                    imageUrl={identityRef.imageUrl}
+                    primaryText={identityRef.displayName}
+                    secondaryText={identityRef.uniqueName}
+                />
+    }    
 }
 
 function parseUniquefiedIdentityName(name: string): {displayName: string, uniqueName: string, imageUrl: string} {

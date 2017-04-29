@@ -2,6 +2,7 @@ export * from "./Components/Common/IdentityView";
 export * from "./Components/Common/InfoLabel";
 export * from "./Components/Common/InputError";
 export * from "./Components/Common/Loading";
+export * from "./Components/Common/Chip";
 
 export * from "./Components/WorkItemFormControls/AutoResizableComponent";
 export * from "./Components/WorkItemFormControls/FieldControl";
