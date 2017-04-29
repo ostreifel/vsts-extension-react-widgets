@@ -1,14 +1,9 @@
 /// <reference types="react" />
-import "../../css/IdentityView.scss";
 import * as React from "react";
-export declare enum IdentitySize {
-    Small = 0,
-    Medium = 1,
-    Large = 2,
-}
+import { PersonaSize } from "OfficeFabric/Persona";
 export interface IIdentityViewProps {
     identityDistinctName: string;
-    size?: IdentitySize;
+    size?: PersonaSize;
     className?: string;
 }
 export declare var IdentityView: React.StatelessComponent<IIdentityViewProps>;

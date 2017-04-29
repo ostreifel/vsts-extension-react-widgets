@@ -1,11 +1,11 @@
-export * from "./Components/Common/IdentityView";
 export * from "./Components/Common/InfoLabel";
 export * from "./Components/Common/InputError";
 export * from "./Components/Common/Loading";
-export * from "./Components/Common/Chip";
 
-export * from "./Components/WorkItemFormControls/AutoResizableComponent";
-export * from "./Components/WorkItemFormControls/FieldControl";
+export * from "./Components/WorkItemControls/IdentityView";
+export * from "./Components/WorkItemControls/TagsView";
+export * from "./Components/WorkItemControls/AutoResizableComponent";
+export * from "./Components/WorkItemControls/FieldControl";
 
 export * from "./Components/WorkItemGrid/WorkItemGrid";
 export * from "./Components/WorkItemGrid/QueryResultGrid";

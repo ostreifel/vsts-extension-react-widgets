@@ -1,33 +1,12 @@
-define(["require", "exports", "react", "OfficeFabric/Label", "VSS/Utils/String", "../../css/IdentityView.scss"], function (require, exports, React, Label_1, Utils_String) {
+define(["require", "exports", "react", "OfficeFabric/Persona", "VSS/Utils/String"], function (require, exports, React, Persona_1, Utils_String) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var IdentitySize;
-    (function (IdentitySize) {
-        IdentitySize[IdentitySize["Small"] = 0] = "Small";
-        IdentitySize[IdentitySize["Medium"] = 1] = "Medium";
-        IdentitySize[IdentitySize["Large"] = 2] = "Large";
-    })(IdentitySize = exports.IdentitySize || (exports.IdentitySize = {}));
     exports.IdentityView = function (props) {
-        var displayName = "";
-        var imageUrl = "";
         var identityRef = parseUniquefiedIdentityName(props.identityDistinctName);
-        displayName = identityRef.displayName;
-        imageUrl = identityRef.imageUrl;
-        if (!displayName) {
+        if (!identityRef || !identityRef.displayName) {
             return null;
         }
-        else {
-            var sizeClassName = "small";
-            if (props.size && props.size === IdentitySize.Medium) {
-                sizeClassName = "medium";
-            }
-            else if (props.size && props.size === IdentitySize.Large) {
-                sizeClassName = "large";
-            }
-            return (React.createElement(Label_1.Label, { className: "identity-view " + sizeClassName + " " + (props.className || "") },
-                imageUrl !== "" && (React.createElement("img", { src: imageUrl })),
-                React.createElement("span", { className: "display-name" }, displayName)));
-        }
+        return React.createElement(Persona_1.Persona, { className: "identity-view", size: props.size || Persona_1.PersonaSize.extraExtraSmall, imageUrl: identityRef.imageUrl, primaryText: identityRef.displayName, secondaryText: identityRef.uniqueName });
     };
     function parseUniquefiedIdentityName(name) {
         if (!name) {

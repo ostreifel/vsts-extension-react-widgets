@@ -5,7 +5,7 @@ import * as React from "react";
 import {Loading} from "../src/Components/Common/Loading";
 import {InputError} from "../src/Components/Common/InputError";
 import {InfoLabel} from "../src/Components/Common/InfoLabel";
-import {IdentityView} from "../src/Components/Common/IdentityView";
+import {IdentityView} from "../src/Components/WorkItemControls/IdentityView";
 
 interface ICommonComponentsDemoState {
 

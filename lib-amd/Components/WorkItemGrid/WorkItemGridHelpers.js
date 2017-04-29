@@ -33,7 +33,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "OfficeFabric/Tooltip", "OfficeFabric/Label", "./WorkItemGrid.Props", "../Common/IdentityView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Tooltip_1, Label_1, WorkItemGrid_Props_1, IdentityView_1) {
+define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "VSS/Utils/Date", "OfficeFabric/Tooltip", "OfficeFabric/Label", "./WorkItemGrid.Props", "../WorkItemControls/IdentityView", "../WorkItemControls/TagsView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Utils_Date, Tooltip_1, Label_1, WorkItemGrid_Props_1, IdentityView_1, TagsView_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function workItemFieldValueComparer(w1, w2, fieldRefName, sortOrder) {
@@ -48,39 +48,62 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
     }
     exports.workItemFieldValueComparer = workItemFieldValueComparer;
     function workItemFieldCellRenderer(item, index, column, extraData) {
-        var text = item.fields[column.fieldName];
+        var text = item.fields[column.fieldName] || "";
         var className = "work-item-grid-cell";
         var innerElement;
-        switch (column.fieldName.toLowerCase()) {
-            case "system.id":
-                text = item.id.toString();
-                innerElement = React.createElement(Label_1.Label, { className: className }, text);
-                break;
-            case "system.title":
-                var witColor = extraData && extraData.workItemTypeAndStateColors &&
-                    extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
-                    extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
-                innerElement = (React.createElement(Label_1.Label, { className: className + " title-cell", onClick: function (e) { return openWorkItemDialog(e, item); }, style: { borderColor: witColor ? "#" + witColor : "#000" } }, item.fields[column.fieldName]));
-                break;
-            case "system.state":
-                innerElement = (React.createElement(Label_1.Label, { className: className + " state-cell" },
-                    extraData &&
-                        extraData.workItemTypeAndStateColors &&
+        var field = column.data["field"];
+        if (field.type === Contracts_1.FieldType.DateTime) {
+            var dateStr = item.fields[column.fieldName];
+            if (!dateStr) {
+                text = "";
+            }
+            else {
+                var date = new Date(dateStr);
+                text = Utils_Date.format(date, "M/d/yyyy h:mm tt");
+            }
+            innerElement = React.createElement(Label_1.Label, { className: className }, text);
+        }
+        else if (field.type === Contracts_1.FieldType.Boolean) {
+            var boolValue = item.fields[column.fieldName];
+            text = boolValue == null ? "" : (!boolValue ? "False" : "True");
+            innerElement = React.createElement(Label_1.Label, { className: className }, text);
+        }
+        else {
+            switch (column.fieldName.toLowerCase()) {
+                case "system.id":
+                    text = item.id.toString();
+                    innerElement = React.createElement(Label_1.Label, { className: className }, text);
+                    break;
+                case "system.title":
+                    var witColor = extraData && extraData.workItemTypeAndStateColors &&
                         extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors &&
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]] &&
-                        React.createElement("span", { className: "work-item-type-state-color", style: {
-                                backgroundColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
-                                borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
-                            } }),
-                    React.createElement("span", { className: "state-name" }, item.fields[column.fieldName])));
-                break;
-            case "system.assignedto":
-                innerElement = React.createElement(IdentityView_1.IdentityView, { className: className, identityDistinctName: item.fields[column.fieldName] });
-                break;
-            default:
-                innerElement = React.createElement(Label_1.Label, { className: className }, item.fields[column.fieldName]);
-                break;
+                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
+                    innerElement = (React.createElement(Label_1.Label, { className: className + " title-cell", onClick: function (e) { return openWorkItemDialog(e, item); }, style: { borderColor: witColor ? "#" + witColor : "#000" } }, item.fields[column.fieldName]));
+                    break;
+                case "system.state":
+                    innerElement = (React.createElement(Label_1.Label, { className: className + " state-cell" },
+                        extraData &&
+                            extraData.workItemTypeAndStateColors &&
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors &&
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]] &&
+                            React.createElement("span", { className: "work-item-type-state-color", style: {
+                                    backgroundColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
+                                    borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
+                                } }),
+                        React.createElement("span", { className: "state-name" }, item.fields[column.fieldName])));
+                    break;
+                case "system.assignedto":
+                    innerElement = React.createElement(IdentityView_1.IdentityView, { identityDistinctName: item.fields[column.fieldName] });
+                    break;
+                case "system.tags":
+                    var tagsArr = (item.fields[column.fieldName] || "").split(";");
+                    innerElement = React.createElement(TagsView_1.TagsView, { tags: tagsArr });
+                    break;
+                default:
+                    innerElement = React.createElement(Label_1.Label, { className: className }, item.fields[column.fieldName]);
+                    break;
+            }
         }
         return (React.createElement(Tooltip_1.TooltipHost, { content: text, delay: Tooltip_1.TooltipDelay.zero, overflowMode: Tooltip_1.TooltipOverflowMode.Parent, directionalHint: Tooltip_1.DirectionalHint.bottomLeftEdge }, innerElement));
     }
@@ -98,11 +121,14 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
         else if (Utils_String.equals(field.referenceName, "System.State", true)) {
             return { minWidth: 50, maxWidth: 100 };
         }
+        else if (Utils_String.equals(field.referenceName, "System.Tags", true)) {
+            return { minWidth: 100, maxWidth: 250 };
+        }
         else if (field.type === Contracts_1.FieldType.TreePath) {
             return { minWidth: 150, maxWidth: 350 };
         }
         else if (field.type === Contracts_1.FieldType.Boolean) {
-            return { minWidth: 40, maxWidth: 40 };
+            return { minWidth: 40, maxWidth: 70 };
         }
         else if (field.type === Contracts_1.FieldType.DateTime) {
             return { minWidth: 80, maxWidth: 150 };

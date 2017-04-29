@@ -3,13 +3,15 @@ import * as React from "react";
 import { WorkItem, WorkItemField, FieldType } from "TFS/WorkItemTracking/Contracts";
 import { WorkItemFormNavigationService } from "TFS/WorkItemTracking/Services";
 import Utils_String = require("VSS/Utils/String");
+import Utils_Date = require("VSS/Utils/Date");
 
 import { TooltipHost, TooltipDelay, DirectionalHint, TooltipOverflowMode } from "OfficeFabric/Tooltip";
 import { IColumn } from "OfficeFabric/DetailsList";
 import { Label } from "OfficeFabric/Label";
 
 import { SortOrder } from "./WorkItemGrid.Props";
-import { IdentityView } from "../Common/IdentityView";
+import { IdentityView } from "../WorkItemControls/IdentityView";
+import { TagsView } from "../WorkItemControls/TagsView";
 
 export interface workItemFieldCellRendererOptions {
     workItemTypeAndStateColors?: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;
@@ -27,55 +29,79 @@ export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, fieldRefN
 }
 
 export function workItemFieldCellRenderer(item: WorkItem, index: number, column: IColumn, extraData?: workItemFieldCellRendererOptions): JSX.Element {
-    let text: string = item.fields[column.fieldName];
+    let text: string = item.fields[column.fieldName] || "";
     let className = "work-item-grid-cell";
     let innerElement: JSX.Element;
     
-    switch (column.fieldName.toLowerCase()) {
-        case "system.id":  
-            text = item.id.toString();
-            innerElement = <Label className={className}>{text}</Label>;            
-            break;
-        case "system.title":
-            let witColor = extraData && extraData.workItemTypeAndStateColors && 
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] && 
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
-            innerElement = (
-                <Label 
-                    className={`${className} title-cell`}
-                    onClick={(e) => openWorkItemDialog(e, item)}
-                    style={{borderColor: witColor ? "#" + witColor : "#000"}}>
+    const field: WorkItemField = column.data["field"];
 
-                    {item.fields[column.fieldName]}
-                </Label>
-            );
-            break;
-        case "system.state":
-            innerElement = (
-                <Label className={`${className} state-cell`}>
-                    {
-                        extraData &&
-                        extraData.workItemTypeAndStateColors &&
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors &&
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]] &&
-                        <span 
-                            className="work-item-type-state-color" 
-                            style={{
-                                backgroundColor: "#" +extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
-                                borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
-                            }} />
-                    }
-                    <span className="state-name">{item.fields[column.fieldName]}</span>
-                </Label>
-            );
-            break;
-        case "system.assignedto":  // check isidentity flag
-            innerElement = <IdentityView className="identity-cell" identityDistinctName={item.fields[column.fieldName]} />;
-            break;
-        default:
-            innerElement = <Label className={className}>{item.fields[column.fieldName]}</Label>;
-            break;          
+    if (field.type === FieldType.DateTime) {
+        const dateStr = item.fields[column.fieldName];
+        if (!dateStr) {
+            text = "";
+        }
+        else {
+            const date = new Date(dateStr);
+            text = Utils_Date.format(date, "M/d/yyyy h:mm tt");
+        }
+        innerElement = <Label className={className}>{text}</Label>;
+    }
+    else if (field.type === FieldType.Boolean) {
+        const boolValue = item.fields[column.fieldName];
+        text = boolValue == null ? "" : (!boolValue ? "False" : "True");
+        innerElement = <Label className={className}>{text}</Label>;
+    }
+    else {
+        switch (column.fieldName.toLowerCase()) {
+            case "system.id":  
+                text = item.id.toString();
+                innerElement = <Label className={className}>{text}</Label>;            
+                break;
+            case "system.title":
+                let witColor = extraData && extraData.workItemTypeAndStateColors && 
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] && 
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
+                innerElement = (
+                    <Label 
+                        className={`${className} title-cell`}
+                        onClick={(e) => openWorkItemDialog(e, item)}
+                        style={{borderColor: witColor ? "#" + witColor : "#000"}}>
+
+                        {item.fields[column.fieldName]}
+                    </Label>
+                );
+                break;
+            case "system.state":
+                innerElement = (
+                    <Label className={`${className} state-cell`}>
+                        {
+                            extraData &&
+                            extraData.workItemTypeAndStateColors &&
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors &&
+                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]] &&
+                            <span 
+                                className="work-item-type-state-color" 
+                                style={{
+                                    backgroundColor: "#" +extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
+                                    borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
+                                }} />
+                        }
+                        <span className="state-name">{item.fields[column.fieldName]}</span>
+                    </Label>
+                );
+                break;
+            case "system.assignedto":  // check isidentity flag
+                innerElement = <IdentityView identityDistinctName={item.fields[column.fieldName]} />;
+                break;
+            case "system.tags":
+                const tagsArr = (item.fields[column.fieldName] as string || "").split(";");
+                innerElement = <TagsView tags={tagsArr} />;
+                break;
+            default:
+                innerElement = <Label className={className}>{item.fields[column.fieldName]}</Label>;
+                break;
+        }
     }
 
     return (
@@ -103,11 +129,14 @@ export function getColumnSize(field: WorkItemField): {minWidth: number, maxWidth
     else if (Utils_String.equals(field.referenceName, "System.State", true)) {
         return { minWidth: 50, maxWidth: 100}
     }
+    else if (Utils_String.equals(field.referenceName, "System.Tags", true)) {
+        return { minWidth: 100, maxWidth: 250}
+    }
     else if (field.type === FieldType.TreePath) {
         return { minWidth: 150, maxWidth: 350}
     }
     else if (field.type === FieldType.Boolean) {
-        return { minWidth: 40, maxWidth: 40}
+        return { minWidth: 40, maxWidth: 70}
     }
     else if (field.type === FieldType.DateTime) {
         return { minWidth: 80, maxWidth: 150}

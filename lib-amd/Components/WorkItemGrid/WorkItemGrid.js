@@ -241,7 +241,7 @@ define(["require", "exports", "react", "OfficeFabric/DetailsList", "OfficeFabric
                     fieldName: f.referenceName,
                     key: f.referenceName,
                     name: f.name,
-                    data: { type: WorkItemGrid_Props_1.ColumnType.Field, renderer: WorkItemHelpers.workItemFieldCellRenderer, comparer: WorkItemHelpers.workItemFieldValueComparer },
+                    data: { type: WorkItemGrid_Props_1.ColumnType.Field, field: f, renderer: WorkItemHelpers.workItemFieldCellRenderer, comparer: WorkItemHelpers.workItemFieldValueComparer },
                     minWidth: columnSize.minWidth,
                     maxWidth: columnSize.maxWidth,
                     isResizable: !_this.props.columnsProps.disableColumnResize,

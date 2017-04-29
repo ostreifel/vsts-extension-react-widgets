@@ -15,10 +15,7 @@
     .info-label-text {
         padding: 0;
         margin: 0 3px 0 0;
-        overflow: hidden;
-        white-space: nowrap;
-        word-wrap: normal;
-        text-overflow: ellipsis;
+        @include TextOverflowEllipsis();
     }
 
     .info-icon-container {

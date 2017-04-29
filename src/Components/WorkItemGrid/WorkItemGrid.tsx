@@ -272,7 +272,7 @@ export class WorkItemGrid extends React.Component<IWorkItemGridProps, IWorkItemG
                 fieldName: f.referenceName,
                 key: f.referenceName,
                 name: f.name,
-                data: { type: ColumnType.Field, renderer: WorkItemHelpers.workItemFieldCellRenderer, comparer: WorkItemHelpers.workItemFieldValueComparer },
+                data: { type: ColumnType.Field, field: f, renderer: WorkItemHelpers.workItemFieldCellRenderer, comparer: WorkItemHelpers.workItemFieldValueComparer },
                 minWidth: columnSize.minWidth,
                 maxWidth: columnSize.maxWidth,
                 isResizable: !this.props.columnsProps.disableColumnResize,

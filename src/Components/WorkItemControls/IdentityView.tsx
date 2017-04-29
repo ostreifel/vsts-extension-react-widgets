@@ -1,5 +1,3 @@
-import "../../css/IdentityView.scss";
-
 import * as React from "react";
 
 import { Label } from "OfficeFabric/Label";
@@ -21,7 +19,7 @@ export var IdentityView: React.StatelessComponent<IIdentityViewProps> =
         }
 
         return <Persona 
-                    className={props.className || ""}
+                    className="identity-view"
                     size={props.size || PersonaSize.extraExtraSmall}
                     imageUrl={identityRef.imageUrl}
                     primaryText={identityRef.displayName}

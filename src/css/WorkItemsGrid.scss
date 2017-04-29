@@ -32,14 +32,18 @@
         overflow: auto;
         flex: 1;
 
-        .identity-cell {
-            font-size: 12px;
+        .identity-view {
+            font-size: 13px;
             height: 16px;
             line-height: 16px;
             margin-right: 0;
 
             .ms-Persona-details {
                 padding: 0 0 0 5px;
+            }
+
+            .ms-Persona-primaryText {
+                font-size: 13px;
             }
         }
 
