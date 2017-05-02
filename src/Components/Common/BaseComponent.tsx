@@ -4,11 +4,11 @@ import { BaseStore } from "../../Flux/Stores/BaseStore";
 import { autobind } from "OfficeFabric/Utilities";
 import { FluxContext } from "../../Flux/FluxContext";
 
-export interface BaseComponentState {
+export interface IBaseComponentState {
     allStoresLoaded?: boolean;
 }
 
-export abstract class BaseComponent<TP, TS extends BaseComponentState> extends React.Component<TP, TS> {
+export abstract class BaseComponent<TP, TS extends IBaseComponentState> extends React.Component<TP, TS> {
     protected fluxContext: FluxContext;
 
     constructor(props: TP, context?: any) {
@@ -66,7 +66,7 @@ export abstract class BaseComponent<TP, TS extends BaseComponentState> extends R
 
     }
 
-    protected initializeState() {
-        
+    protected initializeState(): void {
+        this.state = {} as TS;
     }
 }

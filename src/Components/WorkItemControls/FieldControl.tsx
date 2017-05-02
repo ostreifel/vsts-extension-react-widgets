@@ -1,31 +1,29 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import * as WitExtensionContracts  from "TFS/WorkItemTracking/ExtensionContracts";
-import { WorkItemFormService, IWorkItemFormService } from "TFS/WorkItemTracking/Services";
+import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 import {AutoResizableComponent} from "./AutoResizableComponent";
+import {IBaseComponentState} from "../Common/BaseComponent"; 
 
 export interface IFieldControlProps {
     fieldName: string;
 }
 
-export interface IFieldControlState {
+export interface IFieldControlState extends IBaseComponentState {
     error?: string;
     value?: any;
 }
 
-export class FieldControl<TP extends IFieldControlProps, TS extends IFieldControlState> extends AutoResizableComponent<TP, TS> {
+export abstract class FieldControl<TP extends IFieldControlProps, TS extends IFieldControlState> extends AutoResizableComponent<TP, TS> {
     public static getInputs<T>() {
         return VSS.getConfiguration().witInputs as T;
     }
 
     private _flushing: boolean;
-    
-    constructor(props: TP, context?: any) {
-        super(props, context);
 
-        VSS.register(VSS.getContribution().id, {
+    protected initialize() {
+         VSS.register(VSS.getContribution().id, {
             onLoaded: (args: WitExtensionContracts.IWorkItemLoadedArgs) => {
                 this._invalidate();
             },
@@ -38,12 +36,6 @@ export class FieldControl<TP extends IFieldControlProps, TS extends IFieldContro
                 }   
             },
         } as WitExtensionContracts.IWorkItemNotificationListener);
-
-        this.initializeState(props);
-    }
-
-    protected initializeState(props: TP) {
-        this.state = {} as TS;
     }
 
     /**
