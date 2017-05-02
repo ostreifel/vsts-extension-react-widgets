@@ -1,25 +1,13 @@
 import Utils_String = require("VSS/Utils/String");
 import Utils_Array = require("VSS/Utils/Array");
-import { Store } from "VSS/Flux/Store";
 import { WorkItemTemplateReference } from "TFS/WorkItemTracking/Contracts";
 
+import { BaseStore } from "./BaseStore";
 import { ActionsHub } from "../Actions/ActionsCreator";
 
-export interface IWorkItemTemplateStore {
-    isLoaded(): boolean;
-    itemExists(id: string): boolean;
-    getItem(id: string): WorkItemTemplateReference;
-    getAll(): WorkItemTemplateReference[];
-}
-
-export class WorkItemTemplateStore extends Store implements IWorkItemTemplateStore {
-    private _items: WorkItemTemplateReference[];
-
-    constructor(actions: ActionsHub) {
-        super();
-
-        this._items = null;
-
+export class WorkItemTemplateStore extends BaseStore<WorkItemTemplateReference[], WorkItemTemplateReference, string> {
+    
+    protected registerListeners(actions: ActionsHub): void {
         actions.InitializeWorkItemTemplates.addListener((items: WorkItemTemplateReference[]) => {
             if (!items) {
                 this.emitChanged();
@@ -28,27 +16,7 @@ export class WorkItemTemplateStore extends Store implements IWorkItemTemplateSto
         });
     }
 
-    public isLoaded(): boolean {
-        return this._items ? true : false;
-    }
-
-    public itemExists(id: string): boolean {
-        return this._getById(id) ? true : false;
-    }
-
-    public getItem(id: string): WorkItemTemplateReference {
-        return this._getById(id);
-    }
-
-    public getAll(): WorkItemTemplateReference[] {
-        return this._items || [];
-    }
-
-    private _getById(id: string): WorkItemTemplateReference {
-        if (!this.isLoaded()) {
-            return null;
-        }
-
+    protected getItemByKey(id: string): WorkItemTemplateReference {  
         return Utils_Array.first(this._items, (item: WorkItemTemplateReference) => Utils_String.equals(item.id, id, true));
     }
 

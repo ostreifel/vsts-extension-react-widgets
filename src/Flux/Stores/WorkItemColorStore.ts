@@ -1,24 +1,14 @@
-import { Store } from "VSS/Flux/Store";
-import { WorkItemField } from "TFS/WorkItemTracking/Contracts";
-
+import { BaseStore } from "./BaseStore";
 import { ActionsHub } from "../Actions/ActionsCreator";
 
-export interface IWorkItemColorStore {
-    isLoaded(): boolean;
-    itemExists(witName: string, stateName?: string): boolean;
-    getWorkItemTypeColor(witName: string): string;
-    getStateColor(witName: string, state: string): string;
-    getAll(): IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;
+export interface WorkItemColorStoreKey {
+    workItemType: string;
+    stateName?: string;
 }
 
-export class WorkItemColorStore extends Store implements IWorkItemColorStore {
-    private _items: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;
+export class WorkItemColorStore extends BaseStore<IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>, string, WorkItemColorStoreKey> {
 
-    constructor(actions: ActionsHub) {
-        super();
-
-        this._items = null;
-
+    protected registerListeners(actions: ActionsHub): void {
         actions.InitializeWorkItemColors.addListener((items: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>) => {            
             if (items) {
                 this._items = items;
@@ -27,36 +17,18 @@ export class WorkItemColorStore extends Store implements IWorkItemColorStore {
         });
     }
 
-    public isLoaded(): boolean {
-        return this._items ? true : false;
-    }
-
-    public itemExists(witName: string, stateName?: string): boolean {
-        if (!this.isLoaded()) {
-            return false;
+    protected getItemByKey(key: WorkItemColorStoreKey): string {
+        const workItemType = this._items[key.workItemType];
+        if (workItemType) {
+            if (key.stateName) {
+                return workItemType.stateColors[key.stateName];
+            }
+            else {
+                return workItemType.color;
+            }
         }
-
-        let workItemType = this._items[witName];
-        return workItemType != null && (!stateName || workItemType.stateColors[stateName] != null);
-    }
-
-    public getWorkItemTypeColor(witName: string): string {
-        if (!this.isLoaded() || !this.itemExists(witName)) {
+        else {
             return null;
         }
-
-        return this._items[witName].color;
-    }
-
-     public getStateColor(witName: string, state: string): string {
-        if (!this.isLoaded() || !this.itemExists(witName, state)) {
-            return null;
-        }
-
-        return this._items[witName].stateColors[state];
-    }
-
-    public getAll(): IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}> {
-        return this._items || {};
     }
 }

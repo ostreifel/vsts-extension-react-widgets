@@ -1,54 +1,22 @@
 import Utils_String = require("VSS/Utils/String");
 import Utils_Array = require("VSS/Utils/Array");
-import { Store } from "VSS/Flux/Store";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 
+import { BaseStore } from "./BaseStore";
 import { ActionsHub } from "../Actions/ActionsCreator";
 
-export interface IWorkItemTypeStore {
-    isLoaded(): boolean;
-    itemExists(typeName: string): boolean;
-    getItem(typeName: string): WorkItemType;
-    getAll(): WorkItemType[];
-}
-
-export class WorkItemTypeStore extends Store implements IWorkItemTypeStore {
-    private _items: WorkItemType[];
-
-    constructor(actions: ActionsHub) {
-        super();
-
-        this._items = null;
-
+export class WorkItemTypeStore extends BaseStore<WorkItemType[], WorkItemType, string> {
+    
+    protected registerListeners(actions: ActionsHub): void {
         actions.InitializeWorkItemTypes.addListener((items: WorkItemType[]) => {
             if (!items) {
                 this.emitChanged();
             }
             this._onAdd(items);
         });
-    }
+    }    
 
-    public isLoaded(): boolean {
-        return this._items ? true : false;
-    }
-
-    public itemExists(typeName: string): boolean {
-        return this._getByTypeName(typeName) ? true : false;
-    }
-
-    public getItem(typeName: string): WorkItemType {
-        return this._getByTypeName(typeName);
-    }
-
-    public getAll(): WorkItemType[] {
-        return this._items || [];
-    }
-
-    private _getByTypeName(typeName: string): WorkItemType {
-        if (!this.isLoaded()) {
-            return null;
-        }
-
+    protected getItemByKey(typeName: string): WorkItemType {
         return Utils_Array.first(this._items, (item: WorkItemType) => Utils_String.equals(item.name, typeName, true));
     }
 

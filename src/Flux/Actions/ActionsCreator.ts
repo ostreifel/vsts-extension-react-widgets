@@ -1,11 +1,11 @@
 import { Action } from "VSS/Flux/Action";
 import { WorkItemField, WorkItemTemplateReference, WorkItemStateColor, WorkItemType, WorkItemTemplate } from "TFS/WorkItemTracking/Contracts";
 
-import { IWorkItemFieldStore } from "../Stores/WorkItemFieldStore";
-import { IWorkItemTypeStore } from "../Stores/WorkItemTypeStore";
-import { IWorkItemTemplateStore } from "../Stores/WorkItemTemplateStore";
-import { IWorkItemTemplateItemStore } from "../Stores/WorkItemTemplateItemStore";
-import { IWorkItemColorStore } from "../Stores/WorkItemColorStore";
+import { WorkItemFieldStore } from "../Stores/WorkItemFieldStore";
+import { WorkItemTypeStore } from "../Stores/WorkItemTypeStore";
+import { WorkItemTemplateStore } from "../Stores/WorkItemTemplateStore";
+import { WorkItemTemplateItemStore } from "../Stores/WorkItemTemplateItemStore";
+import { WorkItemColorStore } from "../Stores/WorkItemColorStore";
 
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
 
@@ -21,15 +21,15 @@ export class ActionsHub {
 export class ActionsCreator {
     constructor(
         private _actionsHub: ActionsHub, 
-        private _workItemFieldDataProvider: IWorkItemFieldStore,
-        private _workItemTemplateDataProvider: IWorkItemTemplateStore,
-        private _workItemTypeDataProvider: IWorkItemTypeStore,
-        private _workItemTemplateItemDataProvider: IWorkItemTemplateItemStore,
-        private _workItemColorsDataProvider: IWorkItemColorStore) {
+        private _workItemFieldStore: WorkItemFieldStore,
+        private _workItemTemplateStore: WorkItemTemplateStore,
+        private _workItemTypeStore: WorkItemTypeStore,
+        private _workItemTemplateItemStore: WorkItemTemplateItemStore,
+        private _workItemColorsStore: WorkItemColorStore) {
     }
 
     public async initializeWorkItemFields() {
-        if (this._workItemFieldDataProvider.isLoaded()) {
+        if (this._workItemFieldStore.isLoaded()) {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemFields.invoke(null);
         }
@@ -40,7 +40,7 @@ export class ActionsCreator {
     }
 
     public async initializeWorkItemTemplates() {
-        if (this._workItemTemplateDataProvider.isLoaded()) {
+        if (this._workItemTemplateStore.isLoaded()) {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemTemplates.invoke(null);
         }
@@ -51,7 +51,7 @@ export class ActionsCreator {
     }
 
     public async initializeWorkItemTypes() {
-        if (this._workItemTypeDataProvider.isLoaded()) {
+        if (this._workItemTypeStore.isLoaded()) {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemTypes.invoke(null);
         }
@@ -62,7 +62,7 @@ export class ActionsCreator {
     }
     
     public async initializeWorkItemColors() {
-        if (this._workItemColorsDataProvider.isLoaded()) {
+        if (this._workItemColorsStore.isLoaded()) {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemColors.invoke(null);
         }
@@ -71,7 +71,7 @@ export class ActionsCreator {
             const projectId = VSS.getWebContext().project.id;
             
             await this.initializeWorkItemTypes();
-            const workItemTypes = this._workItemTypeDataProvider.getAll();
+            const workItemTypes = this._workItemTypeStore.getAll();
             workItemTypes.forEach((wit: WorkItemType) => workItemTypeAndStateColors[wit.name] = {
                 color: wit.color,
                 stateColors: {}
@@ -87,7 +87,7 @@ export class ActionsCreator {
     }
 
     public async ensureTemplateItem(id: string): Promise<boolean> {
-        if (!this._workItemTemplateItemDataProvider.itemExists(id)) {
+        if (!this._workItemTemplateItemStore.itemExists(id)) {
             try {
                 let template = await WitClient.getClient().getTemplate(VSS.getWebContext().project.id, VSS.getWebContext().team.id, id)
                 if (template) {

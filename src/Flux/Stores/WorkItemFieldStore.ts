@@ -1,25 +1,13 @@
 import Utils_String = require("VSS/Utils/String");
 import Utils_Array = require("VSS/Utils/Array");
-import { Store } from "VSS/Flux/Store";
 import { WorkItemField } from "TFS/WorkItemTracking/Contracts";
 
+import { BaseStore } from "./BaseStore";
 import { ActionsHub } from "../Actions/ActionsCreator";
 
-export interface IWorkItemFieldStore {
-    isLoaded(): boolean;
-    itemExists(refName: string): boolean;
-    getItem(refName: string): WorkItemField;
-    getAll(): WorkItemField[];
-}
-
-export class WorkItemFieldStore extends Store implements IWorkItemFieldStore {
-    private _items: WorkItemField[];
-
-    constructor(actions: ActionsHub) {
-        super();
-
-        this._items = null;
-
+export class WorkItemFieldStore extends BaseStore<WorkItemField[], WorkItemField, string> {
+    
+    protected registerListeners(actions: ActionsHub): void {
         actions.InitializeWorkItemFields.addListener((items: WorkItemField[]) => {
             if (!items) {
                 this.emitChanged();
@@ -28,27 +16,7 @@ export class WorkItemFieldStore extends Store implements IWorkItemFieldStore {
         });
     }
 
-    public isLoaded(): boolean {
-        return this._items ? true : false;
-    }
-
-    public itemExists(id: string): boolean {
-        return this._getByRefName(id) ? true : false;
-    }
-
-    public getItem(refName: string): WorkItemField {
-        return this._getByRefName(refName);
-    }
-
-    public getAll(): WorkItemField[] {
-        return this._items || [];
-    }
-
-    private _getByRefName(refName: string): WorkItemField {
-        if (!this.isLoaded()) {
-            return null;
-        }
-
+    protected getItemByKey(refName: string): WorkItemField {
         return Utils_Array.first(this._items, (item: WorkItemField) => Utils_String.equals(item.referenceName, refName, true));
     }
 

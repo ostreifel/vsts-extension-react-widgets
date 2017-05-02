@@ -1,8 +1,8 @@
 import Utils_String = require("VSS/Utils/String");
 import Utils_Array = require("VSS/Utils/Array");
-import { Store } from "VSS/Flux/Store";
 import { WorkItemTemplate } from "TFS/WorkItemTracking/Contracts";
 
+import { BaseStore } from "./BaseStore";
 import { ActionsHub } from "../Actions/ActionsCreator";
 
 export interface IWorkItemTemplateItemStore {
@@ -10,28 +10,21 @@ export interface IWorkItemTemplateItemStore {
     getItem(id: string): WorkItemTemplate;
 }
 
-export class WorkItemTemplateItemStore extends Store implements IWorkItemTemplateItemStore {
-    private _items: WorkItemTemplate[];
+export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], WorkItemTemplate, string> {
 
     constructor(actions: ActionsHub) {
-        super();
+        super(actions);
 
-        this._items = [];
+        this._items = [];    
+    }
 
+    protected registerListeners(actions: ActionsHub): void {
         actions.WorkItemTemplateItemAdded.addListener((items: WorkItemTemplate | WorkItemTemplate[]) => {
             this._onAdd(items);
         });
     }
-
-    public itemExists(id: string): boolean {
-        return this._getById(id) ? true : false;
-    }
-
-    public getItem(id: string): WorkItemTemplate {
-        return this._getById(id);
-    }
-
-    private _getById(id: string): WorkItemTemplate {
+    
+    protected getItemByKey(id: string): WorkItemTemplate {
          return Utils_Array.first(this._items, (item: WorkItemTemplate) => Utils_String.equals(item.id, id, true));
     }
 
