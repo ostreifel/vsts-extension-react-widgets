@@ -58,7 +58,7 @@ define(["require", "exports", "VSS/Utils/String", "../BaseGrid", "../BaseGrid.Pr
             this.fluxContext.actionsCreator.initializeWorkItemColors();
         };
         WorkItemGrid.prototype.getComponentKey = function () {
-            return "work-item-grid";
+            return "work-items-grid";
         };
         WorkItemGrid.prototype.getCommandMenuItems = function () {
             var _this = this;
@@ -95,9 +95,12 @@ define(["require", "exports", "VSS/Utils/String", "../BaseGrid", "../BaseGrid.Pr
             return WorkItemHelpers.workItemFieldValueComparer(workItem1, workItem2, sortColumnKey, sortOrder);
         };
         WorkItemGrid.prototype.itemFilter = function (workItem, filterText) {
+            if ("" + workItem.id === filterText) {
+                return true;
+            }
             for (var _i = 0, _a = this.props.columns; _i < _a.length; _i++) {
                 var field = _a[_i];
-                if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] || "", filterText)) {
+                if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : "" + workItem.fields[field.referenceName], filterText)) {
                     return true;
                 }
             }
@@ -119,6 +122,7 @@ define(["require", "exports", "VSS/Utils/String", "../BaseGrid", "../BaseGrid.Pr
                 name: field.name,
                 minWidth: columnSize.minWidth,
                 maxWidth: columnSize.maxWidth,
+                data: { field: field },
                 isResizable: !this.props.columnsProps.disableColumnResize,
                 isSorted: this.state.sortColumnKey && Utils_String.equals(this.state.sortColumnKey, field.referenceName, true),
                 isSortedDescending: this.state.sortOrder && this.state.sortOrder === BaseGrid_Props_1.SortOrder.DESC
