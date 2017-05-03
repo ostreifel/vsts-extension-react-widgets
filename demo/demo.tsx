@@ -5,16 +5,13 @@ import {Pivot, PivotItem} from "OfficeFabric/Pivot";
 import {CommonComponentsDemo} from "./CommonComponentsDemo";
 import {QueryResultGridDemo} from "./QueryResultGridDemo";
 
-interface IDemoState {
-}
+export class Demo extends React.Component<{}, {}> {
 
-export class Demo extends React.Component<void, IDemoState> {
-
-    constructor(props: void, context?: any) {
+    constructor(props: {}, context?: any) {
         super(props, context);
 
         this.state = {
-        } as IDemoState;
+        };
     }
 
     public render(): JSX.Element {

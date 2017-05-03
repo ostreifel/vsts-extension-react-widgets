@@ -7,8 +7,8 @@ interface IQueryResultGridDemoState {
 
 }
 
-export class QueryResultGridDemo extends React.Component<void, IQueryResultGridDemoState> {
-    constructor(props: void, context?: any) {
+export class QueryResultGridDemo extends React.Component<{}, IQueryResultGridDemoState> {
+    constructor(props: {}, context?: any) {
         super(props, context);
 
         this.state = {

@@ -24,7 +24,7 @@ export class WorkItemGrid extends BaseGrid<WorkItem, WorkItemField, IWorkItemGri
     }
     
     protected getComponentKey(): string {
-        return "work-item-grid";
+        return "work-items-grid";
     }
 
     protected getCommandMenuItems(): IContextualMenuItem[] {
@@ -63,8 +63,12 @@ export class WorkItemGrid extends BaseGrid<WorkItem, WorkItemField, IWorkItemGri
     }
 
     protected itemFilter(workItem: WorkItem, filterText: string): boolean {
+        if(`${workItem.id}` === filterText) {
+            return true;
+        }
+
         for (const field of this.props.columns) {
-            if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] || "", filterText)) {
+            if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : `${workItem.fields[field.referenceName]}`, filterText)) {
                 return true;
             }
         }
@@ -85,6 +89,7 @@ export class WorkItemGrid extends BaseGrid<WorkItem, WorkItemField, IWorkItemGri
             name: field.name,
             minWidth: columnSize.minWidth,
             maxWidth: columnSize.maxWidth,
+            data: {field: field},
             isResizable: !this.props.columnsProps.disableColumnResize,
             isSorted: this.state.sortColumnKey && Utils_String.equals(this.state.sortColumnKey, field.referenceName, true),
             isSortedDescending: this.state.sortOrder && this.state.sortOrder === SortOrder.DESC
