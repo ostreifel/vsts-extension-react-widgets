@@ -25,8 +25,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -56,8 +56,14 @@ define(["require", "exports", "TFS/WorkItemTracking/Services", "./AutoResizableC
     Object.defineProperty(exports, "__esModule", { value: true });
     var FieldControl = (function (_super) {
         __extends(FieldControl, _super);
-        function FieldControl(props, context) {
-            var _this = _super.call(this, props, context) || this;
+        function FieldControl() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        FieldControl.getInputs = function () {
+            return VSS.getConfiguration().witInputs;
+        };
+        FieldControl.prototype.initialize = function () {
+            var _this = this;
             VSS.register(VSS.getContribution().id, {
                 onLoaded: function (args) {
                     _this._invalidate();
@@ -71,14 +77,6 @@ define(["require", "exports", "TFS/WorkItemTracking/Services", "./AutoResizableC
                     }
                 },
             });
-            _this.initializeState(props);
-            return _this;
-        }
-        FieldControl.getInputs = function () {
-            return VSS.getConfiguration().witInputs;
-        };
-        FieldControl.prototype.initializeState = function (props) {
-            this.state = {};
         };
         FieldControl.prototype.onValueChanged = function (newValue) {
             return __awaiter(this, void 0, void 0, function () {
@@ -88,23 +86,23 @@ define(["require", "exports", "TFS/WorkItemTracking/Services", "./AutoResizableC
                         case 0:
                             this._setValue(newValue);
                             this._flushing = true;
-                            return [4 /*yield*/, Services_1.WorkItemFormService.getService()];
+                            return [4, Services_1.WorkItemFormService.getService()];
                         case 1:
                             workItemFormService = _a.sent();
                             _a.label = 2;
                         case 2:
                             _a.trys.push([2, 4, , 5]);
-                            return [4 /*yield*/, workItemFormService.setFieldValue(this.props.fieldName, newValue)];
+                            return [4, workItemFormService.setFieldValue(this.props.fieldName, newValue)];
                         case 3:
                             _a.sent();
                             this._flushing = false;
-                            return [3 /*break*/, 5];
+                            return [3, 5];
                         case 4:
                             e_1 = _a.sent();
                             this._flushing = false;
                             this._onError("Error in storing the field value: " + e_1.message);
-                            return [3 /*break*/, 5];
-                        case 5: return [2 /*return*/];
+                            return [3, 5];
+                        case 5: return [2];
                     }
                 });
             });
@@ -118,15 +116,15 @@ define(["require", "exports", "TFS/WorkItemTracking/Services", "./AutoResizableC
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            if (!!this._flushing) return [3 /*break*/, 2];
-                            return [4 /*yield*/, this._getCurrentFieldValue()];
+                            if (!!this._flushing) return [3, 2];
+                            return [4, this._getCurrentFieldValue()];
                         case 1:
                             value = _a.sent();
                             this._setValue(value);
                             _a.label = 2;
                         case 2:
                             this.resize();
-                            return [2 /*return*/];
+                            return [2];
                     }
                 });
             });
@@ -136,19 +134,19 @@ define(["require", "exports", "TFS/WorkItemTracking/Services", "./AutoResizableC
                 var workItemFormService, e_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, Services_1.WorkItemFormService.getService()];
+                        case 0: return [4, Services_1.WorkItemFormService.getService()];
                         case 1:
                             workItemFormService = _a.sent();
                             _a.label = 2;
                         case 2:
                             _a.trys.push([2, 4, , 5]);
-                            return [4 /*yield*/, workItemFormService.getFieldValue(this.props.fieldName)];
-                        case 3: return [2 /*return*/, _a.sent()];
+                            return [4, workItemFormService.getFieldValue(this.props.fieldName)];
+                        case 3: return [2, _a.sent()];
                         case 4:
                             e_2 = _a.sent();
                             this._onError("Error in loading the field value: " + e_2.message);
-                            return [2 /*return*/, null];
-                        case 5: return [2 /*return*/];
+                            return [2, null];
+                        case 5: return [2];
                     }
                 });
             });

@@ -8,38 +8,24 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "VSS/Flux/Store"], function (require, exports, Utils_String, Utils_Array, Store_1) {
+define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "./BaseStore"], function (require, exports, Utils_String, Utils_Array, BaseStore_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemTypeStore = (function (_super) {
         __extends(WorkItemTypeStore, _super);
-        function WorkItemTypeStore(actions) {
-            var _this = _super.call(this) || this;
-            _this._items = null;
+        function WorkItemTypeStore() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        WorkItemTypeStore.prototype.registerListeners = function (actions) {
+            var _this = this;
             actions.InitializeWorkItemTypes.addListener(function (items) {
                 if (!items) {
                     _this.emitChanged();
                 }
                 _this._onAdd(items);
             });
-            return _this;
-        }
-        WorkItemTypeStore.prototype.isLoaded = function () {
-            return this._items ? true : false;
         };
-        WorkItemTypeStore.prototype.itemExists = function (typeName) {
-            return this._getByTypeName(typeName) ? true : false;
-        };
-        WorkItemTypeStore.prototype.getItem = function (typeName) {
-            return this._getByTypeName(typeName);
-        };
-        WorkItemTypeStore.prototype.getAll = function () {
-            return this._items || [];
-        };
-        WorkItemTypeStore.prototype._getByTypeName = function (typeName) {
-            if (!this.isLoaded()) {
-                return null;
-            }
+        WorkItemTypeStore.prototype.getItemByKey = function (typeName) {
             return Utils_Array.first(this._items, function (item) { return Utils_String.equals(item.name, typeName, true); });
         };
         WorkItemTypeStore.prototype._onAdd = function (items) {
@@ -70,6 +56,6 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "VSS/Flux/S
             }
         };
         return WorkItemTypeStore;
-    }(Store_1.Store));
+    }(BaseStore_1.BaseStore));
     exports.WorkItemTypeStore = WorkItemTypeStore;
 });

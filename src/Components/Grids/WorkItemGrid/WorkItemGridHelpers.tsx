@@ -9,9 +9,9 @@ import { TooltipHost, TooltipDelay, DirectionalHint, TooltipOverflowMode } from 
 import { IColumn } from "OfficeFabric/DetailsList";
 import { Label } from "OfficeFabric/Label";
 
-import { SortOrder } from "./WorkItemGrid.Props";
-import { IdentityView } from "../WorkItemControls/IdentityView";
-import { TagsView } from "../WorkItemControls/TagsView";
+import { SortOrder } from "../BaseGrid.Props";
+import { IdentityView } from "../../WorkItemControls/IdentityView";
+import { TagsView } from "../../WorkItemControls/TagsView";
 
 export interface workItemFieldCellRendererOptions {
     workItemTypeAndStateColors?: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;

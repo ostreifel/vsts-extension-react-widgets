@@ -1,10 +1,10 @@
 import { Action } from "VSS/Flux/Action";
 import { WorkItemField, WorkItemTemplateReference, WorkItemType, WorkItemTemplate } from "TFS/WorkItemTracking/Contracts";
-import { IWorkItemFieldStore } from "../Stores/WorkItemFieldStore";
-import { IWorkItemTypeStore } from "../Stores/WorkItemTypeStore";
-import { IWorkItemTemplateStore } from "../Stores/WorkItemTemplateStore";
-import { IWorkItemTemplateItemStore } from "../Stores/WorkItemTemplateItemStore";
-import { IWorkItemColorStore } from "../Stores/WorkItemColorStore";
+import { WorkItemFieldStore } from "../Stores/WorkItemFieldStore";
+import { WorkItemTypeStore } from "../Stores/WorkItemTypeStore";
+import { WorkItemTemplateStore } from "../Stores/WorkItemTemplateStore";
+import { WorkItemTemplateItemStore } from "../Stores/WorkItemTemplateItemStore";
+import { WorkItemColorStore } from "../Stores/WorkItemColorStore";
 export declare class ActionsHub {
     InitializeWorkItemFields: Action<WorkItemField[]>;
     InitializeWorkItemTemplates: Action<WorkItemTemplateReference[]>;
@@ -17,12 +17,12 @@ export declare class ActionsHub {
 }
 export declare class ActionsCreator {
     private _actionsHub;
-    private _workItemFieldDataProvider;
-    private _workItemTemplateDataProvider;
-    private _workItemTypeDataProvider;
-    private _workItemTemplateItemDataProvider;
-    private _workItemColorsDataProvider;
-    constructor(_actionsHub: ActionsHub, _workItemFieldDataProvider: IWorkItemFieldStore, _workItemTemplateDataProvider: IWorkItemTemplateStore, _workItemTypeDataProvider: IWorkItemTypeStore, _workItemTemplateItemDataProvider: IWorkItemTemplateItemStore, _workItemColorsDataProvider: IWorkItemColorStore);
+    private _workItemFieldStore;
+    private _workItemTemplateStore;
+    private _workItemTypeStore;
+    private _workItemTemplateItemStore;
+    private _workItemColorsStore;
+    constructor(_actionsHub: ActionsHub, _workItemFieldStore: WorkItemFieldStore, _workItemTemplateStore: WorkItemTemplateStore, _workItemTypeStore: WorkItemTypeStore, _workItemTemplateItemStore: WorkItemTemplateItemStore, _workItemColorsStore: WorkItemColorStore);
     initializeWorkItemFields(): Promise<void>;
     initializeWorkItemTemplates(): Promise<void>;
     initializeWorkItemTypes(): Promise<void>;

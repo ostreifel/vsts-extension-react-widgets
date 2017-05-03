@@ -8,38 +8,24 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "VSS/Flux/Store"], function (require, exports, Utils_String, Utils_Array, Store_1) {
+define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "./BaseStore"], function (require, exports, Utils_String, Utils_Array, BaseStore_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemFieldStore = (function (_super) {
         __extends(WorkItemFieldStore, _super);
-        function WorkItemFieldStore(actions) {
-            var _this = _super.call(this) || this;
-            _this._items = null;
+        function WorkItemFieldStore() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        WorkItemFieldStore.prototype.registerListeners = function (actions) {
+            var _this = this;
             actions.InitializeWorkItemFields.addListener(function (items) {
                 if (!items) {
                     _this.emitChanged();
                 }
                 _this._onAdd(items);
             });
-            return _this;
-        }
-        WorkItemFieldStore.prototype.isLoaded = function () {
-            return this._items ? true : false;
         };
-        WorkItemFieldStore.prototype.itemExists = function (id) {
-            return this._getByRefName(id) ? true : false;
-        };
-        WorkItemFieldStore.prototype.getItem = function (refName) {
-            return this._getByRefName(refName);
-        };
-        WorkItemFieldStore.prototype.getAll = function () {
-            return this._items || [];
-        };
-        WorkItemFieldStore.prototype._getByRefName = function (refName) {
-            if (!this.isLoaded()) {
-                return null;
-            }
+        WorkItemFieldStore.prototype.getItemByKey = function (refName) {
             return Utils_Array.first(this._items, function (item) { return Utils_String.equals(item.referenceName, refName, true); });
         };
         WorkItemFieldStore.prototype._onAdd = function (items) {
@@ -70,6 +56,6 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "VSS/Flux/S
             }
         };
         return WorkItemFieldStore;
-    }(Store_1.Store));
+    }(BaseStore_1.BaseStore));
     exports.WorkItemFieldStore = WorkItemFieldStore;
 });

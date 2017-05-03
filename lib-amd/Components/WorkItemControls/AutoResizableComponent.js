@@ -8,49 +8,29 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "react", "VSS/Utils/Core"], function (require, exports, React, Utils_Core) {
+define(["require", "exports", "VSS/Utils/Core", "../Common/BaseComponent"], function (require, exports, Utils_Core, BaseComponent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var AutoResizableComponent = (function (_super) {
         __extends(AutoResizableComponent, _super);
         function AutoResizableComponent(props, context) {
             var _this = _super.call(this, props, context) || this;
-            _this._minWindowWidthDelta = 10;
-            _this._windowResizeThrottleDelegate = Utils_Core.throttledDelegate(_this, 50, function () {
-                _this._windowWidth = window.innerWidth;
-                _this.resize();
-            });
-            _this._windowWidth = window.innerWidth;
-            $(window).resize(function () {
-                if (Math.abs(_this._windowWidth - window.innerWidth) > _this._minWindowWidthDelta) {
-                    _this._windowResizeThrottleDelegate.call(_this);
-                }
-            });
+            _this._bodyElement = document.getElementsByTagName("body").item(0);
+            _this._windowResizeThrottleDelegate = Utils_Core.throttledDelegate(_this, 50, _this.resize);
+            $(window).resize(_this._windowResizeThrottleDelegate);
             return _this;
         }
-        AutoResizableComponent.prototype.render = function () {
-            return null;
-        };
         AutoResizableComponent.prototype.componentDidMount = function () {
+            _super.prototype.componentDidMount.call(this);
             this.resize();
         };
         AutoResizableComponent.prototype.componentDidUpdate = function () {
             this.resize();
         };
-        AutoResizableComponent.prototype.resize = function (delay) {
-            var f = function () {
-                var bodyElement = document.getElementsByTagName("body").item(0);
-                VSS.resize(null, bodyElement.offsetHeight);
-            };
-            var throttle = Utils_Core.throttledDelegate(this, delay, f);
-            if (delay) {
-                throttle();
-            }
-            else {
-                f();
-            }
+        AutoResizableComponent.prototype.resize = function () {
+            VSS.resize(null, this._bodyElement.offsetHeight);
         };
         return AutoResizableComponent;
-    }(React.Component));
+    }(BaseComponent_1.BaseComponent));
     exports.AutoResizableComponent = AutoResizableComponent;
 });

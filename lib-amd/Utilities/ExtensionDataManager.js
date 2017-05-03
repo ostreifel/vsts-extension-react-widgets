@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -44,21 +44,21 @@ define(["require", "exports"], function (require, exports) {
                 var dataService, data, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
                         case 1:
                             dataService = _a.sent();
                             _a.label = 2;
                         case 2:
                             _a.trys.push([2, 4, , 5]);
-                            return [4 /*yield*/, dataService.getDocuments(key, isPrivate ? { scopeType: "User" } : undefined)];
+                            return [4, dataService.getDocuments(key, isPrivate ? { scopeType: "User" } : undefined)];
                         case 3:
                             data = _a.sent();
-                            return [3 /*break*/, 5];
+                            return [3, 5];
                         case 4:
                             e_1 = _a.sent();
                             data = [];
-                            return [3 /*break*/, 5];
-                        case 5: return [2 /*return*/, data];
+                            return [3, 5];
+                        case 5: return [2, data];
                     }
                 });
             });
@@ -68,21 +68,21 @@ define(["require", "exports"], function (require, exports) {
                 var dataService, data, e_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
                         case 1:
                             dataService = _a.sent();
                             _a.label = 2;
                         case 2:
                             _a.trys.push([2, 4, , 5]);
-                            return [4 /*yield*/, dataService.getDocument(key, id, isPrivate ? { scopeType: "User" } : undefined)];
+                            return [4, dataService.getDocument(key, id, isPrivate ? { scopeType: "User" } : undefined)];
                         case 3:
                             data = _a.sent();
-                            return [3 /*break*/, 5];
+                            return [3, 5];
                         case 4:
                             e_2 = _a.sent();
                             data = defaultValue || null;
-                            return [3 /*break*/, 5];
-                        case 5: return [2 /*return*/, data];
+                            return [3, 5];
+                        case 5: return [2, data];
                     }
                 });
             });
@@ -92,11 +92,11 @@ define(["require", "exports"], function (require, exports) {
                 var dataService;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
                         case 1:
                             dataService = _a.sent();
-                            return [4 /*yield*/, dataService.setDocument(key, data, isPrivate ? { scopeType: "User" } : undefined)];
-                        case 2: return [2 /*return*/, _a.sent()];
+                            return [4, dataService.setDocument(key, data, isPrivate ? { scopeType: "User" } : undefined)];
+                        case 2: return [2, _a.sent()];
                     }
                 });
             });
@@ -106,11 +106,11 @@ define(["require", "exports"], function (require, exports) {
                 var dataService;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
                         case 1:
                             dataService = _a.sent();
-                            return [4 /*yield*/, dataService.deleteDocument(key, id, isPrivate ? { scopeType: "User" } : undefined)];
-                        case 2: return [2 /*return*/, _a.sent()];
+                            return [4, dataService.deleteDocument(key, id, isPrivate ? { scopeType: "User" } : undefined)];
+                        case 2: return [2, _a.sent()];
                     }
                 });
             });
@@ -120,20 +120,20 @@ define(["require", "exports"], function (require, exports) {
                 var dataService, data, e_3;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
                         case 1:
                             dataService = _a.sent();
                             _a.label = 2;
                         case 2:
                             _a.trys.push([2, 4, , 5]);
-                            return [4 /*yield*/, dataService.getValue(key, isPrivate ? { scopeType: "User" } : undefined)];
+                            return [4, dataService.getValue(key, isPrivate ? { scopeType: "User" } : undefined)];
                         case 3:
                             data = _a.sent();
-                            return [2 /*return*/, data || defaultValue || null];
+                            return [2, data || defaultValue || null];
                         case 4:
                             e_3 = _a.sent();
-                            return [2 /*return*/, defaultValue || null];
-                        case 5: return [2 /*return*/];
+                            return [2, defaultValue || null];
+                        case 5: return [2];
                     }
                 });
             });
@@ -143,11 +143,11 @@ define(["require", "exports"], function (require, exports) {
                 var dataService;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
                         case 1:
                             dataService = _a.sent();
-                            return [4 /*yield*/, dataService.setValue(key, data, isPrivate ? { scopeType: "User" } : undefined)];
-                        case 2: return [2 /*return*/, _a.sent()];
+                            return [4, dataService.setValue(key, data, isPrivate ? { scopeType: "User" } : undefined)];
+                        case 2: return [2, _a.sent()];
                     }
                 });
             });

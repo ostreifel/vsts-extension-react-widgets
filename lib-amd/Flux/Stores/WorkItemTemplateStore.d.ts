@@ -1,20 +1,9 @@
-import { Store } from "VSS/Flux/Store";
 import { WorkItemTemplateReference } from "TFS/WorkItemTracking/Contracts";
+import { BaseStore } from "./BaseStore";
 import { ActionsHub } from "../Actions/ActionsCreator";
-export interface IWorkItemTemplateStore {
-    isLoaded(): boolean;
-    itemExists(id: string): boolean;
-    getItem(id: string): WorkItemTemplateReference;
-    getAll(): WorkItemTemplateReference[];
-}
-export declare class WorkItemTemplateStore extends Store implements IWorkItemTemplateStore {
-    private _items;
-    constructor(actions: ActionsHub);
-    isLoaded(): boolean;
-    itemExists(id: string): boolean;
-    getItem(id: string): WorkItemTemplateReference;
-    getAll(): WorkItemTemplateReference[];
-    private _getById(id);
+export declare class WorkItemTemplateStore extends BaseStore<WorkItemTemplateReference[], WorkItemTemplateReference, string> {
+    protected registerListeners(actions: ActionsHub): void;
+    protected getItemByKey(id: string): WorkItemTemplateReference;
     private _onAdd(items);
     private _addItem(item);
 }

@@ -8,26 +8,23 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "VSS/Flux/Store"], function (require, exports, Utils_String, Utils_Array, Store_1) {
+define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "./BaseStore"], function (require, exports, Utils_String, Utils_Array, BaseStore_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemTemplateItemStore = (function (_super) {
         __extends(WorkItemTemplateItemStore, _super);
         function WorkItemTemplateItemStore(actions) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, actions) || this;
             _this._items = [];
+            return _this;
+        }
+        WorkItemTemplateItemStore.prototype.registerListeners = function (actions) {
+            var _this = this;
             actions.WorkItemTemplateItemAdded.addListener(function (items) {
                 _this._onAdd(items);
             });
-            return _this;
-        }
-        WorkItemTemplateItemStore.prototype.itemExists = function (id) {
-            return this._getById(id) ? true : false;
         };
-        WorkItemTemplateItemStore.prototype.getItem = function (id) {
-            return this._getById(id);
-        };
-        WorkItemTemplateItemStore.prototype._getById = function (id) {
+        WorkItemTemplateItemStore.prototype.getItemByKey = function (id) {
             return Utils_Array.first(this._items, function (item) { return Utils_String.equals(item.id, id, true); });
         };
         WorkItemTemplateItemStore.prototype._onAdd = function (items) {
@@ -58,6 +55,6 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "VSS/Flux/S
             }
         };
         return WorkItemTemplateItemStore;
-    }(Store_1.Store));
+    }(BaseStore_1.BaseStore));
     exports.WorkItemTemplateItemStore = WorkItemTemplateItemStore;
 });

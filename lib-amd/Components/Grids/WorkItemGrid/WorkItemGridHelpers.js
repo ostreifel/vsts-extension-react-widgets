@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -33,17 +33,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "VSS/Utils/Date", "OfficeFabric/Tooltip", "OfficeFabric/Label", "./WorkItemGrid.Props", "../WorkItemControls/IdentityView", "../WorkItemControls/TagsView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Utils_Date, Tooltip_1, Label_1, WorkItemGrid_Props_1, IdentityView_1, TagsView_1) {
+define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "VSS/Utils/Date", "OfficeFabric/Tooltip", "OfficeFabric/Label", "../BaseGrid.Props", "../../WorkItemControls/IdentityView", "../../WorkItemControls/TagsView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Utils_Date, Tooltip_1, Label_1, BaseGrid_Props_1, IdentityView_1, TagsView_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function workItemFieldValueComparer(w1, w2, fieldRefName, sortOrder) {
         if (Utils_String.equals(fieldRefName, "System.Id", true)) {
-            return sortOrder === WorkItemGrid_Props_1.SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
+            return sortOrder === BaseGrid_Props_1.SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
         }
         else {
             var v1 = w1.fields[fieldRefName];
             var v2 = w2.fields[fieldRefName];
-            return sortOrder === WorkItemGrid_Props_1.SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
+            return sortOrder === BaseGrid_Props_1.SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
         }
     }
     exports.workItemFieldValueComparer = workItemFieldValueComparer;
@@ -151,11 +151,11 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                 switch (_a.label) {
                     case 0:
                         newTab = e ? e.ctrlKey : false;
-                        return [4 /*yield*/, Services_1.WorkItemFormNavigationService.getService()];
+                        return [4, Services_1.WorkItemFormNavigationService.getService()];
                     case 1:
                         workItemNavSvc = _a.sent();
                         workItemNavSvc.openWorkItem(item.id, newTab);
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

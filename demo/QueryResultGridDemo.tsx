@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import {QueryResultGrid} from "../src/Components/WorkItemGrid/QueryResultGrid";
+import {QueryResultGrid} from "../src/Components/Grids/WorkItemGrid/QueryResultGrid";
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
 
 interface IQueryResultGridDemoState {
@@ -17,16 +17,9 @@ export class QueryResultGridDemo extends React.Component<void, IQueryResultGridD
 
     public render(): JSX.Element {
         return <QueryResultGrid 
-                project={VSS.getWebContext().project.id}
-                wiql="select [System.Id], [System.WorkItemType], [Microsoft.VSTS.Common.Priority], [c1.boolean], [System.CreatedDate], [System.Title], [System.AssignedTo], [System.State], [System.Tags] from Workitems where [System.TeamProject] = @project and [System.WorkItemType] <> '' and [System.State] <> ''" 
-                selectionMode={SelectionMode.multiple}
-                columnsProps={{
-                    extraColumns: [{
-                        key:"demo",
-                        name:"demo",
-                        renderer: () => <div>Hello</div>
-                    }]
-                }}
+                    project={VSS.getWebContext().project.id}
+                    wiql="select [System.Id], [System.WorkItemType], [Microsoft.VSTS.Common.Priority], [c1.boolean], [System.CreatedDate], [System.Title], [System.AssignedTo], [System.State], [System.Tags] from Workitems where [System.TeamProject] = @project and [System.WorkItemType] <> '' and [System.State] <> ''" 
+                    selectionMode={SelectionMode.multiple}
                 />;
     }
 }

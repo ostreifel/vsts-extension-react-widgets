@@ -8,48 +8,38 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "VSS/Flux/Store"], function (require, exports, Store_1) {
+define(["require", "exports", "./BaseStore"], function (require, exports, BaseStore_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemColorStore = (function (_super) {
         __extends(WorkItemColorStore, _super);
-        function WorkItemColorStore(actions) {
-            var _this = _super.call(this) || this;
-            _this._items = null;
+        function WorkItemColorStore() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        WorkItemColorStore.prototype.registerListeners = function (actions) {
+            var _this = this;
             actions.InitializeWorkItemColors.addListener(function (items) {
                 if (items) {
                     _this._items = items;
                 }
                 _this.emitChanged();
             });
-            return _this;
-        }
-        WorkItemColorStore.prototype.isLoaded = function () {
-            return this._items ? true : false;
         };
-        WorkItemColorStore.prototype.itemExists = function (witName, stateName) {
-            if (!this.isLoaded()) {
-                return false;
+        WorkItemColorStore.prototype.getItemByKey = function (key) {
+            var workItemType = this._items[key.workItemType];
+            if (workItemType) {
+                if (key.stateName) {
+                    return workItemType.stateColors[key.stateName];
+                }
+                else {
+                    return workItemType.color;
+                }
             }
-            var workItemType = this._items[witName];
-            return workItemType != null && (!stateName || workItemType.stateColors[stateName] != null);
-        };
-        WorkItemColorStore.prototype.getWorkItemTypeColor = function (witName) {
-            if (!this.isLoaded() || !this.itemExists(witName)) {
+            else {
                 return null;
             }
-            return this._items[witName].color;
-        };
-        WorkItemColorStore.prototype.getStateColor = function (witName, state) {
-            if (!this.isLoaded() || !this.itemExists(witName, state)) {
-                return null;
-            }
-            return this._items[witName].stateColors[state];
-        };
-        WorkItemColorStore.prototype.getAll = function () {
-            return this._items || {};
         };
         return WorkItemColorStore;
-    }(Store_1.Store));
+    }(BaseStore_1.BaseStore));
     exports.WorkItemColorStore = WorkItemColorStore;
 });

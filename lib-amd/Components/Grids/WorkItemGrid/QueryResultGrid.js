@@ -16,12 +16,6 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -31,8 +25,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -57,27 +51,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "OfficeFabric/Utilities", "../Common/Loading", "./WorkItemGrid", "../../Flux/FluxContext"], function (require, exports, React, WitClient, Utils_String, Utilities_1, Loading_1, WorkItemGrid_1, FluxContext_1) {
+define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "../../Common/Loading", "../../Common/BaseComponent", "./WorkItemGrid"], function (require, exports, React, WitClient, Utils_String, Loading_1, BaseComponent_1, WorkItemGrid_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var QueryResultGrid = (function (_super) {
         __extends(QueryResultGrid, _super);
-        function QueryResultGrid(props, context) {
-            var _this = _super.call(this, props, context) || this;
-            _this._context = FluxContext_1.FluxContext.get();
-            _this._initializeState();
-            return _this;
+        function QueryResultGrid() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
-        QueryResultGrid.prototype._initializeState = function () {
-            this.state = {};
+        QueryResultGrid.prototype.getStoresToLoad = function () {
+            return [this.fluxContext.stores.workItemFieldStore];
         };
-        QueryResultGrid.prototype.componentDidMount = function () {
-            this._context.stores.workItemFieldStore.addChangedListener(this._onStoreChanged);
-            this._context.actionsCreator.initializeWorkItemFields();
+        QueryResultGrid.prototype.initialize = function () {
+            this.fluxContext.actionsCreator.initializeWorkItemFields();
             this._runQuery(__assign({}, this.props));
         };
-        QueryResultGrid.prototype.componentWillUnmount = function () {
-            this._context.stores.workItemFieldStore.removeChangedListener(this._onStoreChanged);
+        QueryResultGrid.prototype.onStoreChanged = function () {
+            if (!this.state.fieldsMap && this.fluxContext.stores.workItemFieldStore.isLoaded()) {
+                var fields = this.fluxContext.stores.workItemFieldStore.getAll();
+                var fieldsMap_1 = {};
+                fields.forEach(function (f) { return fieldsMap_1[f.referenceName.toLowerCase()] = f; });
+                this.updateState({ fieldsMap: fieldsMap_1 });
+            }
         };
         QueryResultGrid.prototype.componentWillReceiveProps = function (nextProps, nextContext) {
             if (!Utils_String.equals(this.props.wiql, nextProps.wiql, true)) {
@@ -90,7 +85,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                 return React.createElement(Loading_1.Loading, null);
             }
             else {
-                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { items: this.state.items, refreshWorkItems: function () { return _this._runQuery(__assign({}, _this.props), false); }, fieldColumns: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), columnsProps: this.props.columnsProps, commandBarProps: this.props.commandBarProps, contextMenuProps: this.props.contextMenuProps, onItemInvoked: this.props.onItemInvoked, selectionMode: this.props.selectionMode }));
+                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { items: this.state.items, refreshItems: function () { return _this._runQuery(__assign({}, _this.props), false); }, columns: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), columnsProps: this.props.columnsProps, commandBarProps: this.props.commandBarProps, contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode }));
             }
         };
         QueryResultGrid.prototype._runQuery = function (props, updateState) {
@@ -101,45 +96,31 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                     switch (_a.label) {
                         case 0:
                             if (updateState) {
-                                this._updateState({ areResultsLoaded: false, items: null, fieldColumns: null });
+                                this.updateState({ areResultsLoaded: false, items: null, fieldColumns: null });
                             }
-                            return [4 /*yield*/, WitClient.getClient().queryByWiql({ query: props.wiql }, props.project, null, false, this.props.top)];
+                            return [4, WitClient.getClient().queryByWiql({ query: props.wiql }, props.project, null, false, this.props.top)];
                         case 1:
                             queryResult = _a.sent();
                             workItemIds = queryResult.workItems.map(function (workItem) { return workItem.id; });
                             workItems = [];
-                            if (!(workItemIds.length > 0)) return [3 /*break*/, 3];
-                            return [4 /*yield*/, WitClient.getClient().getWorkItems(workItemIds)];
+                            if (!(workItemIds.length > 0)) return [3, 3];
+                            return [4, WitClient.getClient().getWorkItems(workItemIds)];
                         case 2:
                             workItems = _a.sent();
                             _a.label = 3;
                         case 3:
                             if (updateState) {
-                                this._updateState({ areResultsLoaded: true, items: workItems, fieldColumns: queryResult.columns });
+                                this.updateState({ areResultsLoaded: true, items: workItems, fieldColumns: queryResult.columns });
                             }
-                            return [2 /*return*/, workItems];
+                            return [2, workItems];
                     }
                 });
             });
         };
-        QueryResultGrid.prototype._onStoreChanged = function () {
-            if (!this.state.fieldsMap && this._context.stores.workItemFieldStore.isLoaded()) {
-                var fields = this._context.stores.workItemFieldStore.getAll();
-                var fieldsMap_1 = {};
-                fields.forEach(function (f) { return fieldsMap_1[f.referenceName.toLowerCase()] = f; });
-                this._updateState({ fieldsMap: fieldsMap_1 });
-            }
-        };
         QueryResultGrid.prototype._isDataLoaded = function () {
             return this.state.areResultsLoaded && this.state.fieldsMap != null;
         };
-        QueryResultGrid.prototype._updateState = function (updatedStates) {
-            this.setState(__assign({}, this.state, updatedStates));
-        };
         return QueryResultGrid;
-    }(React.Component));
-    __decorate([
-        Utilities_1.autobind
-    ], QueryResultGrid.prototype, "_onStoreChanged", null);
+    }(BaseComponent_1.BaseComponent));
     exports.QueryResultGrid = QueryResultGrid;
 });

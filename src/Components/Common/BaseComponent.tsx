@@ -8,34 +8,14 @@ export interface IBaseComponentState {
     allStoresLoaded?: boolean;
 }
 
-export abstract class BaseComponent<TP, TS extends IBaseComponentState> extends React.Component<TP, TS> {
+export abstract class BaseComponent<TProps, TState extends IBaseComponentState> extends React.Component<TProps, TState> {
     protected fluxContext: FluxContext;
 
-    constructor(props: TP, context?: any) {
+    constructor(props: TProps, context?: any) {
         super(props, context);
 
         this.fluxContext = FluxContext.get();
         this.initializeState();
-    }
-
-    private _updateState(updatedStates: TS) {
-        this.setState({...this.state as any, ...updatedStates as any});  // Typescript doesnt support spread for generic types yet. Thats why state object is cast to any
-    }
-
-    @autobind
-    private _onStoreChanged() {
-        const stores = this.getStoresToLoad() || [];
-        let allStoresLoaded = true;
-        for (const store of stores) {
-            if (!store.isLoaded()) {
-                allStoresLoaded = false;
-                break;
-            }
-        }
-
-        this._updateState({allStoresLoaded: allStoresLoaded} as TS);
-
-        this.onStoreChanged();
     }
 
     public componentDidMount() {
@@ -66,7 +46,41 @@ export abstract class BaseComponent<TP, TS extends IBaseComponentState> extends 
 
     }
 
+    protected getComponentKey(): string {
+        return "";
+    }
+
     protected initializeState(): void {
-        this.state = {} as TS;
+        this.state = {} as TState;
+    }
+
+    protected getClassName(className?: string): string {
+        let key = this.getComponentKey();
+        if (className) {
+            return `${key}-${className}`;
+        }
+        else {
+            return key;
+        }        
+    }
+
+    protected updateState(updatedStates: TState) {
+        this.setState({...this.state as any, ...updatedStates as any});  // Typescript doesnt support spread for generic types yet. Thats why state object is cast to any
+    }
+
+    @autobind
+    private _onStoreChanged() {
+        const stores = this.getStoresToLoad() || [];
+        let allStoresLoaded = true;
+        for (const store of stores) {
+            if (!store.isLoaded()) {
+                allStoresLoaded = false;
+                break;
+            }
+        }
+
+        this.updateState({allStoresLoaded: allStoresLoaded} as TState);
+
+        this.onStoreChanged();
     }
 }
