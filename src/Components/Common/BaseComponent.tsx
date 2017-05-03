@@ -4,11 +4,15 @@ import { BaseStore } from "../../Flux/Stores/BaseStore";
 import { autobind } from "OfficeFabric/Utilities";
 import { FluxContext } from "../../Flux/FluxContext";
 
+export interface IBaseComponentProps {
+    className?: string;
+}
+
 export interface IBaseComponentState {
     allStoresLoaded?: boolean;
 }
 
-export abstract class BaseComponent<TProps, TState extends IBaseComponentState> extends React.Component<TProps, TState> {
+export abstract class BaseComponent<TProps extends IBaseComponentProps, TState extends IBaseComponentState> extends React.Component<TProps, TState> {
     protected fluxContext: FluxContext;
 
     constructor(props: TProps, context?: any) {
@@ -46,21 +50,21 @@ export abstract class BaseComponent<TProps, TState extends IBaseComponentState> 
 
     }
 
-    protected getComponentKey(): string {
-        return "";
+    protected getComponentClassName(): string {
+        return "base-component";
     }
 
     protected initializeState(): void {
         this.state = {} as TState;
     }
 
-    protected getClassName(className?: string): string {
-        let key = this.getComponentKey();
+    protected getChildClassName(className?: string): string {
+        let baseClassName = (this.props.className == null || this.props.className.trim() == "") ? this.getComponentClassName() : this.props.className.trim();
         if (className) {
-            return `${key}-${className}`;
+            return `${baseClassName}-${className}`;
         }
         else {
-            return key;
+            return baseClassName;
         }        
     }
 

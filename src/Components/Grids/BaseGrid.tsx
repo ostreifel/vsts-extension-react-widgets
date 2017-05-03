@@ -14,7 +14,7 @@ import { BaseComponent } from "../Common/BaseComponent";
 import { Loading } from "../Common/Loading";
 import { IBaseGridProps, IBaseGridState, SortOrder } from "./BaseGrid.Props";
 
-export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TItem, TColumn>, TState extends IBaseGridState<TItem>> extends BaseComponent<TProps, TState> {
+export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TItem, TColumn>, TState extends IBaseGridState<TItem, TColumn>> extends BaseComponent<TProps, TState> {
     static defaultProps = {        
         columns: [],
         items: [],
@@ -44,12 +44,12 @@ export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TIt
 
     public render(): JSX.Element {
         return (
-            <div className={this.getClassName()}>
+            <div className={this.getChildClassName()}>
                 {this._renderCommandBar()}
                 {this._renderGrid()}
                 {this.state.isContextMenuVisible && !this.props.contextMenuProps.disableContextMenu && (
                     <ContextualMenu
-                        className={this.getClassName("context-menu")}
+                        className={this.getChildClassName("context-menu")}
                         items={this.getContextMenuItems()}
                         target={this.state.contextMenuTarget}
                         shouldFocusOnMount={ true }
@@ -64,15 +64,16 @@ export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TIt
         this.state = {
             filteredItems: this.props.items || [],
             items: this.props.items || [],
+            columns: this.props.columns || [],
             sortColumnKey: "",
             sortOrder: SortOrder.ASC,
             filterText: ""
         } as TState;
     }
 
-    protected getComponentKey(): string {
+    protected getComponentClassName(): string {
         return "base-grid";
-    }    
+    }
 
     protected getCommandMenuItems(): IContextualMenuItem[] {
         let menuItems: IContextualMenuItem[] = [];
@@ -104,7 +105,7 @@ export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TIt
             {
                 key: "resultCount", 
                 name: this.state.loading ? "Loading ..." : `${this.state.filteredItems.length} results`, 
-                className: this.getClassName("result-count")
+                className: this.getChildClassName("result-count")
             }
         ];
 
@@ -132,7 +133,7 @@ export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TIt
                         columns={this.getColumns(this.props.columns)}
                         onRenderItemColumn={(item: TItem, index: number, column: IColumn) => this.onRenderCell(item, index, column)}
                         items={this.state.filteredItems}
-                        className={this.getClassName("grid")}
+                        className={this.getChildClassName("grid")}
                         onItemInvoked={(item: TItem, index: number, ev?: Event) => this.onItemInvoked(item, index, ev)}
                         selection={ this.selection }
                         onItemContextMenu={this._showContextMenu}
@@ -162,10 +163,10 @@ export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TIt
 
     private _renderCommandBar(): JSX.Element {
         return (
-            <div className={this.getClassName("menu-bar-container")}>
+            <div className={this.getChildClassName("menu-bar-container")}>
                 {!this.props.commandBarProps.hideSearchBox && (
                     <SearchBox 
-                        className={this.getClassName("searchbox")}
+                        className={this.getChildClassName("searchbox")}
                         value={this.state.filterText || ""}
                         onSearch={this._updateFilterText}
                         onChange={this._updateFilterText} />
@@ -173,7 +174,7 @@ export abstract class BaseGrid<TItem, TColumn, TProps extends IBaseGridProps<TIt
 
                 {!this.props.commandBarProps.hideCommandBar && (
                     <CommandBar 
-                        className={this.getClassName("menu-bar")}
+                        className={this.getChildClassName("menu-bar")}
                         items={this.getCommandMenuItems()} 
                         farItems={this.getFarCommandMenuItems()} />
                 )}

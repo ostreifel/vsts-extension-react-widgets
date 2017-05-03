@@ -1,10 +1,10 @@
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
 
-import {IBaseComponentState} from "../Common/BaseComponent"; 
+import { IBaseComponentProps, IBaseComponentState } from "../Common/BaseComponent"; 
 
-export interface IBaseGridProps<TItem, TColumn> {    
-    items: TItem[];
-    columns?: TColumn[];
+export interface IBaseGridProps<TItem, TColumn> extends IBaseComponentProps {
+    items?: TItem[];
+    columns?: TColumn[];    
     columnsProps?: IColumnsProps<TItem>;    
     commandBarProps?: ICommandBarProps;
     contextMenuProps?: IContextMenuProps<TItem>;
@@ -12,9 +12,10 @@ export interface IBaseGridProps<TItem, TColumn> {
     refreshItems?: () => Promise<TItem[]>;
 }
 
-export interface IBaseGridState<TItem> extends IBaseComponentState {
+export interface IBaseGridState<TItem, TColumn> extends IBaseComponentState {
     filteredItems?: TItem[];
     items?: TItem[];
+    columns?: TColumn[];
     loading?: boolean; 
     isContextMenuVisible?: boolean;
     contextMenuTarget?: MouseEvent;
