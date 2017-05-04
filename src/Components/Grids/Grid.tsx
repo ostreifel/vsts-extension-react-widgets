@@ -1,4 +1,4 @@
-import "../../css/WorkItemsGrid.scss";
+import "../../css/Grid.scss";
 
 import * as React from "react";
 
@@ -166,7 +166,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
                 maxWidth: column.maxWidth,
                 isResizable: column.resizable,
                 onRender: (item?: any, index?: number) => column.onRenderCell(item, index),
-                isSorted: column.sortable && Utils_String.equals(this.state.sortColumn.key, column.key, true),
+                isSorted: column.sortable && this.state.sortColumn && Utils_String.equals(this.state.sortColumn.key, column.key, true),
                 isSortedDescending: column.sortable && this.state.sortOrder === SortOrder.DESC,
                 onColumnClick: () => this._onColumnHeaderClick(column)
             }

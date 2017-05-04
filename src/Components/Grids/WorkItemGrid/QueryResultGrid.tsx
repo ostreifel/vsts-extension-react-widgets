@@ -55,7 +55,7 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
                 <WorkItemGrid 
                     items={this.state.workItems}
                     fields={this.state.fieldColumns.map(fr => this.state.fieldsMap[fr.referenceName.toLowerCase()]).filter(f => f != null)}
-                    commandBarProps={this.props.commandBarProps}
+                    commandBarProps={this._getCommandBarProps()}
                     contextMenuProps={this.props.contextMenuProps}
                     selectionMode={this.props.selectionMode}
                     extraColumns={this.props.extraColumns}

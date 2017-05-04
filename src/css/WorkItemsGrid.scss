@@ -1,79 +1,47 @@
 @import "mixins";
 
-.work-items-grid {
-    display: flex;
-    flex-direction: column;
-    height: inherit;
+.work-item-grid {
+    .identity-view {
+        font-size: 13px;
+        height: 16px;
+        line-height: 16px;
+        margin-right: 0;
 
-    .work-items-grid-menu-bar-container {
-        display: flex;
-        flex-direction: row;            
-        margin-bottom: 10px;
-        min-height: 40px;
-        max-height: 40px;
-
-        .work-items-grid-searchbox {
-            margin-bottom: 1px;
-            margin-top: 1px;
-            height: inherit;
+        .ms-Persona-details {
+            padding: 0 0 0 5px;
         }
-        
-        .work-items-grid-menu-bar {
-            flex: 1;
+
+        .ms-Persona-primaryText {
+            font-size: 13px;
         }
     }
 
-    & > .ms-Viewport {
-        display: flex;
-        flex: 1;
-    }
+    .work-item-grid-cell {
+        padding: 0;
+        margin: 0;
+        display: inline;
+        font-size: 13px;
 
-    .work-items-grid-grid {
-        overflow: auto;
-        flex: 1;
+        &.title-cell {
+            cursor: pointer;
+            border-left: 6px solid black;
+            padding-left: 5px;
 
-        .identity-view {
-            font-size: 13px;
-            height: 16px;
-            line-height: 16px;
-            margin-right: 0;
-
-            .ms-Persona-details {
-                padding: 0 0 0 5px;
-            }
-
-            .ms-Persona-primaryText {
-                font-size: 13px;
-            }
+            &:hover {
+                color: #106ebe;
+                text-decoration: underline;
+            }            
         }
 
-        .work-item-grid-cell {
-            padding: 0;
-            margin: 0;
-            display: inline;
-            font-size: 13px;
-
-            &.title-cell {
-                cursor: pointer;
-                border-left: 6px solid black;
-                padding-left: 5px;
-
-                &:hover {
-                    color: #106ebe;
-                    text-decoration: underline;
-                }            
-            }
-
-            &.state-cell {                
-                .work-item-type-state-color {
-                    height: 8px;
-                    width: 8px;
-                    border-radius: 50%;
-                    border-width: 1px;
-                    border-style: solid;
-                    margin-right: 5px;
-                    display: inline-block;
-                }
+        &.state-cell {                
+            .work-item-type-state-color {
+                height: 8px;
+                width: 8px;
+                border-radius: 50%;
+                border-width: 1px;
+                border-style: solid;
+                margin-right: 5px;
+                display: inline-block;
             }
         }
     }
