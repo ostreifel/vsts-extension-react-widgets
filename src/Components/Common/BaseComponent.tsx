@@ -54,18 +54,17 @@ export abstract class BaseComponent<TProps extends IBaseComponentProps, TState e
         return "base-component";
     }
 
-    protected initializeState(): void {
-        this.state = {} as TState;
-    }
-
-    protected getChildClassName(className?: string): string {
-        let baseClassName = (this.props.className == null || this.props.className.trim() == "") ? this.getComponentClassName() : this.props.className.trim();
-        if (className) {
-            return `${baseClassName}-${className}`;
+    protected getClassName(): string {
+        if (this.props.className != null && this.props.className.trim() !== "") {
+            return `${this.getDefaultClassName()} ${this.props.className}`;
         }
         else {
-            return baseClassName;
-        }        
+            return this.getDefaultClassName();
+        }
+    }
+
+    protected initializeState(): void {
+        this.state = {} as TState;
     }
 
     protected updateState(updatedStates: TState) {

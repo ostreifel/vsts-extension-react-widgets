@@ -55,20 +55,19 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "../../Flux/Flu
         };
         BaseComponent.prototype.onStoreChanged = function () {
         };
-        BaseComponent.prototype.getComponentKey = function () {
-            return "";
+        BaseComponent.prototype.getDefaultClassName = function () {
+            return "base-component";
+        };
+        BaseComponent.prototype.getClassName = function () {
+            if (this.props.className != null && this.props.className.trim() !== "") {
+                return this.getDefaultClassName() + " " + this.props.className;
+            }
+            else {
+                return this.getDefaultClassName();
+            }
         };
         BaseComponent.prototype.initializeState = function () {
             this.state = {};
-        };
-        BaseComponent.prototype.getClassName = function (className) {
-            var key = this.getComponentKey();
-            if (className) {
-                return key + "-" + className;
-            }
-            else {
-                return key;
-            }
         };
         BaseComponent.prototype.updateState = function (updatedStates) {
             this.setState(__assign({}, this.state, updatedStates));

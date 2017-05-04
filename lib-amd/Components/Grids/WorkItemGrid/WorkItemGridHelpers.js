@@ -33,27 +33,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "VSS/Utils/Date", "OfficeFabric/Tooltip", "OfficeFabric/Label", "../BaseGrid.Props", "../../WorkItemControls/IdentityView", "../../WorkItemControls/TagsView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Utils_Date, Tooltip_1, Label_1, BaseGrid_Props_1, IdentityView_1, TagsView_1) {
+define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "VSS/Utils/Date", "OfficeFabric/Tooltip", "OfficeFabric/Label", "../Grid.Props", "../../WorkItemControls/IdentityView", "../../WorkItemControls/TagsView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Utils_Date, Tooltip_1, Label_1, Grid_Props_1, IdentityView_1, TagsView_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function workItemFieldValueComparer(w1, w2, fieldRefName, sortOrder) {
         if (Utils_String.equals(fieldRefName, "System.Id", true)) {
-            return sortOrder === BaseGrid_Props_1.SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
+            return sortOrder === Grid_Props_1.SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
         }
         else {
             var v1 = w1.fields[fieldRefName];
             var v2 = w2.fields[fieldRefName];
-            return sortOrder === BaseGrid_Props_1.SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
+            return sortOrder === Grid_Props_1.SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
         }
     }
     exports.workItemFieldValueComparer = workItemFieldValueComparer;
-    function workItemFieldCellRenderer(item, index, column, extraData) {
-        var text = item.fields[column.fieldName] || "";
+    function workItemFieldCellRenderer(item, field, extraData) {
+        var text = item.fields[field.referenceName] || "";
         var className = "work-item-grid-cell";
         var innerElement;
-        var field = column.data["field"];
         if (field.type === Contracts_1.FieldType.DateTime) {
-            var dateStr = item.fields[column.fieldName];
+            var dateStr = item.fields[field.referenceName];
             if (!dateStr) {
                 text = "";
             }
@@ -64,12 +63,12 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
             innerElement = React.createElement(Label_1.Label, { className: className }, text);
         }
         else if (field.type === Contracts_1.FieldType.Boolean) {
-            var boolValue = item.fields[column.fieldName];
+            var boolValue = item.fields[field.referenceName];
             text = boolValue == null ? "" : (!boolValue ? "False" : "True");
             innerElement = React.createElement(Label_1.Label, { className: className }, text);
         }
         else {
-            switch (column.fieldName.toLowerCase()) {
+            switch (field.referenceName.toLowerCase()) {
                 case "system.id":
                     text = item.id.toString();
                     innerElement = React.createElement(Label_1.Label, { className: className }, text);
@@ -78,7 +77,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                     var witColor = extraData && extraData.workItemTypeAndStateColors &&
                         extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
                         extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
-                    innerElement = (React.createElement(Label_1.Label, { className: className + " title-cell", onClick: function (e) { return openWorkItemDialog(e, item); }, style: { borderColor: witColor ? "#" + witColor : "#000" } }, item.fields[column.fieldName]));
+                    innerElement = (React.createElement(Label_1.Label, { className: className + " title-cell", onClick: function (e) { return openWorkItemDialog(e, item); }, style: { borderColor: witColor ? "#" + witColor : "#000" } }, item.fields[field.referenceName]));
                     break;
                 case "system.state":
                     innerElement = (React.createElement(Label_1.Label, { className: className + " state-cell" },
@@ -91,17 +90,17 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                                     backgroundColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
                                     borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
                                 } }),
-                        React.createElement("span", { className: "state-name" }, item.fields[column.fieldName])));
+                        React.createElement("span", { className: "state-name" }, item.fields[field.referenceName])));
                     break;
                 case "system.assignedto":
-                    innerElement = React.createElement(IdentityView_1.IdentityView, { identityDistinctName: item.fields[column.fieldName] });
+                    innerElement = React.createElement(IdentityView_1.IdentityView, { identityDistinctName: item.fields[field.referenceName] });
                     break;
                 case "system.tags":
-                    var tagsArr = (item.fields[column.fieldName] || "").split(";");
+                    var tagsArr = (item.fields[field.referenceName] || "").split(";");
                     innerElement = React.createElement(TagsView_1.TagsView, { tags: tagsArr });
                     break;
                 default:
-                    innerElement = React.createElement(Label_1.Label, { className: className }, item.fields[column.fieldName]);
+                    innerElement = React.createElement(Label_1.Label, { className: className }, item.fields[field.referenceName]);
                     break;
             }
         }

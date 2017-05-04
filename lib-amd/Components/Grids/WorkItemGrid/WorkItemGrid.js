@@ -8,6 +8,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -43,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "VSS/Utils/String", "../BaseGrid", "../BaseGrid.Props", "./WorkItemGridHelpers", "../../../css/WorkItemsGrid.scss"], function (require, exports, Utils_String, BaseGrid_1, BaseGrid_Props_1, WorkItemHelpers) {
+define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/String", "./WorkItemGrid.Props", "../Grid", "../Grid.Props", "./WorkItemGridHelpers", "../../Common/BaseComponent", "../../../css/WorkItemsGrid.scss"], function (require, exports, React, Utilities_1, Utils_String, WorkItemGrid_Props_1, Grid_1, Grid_Props_1, WorkItemHelpers, BaseComponent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemGrid = (function (_super) {
@@ -57,56 +63,99 @@ define(["require", "exports", "VSS/Utils/String", "../BaseGrid", "../BaseGrid.Pr
         WorkItemGrid.prototype.initialize = function () {
             this.fluxContext.actionsCreator.initializeWorkItemColors();
         };
-        WorkItemGrid.prototype.getComponentKey = function () {
-            return "work-items-grid";
+        WorkItemGrid.prototype.initializeState = function () {
+            this.state = {
+                filteredItems: this.props.items.slice()
+            };
         };
-        WorkItemGrid.prototype.getCommandMenuItems = function () {
+        WorkItemGrid.prototype.getDefaultClassName = function () {
+            return "work-item-grid";
+        };
+        WorkItemGrid.prototype.render = function () {
             var _this = this;
-            var menuItems = _super.prototype.getCommandMenuItems.call(this);
-            menuItems.push({
-                key: "OpenQuery", name: "Open as query", title: "Open all workitems as a query", iconProps: { iconName: "OpenInNewWindow" },
-                disabled: !this.state.filteredItems || this.state.filteredItems.length === 0,
-                onClick: function (event, menuItem) { return __awaiter(_this, void 0, void 0, function () {
-                    var url;
-                    return __generator(this, function (_a) {
-                        url = VSS.getWebContext().host.uri + "/" + VSS.getWebContext().project.id + "/_workitems?_a=query&wiql=" + encodeURIComponent(this._getWiql());
-                        window.open(url, "_blank");
-                        return [2];
-                    });
-                }); }
-            });
-            return menuItems;
+            return (React.createElement(Grid_1.Grid, { className: this.getClassName(), items: this.props.items.slice(), columns: this._mapFieldsToColumn(this.props.fields), selectionMode: this.props.selectionMode, commandBarProps: this._getCommandBarProps(), contextMenuProps: this._getContextMenuProps(), onItemInvoked: this._onItemInvoked, itemComparer: this._itemComparer, itemFilter: this._itemFilter, events: {
+                    onSearch: function (searchText, filteredItems) {
+                        _this.updateState({ filteredItems: filteredItems });
+                    },
+                    onSort: function (sortColumn, sortOrder, filteredItems) {
+                        _this.updateState({ filteredItems: filteredItems, sortColumn: sortColumn, sortOrder: sortOrder });
+                    }
+                } }));
         };
-        WorkItemGrid.prototype.getContextMenuItems = function () {
+        WorkItemGrid.prototype._mapFieldsToColumn = function (fields) {
             var _this = this;
-            var menuItems = _super.prototype.getContextMenuItems.call(this);
-            var selectedWorkItems = this.selection.getSelection();
-            menuItems.push({
-                key: "OpenQuery", name: "Open as query", title: "Open selected workitems as a query", iconProps: { iconName: "OpenInNewWindow" },
-                disabled: this.selection.getSelectedCount() == 0,
-                onClick: function (event, menuItem) {
-                    var url = VSS.getWebContext().host.uri + "/" + VSS.getWebContext().project.id + "/_workitems?_a=query&wiql=" + encodeURIComponent(_this._getWiql(selectedWorkItems));
-                    window.open(url, "_blank");
-                }
+            var columns = fields.map(function (f) {
+                var columnSize = WorkItemHelpers.getColumnSize(f);
+                return {
+                    key: f.referenceName,
+                    name: f.name,
+                    minWidth: columnSize.minWidth,
+                    maxWidth: columnSize.maxWidth,
+                    sortable: true,
+                    resizable: true,
+                    data: { field: f },
+                    onRenderCell: function (item) { return WorkItemHelpers.workItemFieldCellRenderer(item, f, { workItemTypeAndStateColors: _this.fluxContext.stores.workItemColorStore.getAll() }); }
+                };
             });
-            return menuItems;
-        };
-        WorkItemGrid.prototype.itemComparer = function (workItem1, workItem2, sortColumnKey, sortOrder) {
-            return WorkItemHelpers.workItemFieldValueComparer(workItem1, workItem2, sortColumnKey, sortOrder);
-        };
-        WorkItemGrid.prototype.itemFilter = function (workItem, filterText) {
-            if ("" + workItem.id === filterText) {
-                return true;
+            var extraColumns = this.props.extraColumns || [];
+            var leftColumns = extraColumns.filter(function (c) { return c.position === WorkItemGrid_Props_1.ColumnPosition.FarLeft; }).map(function (c) { return c.column; });
+            var rightColumns = extraColumns.filter(function (c) { return c.position !== WorkItemGrid_Props_1.ColumnPosition.FarLeft; }).map(function (c) { return c.column; });
+            if (leftColumns.length > 0) {
+                columns = leftColumns.concat(columns);
             }
-            for (var _i = 0, _a = this.props.columns; _i < _a.length; _i++) {
-                var field = _a[_i];
-                if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : "" + workItem.fields[field.referenceName], filterText)) {
-                    return true;
+            if (rightColumns.length > 0) {
+                columns = columns.concat(rightColumns);
+            }
+            return columns;
+        };
+        WorkItemGrid.prototype._getCommandBarProps = function () {
+            var _this = this;
+            var menuItems = [{
+                    key: "OpenQuery", name: "Open as query", title: "Open all workitems as a query", iconProps: { iconName: "OpenInNewWindow" },
+                    disabled: !this.state.filteredItems || this.state.filteredItems.length === 0,
+                    onClick: function (event, menuItem) { return __awaiter(_this, void 0, void 0, function () {
+                        var url;
+                        return __generator(this, function (_a) {
+                            url = VSS.getWebContext().host.uri + "/" + VSS.getWebContext().project.id + "/_workitems?_a=query&wiql=" + encodeURIComponent(this._getWiql());
+                            window.open(url, "_blank");
+                            return [2];
+                        });
+                    }); }
+                }];
+            if (this.props.commandBarProps && this.props.commandBarProps.menuItems && this.props.commandBarProps.menuItems.length > 0) {
+                menuItems = menuItems.concat(this.props.commandBarProps.menuItems);
+            }
+            return {
+                hideSearchBox: this.props.commandBarProps && this.props.commandBarProps.hideSearchBox,
+                hideCommandBar: this.props.commandBarProps && this.props.commandBarProps.hideCommandBar,
+                refreshItems: this.props.commandBarProps && this.props.commandBarProps.refreshItems,
+                menuItems: menuItems,
+                farMenuItems: this.props.commandBarProps && this.props.commandBarProps.farMenuItems
+            };
+        };
+        WorkItemGrid.prototype._getContextMenuProps = function () {
+            var _this = this;
+            return {
+                menuItems: function (selectedWorkItems) {
+                    var contextMenuItems = [{
+                            key: "OpenQuery", name: "Open as query", title: "Open selected workitems as a query", iconProps: { iconName: "OpenInNewWindow" },
+                            disabled: selectedWorkItems.length == 0,
+                            onClick: function (event, menuItem) {
+                                var url = VSS.getWebContext().host.uri + "/" + VSS.getWebContext().project.id + "/_workitems?_a=query&wiql=" + encodeURIComponent(_this._getWiql(selectedWorkItems));
+                                window.open(url, "_blank");
+                            }
+                        }];
+                    if (_this.props.contextMenuProps && _this.props.contextMenuProps.menuItems) {
+                        var extraMenuItems = _this.props.contextMenuProps.menuItems(selectedWorkItems);
+                        if (extraMenuItems && extraMenuItems.length > 0) {
+                            contextMenuItems = contextMenuItems.concat(extraMenuItems);
+                        }
+                    }
+                    return contextMenuItems;
                 }
-            }
-            return false;
+            };
         };
-        WorkItemGrid.prototype.onItemInvoked = function (workItem, index, ev) {
+        WorkItemGrid.prototype._onItemInvoked = function (workItem, index, ev) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     WorkItemHelpers.openWorkItemDialog(null, workItem);
@@ -114,31 +163,38 @@ define(["require", "exports", "VSS/Utils/String", "../BaseGrid", "../BaseGrid.Pr
                 });
             });
         };
-        WorkItemGrid.prototype.columnMapper = function (field) {
-            var columnSize = WorkItemHelpers.getColumnSize(field);
-            return {
-                fieldName: field.referenceName,
-                key: field.referenceName,
-                name: field.name,
-                minWidth: columnSize.minWidth,
-                maxWidth: columnSize.maxWidth,
-                data: { field: field },
-                isResizable: !this.props.columnsProps.disableColumnResize,
-                isSorted: this.state.sortColumnKey && Utils_String.equals(this.state.sortColumnKey, field.referenceName, true),
-                isSortedDescending: this.state.sortOrder && this.state.sortOrder === BaseGrid_Props_1.SortOrder.DESC
-            };
+        WorkItemGrid.prototype._itemComparer = function (workItem1, workItem2, sortColumn, sortOrder) {
+            return WorkItemHelpers.workItemFieldValueComparer(workItem1, workItem2, sortColumn.key, sortOrder);
         };
-        WorkItemGrid.prototype.onRenderCell = function (workItem, index, column) {
-            return WorkItemHelpers.workItemFieldCellRenderer(workItem, index, column, { workItemTypeAndStateColors: this.fluxContext.stores.workItemColorStore.getAll() });
+        WorkItemGrid.prototype._itemFilter = function (workItem, filterText) {
+            if ("" + workItem.id === filterText) {
+                return true;
+            }
+            for (var _i = 0, _a = this.props.fields; _i < _a.length; _i++) {
+                var field = _a[_i];
+                if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : "" + workItem.fields[field.referenceName], filterText)) {
+                    return true;
+                }
+            }
+            return false;
         };
         WorkItemGrid.prototype._getWiql = function (workItems) {
-            var fieldStr = this.props.columns.map(function (f) { return "[" + f.referenceName + "]"; }).join(",");
+            var fieldStr = this.props.fields.map(function (f) { return "[" + f.referenceName + "]"; }).join(",");
             var ids = (workItems || this.state.filteredItems).map(function (w) { return w.id; }).join(",");
-            var sortColumn = this.state.sortColumnKey ? this.state.sortColumnKey : "System.CreatedDate";
-            var sortOrder = this.state.sortOrder === BaseGrid_Props_1.SortOrder.DESC ? "DESC" : "";
+            var sortColumn = this.state.sortColumn ? this.state.sortColumn.key : "System.CreatedDate";
+            var sortOrder = (this.state.sortOrder && this.state.sortOrder === Grid_Props_1.SortOrder.DESC) ? "DESC" : "";
             return "SELECT " + fieldStr + "\n                 FROM WorkItems \n                 WHERE [System.TeamProject] = @project \n                 AND [System.ID] IN (" + ids + ") \n                 ORDER BY [" + sortColumn + "] " + sortOrder;
         };
         return WorkItemGrid;
-    }(BaseGrid_1.BaseGrid));
+    }(BaseComponent_1.BaseComponent));
+    __decorate([
+        Utilities_1.autobind
+    ], WorkItemGrid.prototype, "_onItemInvoked", null);
+    __decorate([
+        Utilities_1.autobind
+    ], WorkItemGrid.prototype, "_itemComparer", null);
+    __decorate([
+        Utilities_1.autobind
+    ], WorkItemGrid.prototype, "_itemFilter", null);
     exports.WorkItemGrid = WorkItemGrid;
 });

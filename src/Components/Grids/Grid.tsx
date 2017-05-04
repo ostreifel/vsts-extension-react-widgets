@@ -17,37 +17,24 @@ import { Loading } from "../Common/Loading";
 import { IGridProps, IGridState, SortOrder, GridColumn } from "./Grid.Props";
 
 export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
-    static defaultProps = {
-        columns: [],
-        items: [],
-        selectionMode: SelectionMode.multiple,        
-        commandBarProps: {            
-            hideSearchBox: false,
-            hideCommandBar: false,
-            refreshItems: null,
-            menuItems: [],
-            farMenuItems: []
-        },
-        contextMenuProps: {
-            menuItems: []
-        },
-        events: {
-
-        }
-    };
-
     private _selection: Selection;
     private _searchTimeout: any
 
     constructor(props: IGridProps, context?: any) {
         super(props, context);
-        this._selection = new Selection();
+        this._selection = new Selection({
+            onSelectionChanged: () => {
+                if (props.events.onSelectionChanged) {
+                    props.events.onSelectionChanged(this._selection.getSelection());
+                }
+            }
+        });
     }    
 
     protected initializeState() {
         this.state = {
-            filteredItems: this.props.items || [],
-            items: this.props.items || [],
+            filteredItems: this.props.items.slice(),
+            items: this.props.items.slice(),
             sortColumn: null,
             sortOrder: SortOrder.ASC,
             filterText: ""
@@ -55,20 +42,20 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
     }
 
     protected getDefaultClassName(): string {
-        return "grid";
+        return "base-grid";
     }
 
     public render(): JSX.Element {
         return (
-            <div className={this.getChildClassName()}>
+            <div className={this.getClassName()}>
                 {this._renderCommandBar()}
                 {this._renderGrid()}
-                {this.state.isContextMenuVisible && this.props.contextMenuProps.menuItems && this.props.contextMenuProps.menuItems.length > 0 && (
+                {this.state.isContextMenuVisible && this.props.contextMenuProps && this.props.contextMenuProps.menuItems && (
                     <ContextualMenu
-                        className={this.getChildClassName("context-menu")}
-                        items={this.props.contextMenuProps.menuItems}
+                        className="context-menu"
+                        items={this.props.contextMenuProps.menuItems(this._selection.getSelection())}
                         target={this.state.contextMenuTarget}
-                        shouldFocusOnMount={ true }
+                        shouldFocusOnMount={true}
                         onDismiss={this._hideContextMenu}
                     />
                 )}
@@ -77,15 +64,15 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
     }
 
     private _renderCommandBar(): JSX.Element {
-        if (this.props.commandBarProps.hideSearchBox && this.props.commandBarProps.hideCommandBar) {
+        if (!this.props.commandBarProps || (this.props.commandBarProps.hideSearchBox && this.props.commandBarProps.hideCommandBar)) {
             return null;
         }
 
         return (
-            <div className={this.getChildClassName("menu-bar-container")}>
+            <div className="menu-bar-container">
                 {!this.props.commandBarProps.hideSearchBox && (
                     <SearchBox 
-                        className={this.getChildClassName("searchbox")}
+                        className="searchbox"
                         value={this.state.filterText || ""}
                         onSearch={this._updateFilterText}
                         onChange={this._updateFilterText} />
@@ -93,7 +80,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
 
                 {!this.props.commandBarProps.hideCommandBar && (
                     <CommandBar 
-                        className={this.getChildClassName("menu-bar")}
+                        className="menu-bar"
                         items={this._getCommandMenuItems()} 
                         farItems={this._getFarCommandMenuItems()} />
                 )}
@@ -104,7 +91,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
     private _getCommandMenuItems(): IContextualMenuItem[] {
         let menuItems: IContextualMenuItem[] = [];
         
-        if (this.props.commandBarProps.refreshItems) {
+        if (this.props.commandBarProps && this.props.commandBarProps.refreshItems) {
             menuItems.push({
                 key: "refresh", name: "Refresh", title: "Refresh items", iconProps: {iconName: "Refresh"},
                 onClick: async (event?: React.MouseEvent<HTMLElement>, menuItem?: IContextualMenuItem) => {
@@ -115,7 +102,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
             });
         }
 
-        if (this.props.commandBarProps.menuItems && this.props.commandBarProps.menuItems.length > 0) {
+        if (this.props.commandBarProps && this.props.commandBarProps.menuItems && this.props.commandBarProps.menuItems.length > 0) {
             menuItems = menuItems.concat(this.props.commandBarProps.menuItems);
         }
 
@@ -127,11 +114,11 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
             {
                 key: "resultCount", 
                 name: this.state.loading ? "Loading ..." : `${this.state.filteredItems.length} results`, 
-                className: this.getChildClassName("result-count")
+                className: "result-count"
             }
         ];
 
-        if (this.props.commandBarProps.farMenuItems && this.props.commandBarProps.farMenuItems.length > 0) {
+        if (this.props.commandBarProps && this.props.commandBarProps.farMenuItems && this.props.commandBarProps.farMenuItems.length > 0) {
             menuItems = menuItems.concat(this.props.commandBarProps.farMenuItems);
         }
 
@@ -149,12 +136,12 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
             return <DetailsList 
                         layoutMode={DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.horizontalConstrained}
-                        selectionMode={this.props.selectionMode}
+                        selectionMode={this.props.selectionMode || SelectionMode.multiple}
                         isHeaderVisible={true}
                         checkboxVisibility={this.props.selectionMode === SelectionMode.none ? CheckboxVisibility.hidden : CheckboxVisibility.onHover}
                         columns={this._prepareColumns()}
                         items={this.state.filteredItems}
-                        className={this.getChildClassName("grid")}
+                        className="grid"
                         onItemInvoked={this._onItemInvoked}
                         selection={this._selection}
                         onItemContextMenu={this._showContextMenu}
@@ -178,10 +165,10 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 isResizable: column.resizable,
-                onRender: (item?: any, index?: number) => column.onRenderCell(item, index, column),
+                onRender: (item?: any, index?: number) => column.onRenderCell(item, index),
                 isSorted: column.sortable && Utils_String.equals(this.state.sortColumn.key, column.key, true),
                 isSortedDescending: column.sortable && this.state.sortOrder === SortOrder.DESC,
-                onColumnClick: (ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => this._onColumnHeaderClick(column)
+                onColumnClick: () => this._onColumnHeaderClick(column)
             }
         });
     }
@@ -219,7 +206,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
 
     @autobind
     private _showContextMenu(item?: any, index?: number, e?: MouseEvent) {
-        if (this.props.contextMenuProps.menuItems && this.props.contextMenuProps.menuItems.length > 0) {
+        if (this.props.contextMenuProps && this.props.contextMenuProps.menuItems) {
             if (!this._selection.isIndexSelected(index)) {
                 // if not already selected, unselect every other row and select this one
                 this._selection.setAllSelected(false);

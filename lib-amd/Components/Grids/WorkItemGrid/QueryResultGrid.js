@@ -8,14 +8,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -64,7 +56,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
         };
         QueryResultGrid.prototype.initialize = function () {
             this.fluxContext.actionsCreator.initializeWorkItemFields();
-            this._runQuery(__assign({}, this.props));
+            this._runQuery(this.props);
         };
         QueryResultGrid.prototype.onStoreChanged = function () {
             if (!this.state.fieldsMap && this.fluxContext.stores.workItemFieldStore.isLoaded()) {
@@ -74,9 +66,14 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                 this.updateState({ fieldsMap: fieldsMap_1 });
             }
         };
+        QueryResultGrid.prototype.initializeState = function () {
+            this.state = {};
+        };
         QueryResultGrid.prototype.componentWillReceiveProps = function (nextProps, nextContext) {
-            if (!Utils_String.equals(this.props.wiql, nextProps.wiql, true)) {
-                this._runQuery(__assign({}, nextProps));
+            if (!Utils_String.equals(this.props.wiql, nextProps.wiql, true) ||
+                !Utils_String.equals(this.props.project, nextProps.project, true) ||
+                this.props.top !== nextProps.top) {
+                this._runQuery(nextProps);
             }
         };
         QueryResultGrid.prototype.render = function () {
@@ -85,8 +82,28 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                 return React.createElement(Loading_1.Loading, null);
             }
             else {
-                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { items: this.state.items, refreshItems: function () { return _this._runQuery(__assign({}, _this.props), false); }, columns: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), columnsProps: this.props.columnsProps, commandBarProps: this.props.commandBarProps, contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode }));
+                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { items: this.state.workItems, fields: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), commandBarProps: this.props.commandBarProps, contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode, extraColumns: this.props.extraColumns }));
             }
+        };
+        QueryResultGrid.prototype._getCommandBarProps = function () {
+            var _this = this;
+            return {
+                hideSearchBox: this.props.commandBarProps && this.props.commandBarProps.hideSearchBox,
+                hideCommandBar: this.props.commandBarProps && this.props.commandBarProps.hideCommandBar,
+                refreshItems: function () { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        if (this.props.commandBarProps && this.props.commandBarProps.refreshItems) {
+                            return [2, this.props.commandBarProps.refreshItems()];
+                        }
+                        else {
+                            return [2, this._runQuery(this.props, false)];
+                        }
+                        return [2];
+                    });
+                }); },
+                menuItems: this.props.commandBarProps && this.props.commandBarProps.menuItems,
+                farMenuItems: this.props.commandBarProps && this.props.commandBarProps.farMenuItems
+            };
         };
         QueryResultGrid.prototype._runQuery = function (props, updateState) {
             if (updateState === void 0) { updateState = true; }
@@ -96,7 +113,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                     switch (_a.label) {
                         case 0:
                             if (updateState) {
-                                this.updateState({ areResultsLoaded: false, items: null, fieldColumns: null });
+                                this.updateState({ workItems: null, fieldColumns: null });
                             }
                             return [4, WitClient.getClient().queryByWiql({ query: props.wiql }, props.project, null, false, this.props.top)];
                         case 1:
@@ -110,7 +127,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                             _a.label = 3;
                         case 3:
                             if (updateState) {
-                                this.updateState({ areResultsLoaded: true, items: workItems, fieldColumns: queryResult.columns });
+                                this.updateState({ workItems: workItems, fieldColumns: queryResult.columns });
                             }
                             return [2, workItems];
                     }
@@ -118,7 +135,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
             });
         };
         QueryResultGrid.prototype._isDataLoaded = function () {
-            return this.state.areResultsLoaded && this.state.fieldsMap != null;
+            return this.state.workItems != null && this.state.fieldColumns != null && this.state.fieldsMap != null;
         };
         return QueryResultGrid;
     }(BaseComponent_1.BaseComponent));

@@ -1,30 +1,37 @@
 import { WorkItem, WorkItemField, WorkItemFieldReference } from "TFS/WorkItemTracking/Contracts";
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
-import { IBaseGridProps, IBaseGridState, IColumnsProps, ICommandBarProps, IContextMenuProps } from "../BaseGrid.Props";
-export interface IWorkItemGridProps extends IBaseGridProps<WorkItem, WorkItemField> {
+import { ICommandBarProps, IContextMenuProps, GridColumn, SortOrder } from "../Grid.Props";
+import { IBaseComponentProps, IBaseComponentState } from "../../Common/BaseComponent";
+export interface BaseWorkItemGridProps extends IBaseComponentProps {
+    extraColumns?: IExtraWorkItemGridColumn[];
+    selectionMode?: SelectionMode;
+    commandBarProps?: ICommandBarProps;
+    contextMenuProps?: IContextMenuProps;
 }
-export interface IWorkItemGridState extends IBaseGridState<WorkItem> {
-    workItemTypeAndStateColors?: IDictionaryStringTo<{
-        color: string;
-        stateColors: IDictionaryStringTo<string>;
-    }>;
+export interface IWorkItemGridProps extends BaseWorkItemGridProps {
+    items: WorkItem[];
+    fields: WorkItemField[];
 }
-export interface IQueryResultGridProps {
+export interface IWorkItemGridState extends IBaseComponentState {
+    filteredItems?: WorkItem[];
+    sortColumn?: GridColumn;
+    sortOrder?: SortOrder;
+}
+export interface IQueryResultGridProps extends BaseWorkItemGridProps {
     wiql: string;
     top?: number;
     project?: string;
-    columnsProps?: IColumnsProps<WorkItem>;
-    commandBarProps?: ICommandBarProps;
-    contextMenuProps?: IContextMenuProps<WorkItem>;
-    selectionMode?: SelectionMode;
 }
-export interface IQueryResultGridState {
-    areResultsLoaded?: boolean;
-    items?: WorkItem[];
+export interface IQueryResultGridState extends IBaseComponentState {
     fieldColumns?: WorkItemFieldReference[];
+    workItems?: WorkItem[];
     fieldsMap?: IDictionaryStringTo<WorkItemField>;
 }
-export declare enum ColumnType {
-    Field = 0,
-    Custom = 1,
+export interface IExtraWorkItemGridColumn {
+    column: GridColumn;
+    position?: ColumnPosition;
+}
+export declare enum ColumnPosition {
+    FarLeft = 0,
+    FarRight = 1,
 }

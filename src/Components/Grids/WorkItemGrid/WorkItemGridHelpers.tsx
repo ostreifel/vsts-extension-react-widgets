@@ -9,7 +9,7 @@ import { TooltipHost, TooltipDelay, DirectionalHint, TooltipOverflowMode } from 
 import { IColumn } from "OfficeFabric/DetailsList";
 import { Label } from "OfficeFabric/Label";
 
-import { SortOrder } from "../BaseGrid.Props";
+import { SortOrder } from "../Grid.Props";
 import { IdentityView } from "../../WorkItemControls/IdentityView";
 import { TagsView } from "../../WorkItemControls/TagsView";
 

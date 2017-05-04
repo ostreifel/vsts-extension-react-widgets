@@ -1,8 +1,7 @@
+/// <reference types="react" />
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
-import { ContextualMenu, IContextualMenuItem } from "OfficeFabric/ContextualMenu";
-
-import { IBaseComponentProps, IBaseComponentState } from "../Common/BaseComponent"; 
-
+import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
+import { IBaseComponentProps, IBaseComponentState } from "../Common/BaseComponent";
 export interface IGridProps extends IBaseComponentProps {
     items: any[];
     columns: GridColumn[];
@@ -14,7 +13,6 @@ export interface IGridProps extends IBaseComponentProps {
     itemFilter?: (item: any, filterText: string) => boolean;
     events?: IGridEvents;
 }
-
 export interface IGridState extends IBaseComponentState {
     filteredItems?: any[];
     items?: any[];
@@ -25,7 +23,6 @@ export interface IGridState extends IBaseComponentState {
     sortOrder?: SortOrder;
     filterText?: string;
 }
-
 export interface GridColumn {
     key: string;
     name: string;
@@ -36,7 +33,6 @@ export interface GridColumn {
     onRenderCell?: (item?: any, index?: number) => JSX.Element;
     data?: any;
 }
-
 export interface ICommandBarProps {
     hideSearchBox?: boolean;
     hideCommandBar?: boolean;
@@ -44,18 +40,15 @@ export interface ICommandBarProps {
     menuItems?: IContextualMenuItem[];
     farMenuItems?: IContextualMenuItem[];
 }
-
 export interface IContextMenuProps {
     menuItems?: (selectedItems: any[]) => IContextualMenuItem[];
 }
-
 export interface IGridEvents {
     onSearch?: (searchText: string, filteredItems: any[]) => void;
     onSort?: (sortColumn: GridColumn, sortOrder: SortOrder, filteredItems: any[]) => void;
     onSelectionChanged?: (selectedItems: any[]) => void;
 }
-
-export enum SortOrder {
-    ASC,
-    DESC
+export declare enum SortOrder {
+    ASC = 0,
+    DESC = 1,
 }

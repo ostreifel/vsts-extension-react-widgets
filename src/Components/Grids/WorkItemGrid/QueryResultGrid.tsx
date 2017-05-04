@@ -9,6 +9,7 @@ import { BaseComponent } from "../../Common/BaseComponent";
 import { WorkItemGrid } from "./WorkItemGrid";
 import { BaseStore } from "../../../Flux/Stores/BaseStore";
 import { IQueryResultGridProps, IQueryResultGridState } from "./WorkItemGrid.Props";
+import { ICommandBarProps } from "../Grid.Props";
 
 export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQueryResultGridState> {
     protected getStoresToLoad(): BaseStore<any, any, any>[] {
@@ -17,7 +18,7 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
 
     protected initialize() {
         this.fluxContext.actionsCreator.initializeWorkItemFields();
-        this._runQuery({...this.props});
+        this._runQuery(this.props);
     }
 
     protected onStoreChanged() {
@@ -30,9 +31,18 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
          }
     }
 
+    protected initializeState(): void {
+        this.state = {
+            
+        };
+    }
+
     public componentWillReceiveProps(nextProps: Readonly<IQueryResultGridProps>, nextContext: any): void {
-        if (!Utils_String.equals(this.props.wiql, nextProps.wiql, true)) {
-            this._runQuery({...nextProps});
+        if (!Utils_String.equals(this.props.wiql, nextProps.wiql, true) || 
+            !Utils_String.equals(this.props.project, nextProps.project, true) || 
+            this.props.top !== nextProps.top) {
+
+            this._runQuery(nextProps);
         }
     }
 
@@ -43,21 +53,37 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
         else {                    
             return (
                 <WorkItemGrid 
-                    items={this.state.items}
-                    refreshItems={() => this._runQuery({...this.props}, false)}
-                    columns={this.state.fieldColumns.map(fr => this.state.fieldsMap[fr.referenceName.toLowerCase()]).filter(f => f != null)}
-                    columnsProps={this.props.columnsProps}
+                    items={this.state.workItems}
+                    fields={this.state.fieldColumns.map(fr => this.state.fieldsMap[fr.referenceName.toLowerCase()]).filter(f => f != null)}
                     commandBarProps={this.props.commandBarProps}
                     contextMenuProps={this.props.contextMenuProps}
                     selectionMode={this.props.selectionMode}
+                    extraColumns={this.props.extraColumns}
                 />                        
             );
         }
     }
 
+    private _getCommandBarProps(): ICommandBarProps {
+        return {
+            hideSearchBox: this.props.commandBarProps && this.props.commandBarProps.hideSearchBox,
+            hideCommandBar: this.props.commandBarProps && this.props.commandBarProps.hideCommandBar,
+            refreshItems: async () => {
+                if (this.props.commandBarProps && this.props.commandBarProps.refreshItems) {
+                    return this.props.commandBarProps.refreshItems();
+                }
+                else {
+                    return this._runQuery(this.props, false);
+                }
+            },
+            menuItems: this.props.commandBarProps && this.props.commandBarProps.menuItems,
+            farMenuItems: this.props.commandBarProps && this.props.commandBarProps.farMenuItems
+        }
+    }
+
     private async _runQuery(props: IQueryResultGridProps, updateState: boolean = true): Promise<WorkItem[]> {
         if (updateState) {
-            this.updateState({areResultsLoaded: false, items: null, fieldColumns: null});
+            this.updateState({workItems: null, fieldColumns: null});
         }
 
         let queryResult = await WitClient.getClient().queryByWiql({ query: props.wiql }, props.project, null, false, this.props.top);
@@ -69,13 +95,13 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
         }
 
         if (updateState) {
-            this.updateState({areResultsLoaded: true, items: workItems, fieldColumns: queryResult.columns});
+            this.updateState({workItems: workItems, fieldColumns: queryResult.columns});
         }
 
         return workItems;
     }    
 
     private _isDataLoaded(): boolean {
-        return this.state.areResultsLoaded && this.state.fieldsMap != null;
+        return this.state.workItems != null && this.state.fieldColumns != null && this.state.fieldsMap != null;
     }
 }
