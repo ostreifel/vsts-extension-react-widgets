@@ -28,15 +28,14 @@ export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, fieldRefN
     }
 }
 
-export function workItemFieldCellRenderer(item: WorkItem, index: number, column: IColumn, extraData?: workItemFieldCellRendererOptions): JSX.Element {
-    let text: string = item.fields[column.fieldName] || "";
+export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField, extraData?: workItemFieldCellRendererOptions): JSX.Element {
+    let text: string = item.fields[field.referenceName] || "";
     let className = "work-item-grid-cell";
     let innerElement: JSX.Element;
     
-    const field: WorkItemField = column.data["field"];
 
     if (field.type === FieldType.DateTime) {
-        const dateStr = item.fields[column.fieldName];
+        const dateStr = item.fields[field.referenceName];
         if (!dateStr) {
             text = "";
         }
@@ -47,12 +46,12 @@ export function workItemFieldCellRenderer(item: WorkItem, index: number, column:
         innerElement = <Label className={className}>{text}</Label>;
     }
     else if (field.type === FieldType.Boolean) {
-        const boolValue = item.fields[column.fieldName];
+        const boolValue = item.fields[field.referenceName];
         text = boolValue == null ? "" : (!boolValue ? "False" : "True");
         innerElement = <Label className={className}>{text}</Label>;
     }
     else {
-        switch (column.fieldName.toLowerCase()) {
+        switch (field.referenceName.toLowerCase()) {
             case "system.id":  
                 text = item.id.toString();
                 innerElement = <Label className={className}>{text}</Label>;            
@@ -67,7 +66,7 @@ export function workItemFieldCellRenderer(item: WorkItem, index: number, column:
                         onClick={(e) => openWorkItemDialog(e, item)}
                         style={{borderColor: witColor ? "#" + witColor : "#000"}}>
 
-                        {item.fields[column.fieldName]}
+                        {item.fields[field.referenceName]}
                     </Label>
                 );
                 break;
@@ -87,19 +86,19 @@ export function workItemFieldCellRenderer(item: WorkItem, index: number, column:
                                     borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
                                 }} />
                         }
-                        <span className="state-name">{item.fields[column.fieldName]}</span>
+                        <span className="state-name">{item.fields[field.referenceName]}</span>
                     </Label>
                 );
                 break;
             case "system.assignedto":  // check isidentity flag
-                innerElement = <IdentityView identityDistinctName={item.fields[column.fieldName]} />;
+                innerElement = <IdentityView identityDistinctName={item.fields[field.referenceName]} />;
                 break;
             case "system.tags":
-                const tagsArr = (item.fields[column.fieldName] as string || "").split(";");
+                const tagsArr = (item.fields[field.referenceName] as string || "").split(";");
                 innerElement = <TagsView tags={tagsArr} />;
                 break;
             default:
-                innerElement = <Label className={className}>{item.fields[column.fieldName]}</Label>;
+                innerElement = <Label className={className}>{item.fields[field.referenceName]}</Label>;
                 break;
         }
     }

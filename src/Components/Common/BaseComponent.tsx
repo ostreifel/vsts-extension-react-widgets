@@ -50,7 +50,7 @@ export abstract class BaseComponent<TProps extends IBaseComponentProps, TState e
 
     }
 
-    protected getComponentClassName(): string {
+    protected getDefaultClassName(): string {
         return "base-component";
     }
 

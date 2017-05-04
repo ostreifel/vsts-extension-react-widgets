@@ -1,34 +1,26 @@
 import * as React from "react";
 import { WorkItem, WorkItemField, WorkItemFieldReference } from "TFS/WorkItemTracking/Contracts";
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
-import {IBaseGridProps, IBaseGridState, IColumnsProps, ICommandBarProps, IContextMenuProps, SortOrder} from "../BaseGrid.Props";
+import { ICommandBarProps, IContextMenuProps, GridColumn } from "../Grid.Props";
 
-export interface IWorkItemGridProps extends IBaseGridProps<WorkItem, WorkItemField> {    
-
+export interface IWorkItemGridProps {    
+    items?: WorkItem[];
+    fields?: WorkItemField[];
+    query?: IQueryProps;
+    selectionMode?: SelectionMode;
+    commandBarProps?: ICommandBarProps;
+    contextMenuProps?: IContextMenuProps;
 }
 
-export interface IWorkItemGridState extends IBaseGridState<WorkItem> {
+export interface IWorkItemGridState {
+    loading?: boolean;
+    items?: WorkItem[];
+    fields?: WorkItemField[];
     workItemTypeAndStateColors?: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;
 }
 
-export interface IQueryResultGridProps {
+export interface IQueryProps {
     wiql: string;
     top?: number;
     project?: string;
-    columnsProps?: IColumnsProps<WorkItem>;    
-    commandBarProps?: ICommandBarProps;
-    contextMenuProps?: IContextMenuProps<WorkItem>;
-    selectionMode?: SelectionMode;
-}
-
-export interface IQueryResultGridState {
-    areResultsLoaded?: boolean;
-    items?: WorkItem[];
-    fieldColumns?: WorkItemFieldReference[];
-    fieldsMap?: IDictionaryStringTo<WorkItemField>;
-}
-
-export enum ColumnType {
-    Field,
-    Custom
 }
