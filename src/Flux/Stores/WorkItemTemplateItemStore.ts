@@ -15,7 +15,7 @@ export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], Wor
     constructor(actions: ActionsHub) {
         super(actions);
 
-        this._items = [];    
+        this.items = [];    
     }
 
     protected registerListeners(actions: ActionsHub): void {
@@ -25,7 +25,7 @@ export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], Wor
     }
     
     protected getItemByKey(id: string): WorkItemTemplate {
-         return Utils_Array.first(this._items, (item: WorkItemTemplate) => Utils_String.equals(item.id, id, true));
+         return Utils_Array.first(this.items, (item: WorkItemTemplate) => Utils_String.equals(item.id, id, true));
     }
 
     private _onAdd(items: WorkItemTemplate | WorkItemTemplate[]): void {
@@ -33,8 +33,8 @@ export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], Wor
             return;
         }
 
-        if (!this._items) {
-            this._items = [];
+        if (!this.items) {
+            this.items = [];
         }
 
         if (Array.isArray(items)) {
@@ -50,13 +50,13 @@ export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], Wor
     }
 
     private _addItem(item: WorkItemTemplate): void {
-        let existingItemIndex = Utils_Array.findIndex(this._items, (existingItem: WorkItemTemplate) => Utils_String.equals(item.id, existingItem.id, true));
+        let existingItemIndex = Utils_Array.findIndex(this.items, (existingItem: WorkItemTemplate) => Utils_String.equals(item.id, existingItem.id, true));
         if (existingItemIndex != -1) {
             // Overwrite the item data
-            this._items[existingItemIndex] = item;
+            this.items[existingItemIndex] = item;
         }
         else {
-            this._items.push(item);
+            this.items.push(item);
         }
     }
 }

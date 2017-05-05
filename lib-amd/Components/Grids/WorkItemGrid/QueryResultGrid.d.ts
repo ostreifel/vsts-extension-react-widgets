@@ -10,6 +10,6 @@ export declare class QueryResultGrid extends BaseComponent<IQueryResultGridProps
     componentWillReceiveProps(nextProps: Readonly<IQueryResultGridProps>, nextContext: any): void;
     render(): JSX.Element;
     private _getCommandBarProps();
-    private _runQuery(props, updateState?);
+    private _runQuery(props);
     private _isDataLoaded();
 }

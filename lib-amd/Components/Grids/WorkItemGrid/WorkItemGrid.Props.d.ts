@@ -1,6 +1,6 @@
 import { WorkItem, WorkItemField, WorkItemFieldReference } from "TFS/WorkItemTracking/Contracts";
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
-import { ICommandBarProps, IContextMenuProps, GridColumn, SortOrder } from "../Grid.Props";
+import { ICommandBarProps, IContextMenuProps, GridColumn } from "../Grid.Props";
 import { IBaseComponentProps, IBaseComponentState } from "../../Common/BaseComponent";
 export interface BaseWorkItemGridProps extends IBaseComponentProps {
     extraColumns?: IExtraWorkItemGridColumn[];
@@ -9,13 +9,8 @@ export interface BaseWorkItemGridProps extends IBaseComponentProps {
     contextMenuProps?: IContextMenuProps;
 }
 export interface IWorkItemGridProps extends BaseWorkItemGridProps {
-    items: WorkItem[];
+    workItems: WorkItem[];
     fields: WorkItemField[];
-}
-export interface IWorkItemGridState extends IBaseComponentState {
-    filteredItems?: WorkItem[];
-    sortColumn?: GridColumn;
-    sortOrder?: SortOrder;
 }
 export interface IQueryResultGridProps extends BaseWorkItemGridProps {
     wiql: string;

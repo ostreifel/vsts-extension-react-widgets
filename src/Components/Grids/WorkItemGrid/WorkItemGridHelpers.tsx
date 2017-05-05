@@ -6,33 +6,58 @@ import Utils_String = require("VSS/Utils/String");
 import Utils_Date = require("VSS/Utils/Date");
 
 import { TooltipHost, TooltipDelay, DirectionalHint, TooltipOverflowMode } from "OfficeFabric/Tooltip";
-import { IColumn } from "OfficeFabric/DetailsList";
 import { Label } from "OfficeFabric/Label";
 
 import { SortOrder } from "../Grid.Props";
 import { IdentityView } from "../../WorkItemControls/IdentityView";
 import { TagsView } from "../../WorkItemControls/TagsView";
+import { TitleView } from "../../WorkItemControls/TitleView";
+import { StateView } from "../../WorkItemControls/StateView";
 
-export interface workItemFieldCellRendererOptions {
-    workItemTypeAndStateColors?: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>;
-}
+export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, field: WorkItemField, sortOrder: SortOrder): number {
+    const v1 = w1.fields[field.referenceName];
+    const v2 = w2.fields[field.referenceName];
+    let compareValue: number;
 
-export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, fieldRefName: string, sortOrder: SortOrder): number {
-    if (Utils_String.equals(fieldRefName, "System.Id", true)) {
-        return sortOrder === SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
-    }            
-    else {
-        let v1 = w1.fields[fieldRefName];
-        let v2 = w2.fields[fieldRefName];
-        return sortOrder === SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
+    if (Utils_String.equals(field.referenceName, "System.Id", true)) {
+        compareValue = (w1.id > w2.id) ? 1 : -1;
     }
+    else if (field.type === FieldType.DateTime) {
+        const date1 = new Date(v1 || null);
+        const date2 = new Date(v2 || null);
+        compareValue = Utils_Date.defaultComparer(date1, date2);
+    }
+    else if (field.type === FieldType.Boolean) {
+        const b1 = v1 == null ? "" : (!v1 ? "False" : "True");
+        const b2 = v2 == null ? "" : (!v2 ? "False" : "True");
+        compareValue = Utils_String.ignoreCaseComparer(b1, b2);
+    }
+    else if (field.type === FieldType.Integer || field.type === FieldType.Double) {
+        if (v1 == null && v2 == null) {
+            compareValue = 0;
+        }
+        else if (v1 == null && v2 != null) {
+            compareValue = -1;
+        }
+        else if (v1 != null && v2 == null) {
+            compareValue = 1;
+        }
+        else {
+            compareValue = (v1 > v2) ? 1 : -1;
+        }
+    }
+    else {
+        compareValue = Utils_String.ignoreCaseComparer(v1, v2);
+    }
+
+    return sortOrder === SortOrder.DESC ? -1 * compareValue : compareValue;
 }
 
-export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField, extraData?: workItemFieldCellRendererOptions): JSX.Element {
-    let text: string = item.fields[field.referenceName] || "";
+export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField): JSX.Element {
+    let text: string = item.fields[field.referenceName] != null ? item.fields[field.referenceName] : "";
     let className = "work-item-grid-cell";
     let innerElement: JSX.Element;
-    
+    let alwaysShowTooltip = false;
 
     if (field.type === FieldType.DateTime) {
         const dateStr = item.fields[field.referenceName];
@@ -50,6 +75,11 @@ export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField, 
         text = boolValue == null ? "" : (!boolValue ? "False" : "True");
         innerElement = <Label className={className}>{text}</Label>;
     }
+    else if ((field as any).isIdentity) {  // remove cast after m116 sdk 
+        text = item.fields[field.referenceName] || "";
+        innerElement = <IdentityView identityDistinctName={text} />;
+        alwaysShowTooltip = true;
+    }
     else {
         switch (field.referenceName.toLowerCase()) {
             case "system.id":  
@@ -57,41 +87,10 @@ export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField, 
                 innerElement = <Label className={className}>{text}</Label>;            
                 break;
             case "system.title":
-                let witColor = extraData && extraData.workItemTypeAndStateColors && 
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] && 
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
-                innerElement = (
-                    <Label 
-                        className={`${className} title-cell`}
-                        onClick={(e) => openWorkItemDialog(e, item)}
-                        style={{borderColor: witColor ? "#" + witColor : "#000"}}>
-
-                        {item.fields[field.referenceName]}
-                    </Label>
-                );
+                innerElement = <TitleView className={className} title={item.fields["System.Title"]} workItemType={item.fields["System.WorkItemType"]} />
                 break;
             case "system.state":
-                innerElement = (
-                    <Label className={`${className} state-cell`}>
-                        {
-                            extraData &&
-                            extraData.workItemTypeAndStateColors &&
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors &&
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]] &&
-                            <span 
-                                className="work-item-type-state-color" 
-                                style={{
-                                    backgroundColor: "#" +extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
-                                    borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
-                                }} />
-                        }
-                        <span className="state-name">{item.fields[field.referenceName]}</span>
-                    </Label>
-                );
-                break;
-            case "system.assignedto":  // check isidentity flag
-                innerElement = <IdentityView identityDistinctName={item.fields[field.referenceName]} />;
+                innerElement = <StateView className={className} state={item.fields["System.State"]} workItemType={item.fields["System.WorkItemType"]} />
                 break;
             case "system.tags":
                 const tagsArr = (item.fields[field.referenceName] as string || "").split(";");
@@ -106,10 +105,9 @@ export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField, 
     return (
         <TooltipHost 
             content={text}
-            delay={TooltipDelay.zero}
-            overflowMode={TooltipOverflowMode.Parent}   // use null for identity fields
-            directionalHint={DirectionalHint.bottomLeftEdge}
-            >
+            delay={TooltipDelay.medium}
+            overflowMode={alwaysShowTooltip ? undefined : TooltipOverflowMode.Parent}   // use null for identity fields
+            directionalHint={DirectionalHint.bottomLeftEdge}>
             {innerElement}
         </TooltipHost>
     );
@@ -151,8 +149,10 @@ export function getColumnSize(field: WorkItemField): {minWidth: number, maxWidth
     }
 }
 
-export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<void> {
+export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<WorkItem> {
     let newTab = e ? e.ctrlKey : false;
     let workItemNavSvc = await WorkItemFormNavigationService.getService();
-    workItemNavSvc.openWorkItem(item.id, newTab);
+    const workItem = await workItemNavSvc.openWorkItem(item.id, newTab);
+
+    return null; // change once m116 sdk is released
 }

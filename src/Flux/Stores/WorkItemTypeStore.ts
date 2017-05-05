@@ -7,7 +7,7 @@ import { ActionsHub } from "../Actions/ActionsCreator";
 
 export class WorkItemTypeStore extends BaseStore<WorkItemType[], WorkItemType, string> {
     
-    protected registerListeners(actions: ActionsHub): void {
+    protected registerListeners(actions: ActionsHub): void {        
         actions.InitializeWorkItemTypes.addListener((items: WorkItemType[]) => {
             if (!items) {
                 this.emitChanged();
@@ -17,7 +17,7 @@ export class WorkItemTypeStore extends BaseStore<WorkItemType[], WorkItemType, s
     }    
 
     protected getItemByKey(typeName: string): WorkItemType {
-        return Utils_Array.first(this._items, (item: WorkItemType) => Utils_String.equals(item.name, typeName, true));
+        return Utils_Array.first(this.items, (item: WorkItemType) => Utils_String.equals(item.name, typeName, true));
     }
 
     private _onAdd(items: WorkItemType | WorkItemType[]): void {
@@ -25,8 +25,8 @@ export class WorkItemTypeStore extends BaseStore<WorkItemType[], WorkItemType, s
             return;
         }
 
-        if (!this._items) {
-            this._items = [];
+        if (!this.items) {
+            this.items = [];
         }
 
         if (Array.isArray(items)) {
@@ -42,13 +42,13 @@ export class WorkItemTypeStore extends BaseStore<WorkItemType[], WorkItemType, s
     }
 
     private _addItem(item: WorkItemType): void {
-        let existingItemIndex = Utils_Array.findIndex(this._items, (existingItem: WorkItemType) => Utils_String.equals(item.name, existingItem.name, true));
+        let existingItemIndex = Utils_Array.findIndex(this.items, (existingItem: WorkItemType) => Utils_String.equals(item.name, existingItem.name, true));
         if (existingItemIndex != -1) {
             // Overwrite the item data
-            this._items[existingItemIndex] = item;
+            this.items[existingItemIndex] = item;
         }
         else {
-            this._items.push(item);
+            this.items.push(item);
         }
     }
 }

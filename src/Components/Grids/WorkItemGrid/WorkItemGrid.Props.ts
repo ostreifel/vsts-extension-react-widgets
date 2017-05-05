@@ -12,14 +12,8 @@ export interface BaseWorkItemGridProps extends IBaseComponentProps {
 }
 
 export interface IWorkItemGridProps extends BaseWorkItemGridProps {    
-    items: WorkItem[];
+    workItems: WorkItem[];
     fields: WorkItemField[];    
-}
-
-export interface IWorkItemGridState extends IBaseComponentState {
-    filteredItems?: WorkItem[];
-    sortColumn?: GridColumn;
-    sortOrder?: SortOrder;
 }
 
 export interface IQueryResultGridProps extends BaseWorkItemGridProps {

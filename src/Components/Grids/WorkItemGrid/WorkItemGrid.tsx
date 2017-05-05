@@ -9,25 +9,18 @@ import { autobind } from "OfficeFabric/Utilities";
 import Utils_String = require("VSS/Utils/String");
 import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 
-import { IWorkItemGridProps, IWorkItemGridState, ColumnPosition } from "./WorkItemGrid.Props";
+import { IBaseComponentState } from "../../Common/BaseComponent"; 
+import { IWorkItemGridProps, ColumnPosition } from "./WorkItemGrid.Props";
 import { Grid } from "../Grid";
 import { SortOrder, GridColumn, ICommandBarProps, IContextMenuProps } from "../Grid.Props";
 import * as WorkItemHelpers from "./WorkItemGridHelpers";
 import { BaseStore } from "../../../Flux/Stores/BaseStore";
 import { BaseComponent } from "../../Common/BaseComponent"; 
 
-export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IWorkItemGridState> {
-    protected getStoresToLoad(): BaseStore<any, any, any>[] {
-        return [this.fluxContext.stores.workItemColorStore];
-    }
-
-    protected initialize() {
-        this.fluxContext.actionsCreator.initializeWorkItemColors();        
-    }
-
+export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseComponentState> {
     protected initializeState(): void {
         this.state = {
-            filteredItems: this.props.items.slice()
+            
         };
     }
 
@@ -39,39 +32,30 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IWorkItemGri
         return (
             <Grid
                 className={this.getClassName()}
-                items={this.props.items.slice()}
+                items={this.props.workItems}
                 columns={this._mapFieldsToColumn(this.props.fields)}
                 selectionMode={this.props.selectionMode}
                 commandBarProps={this._getCommandBarProps()}
                 contextMenuProps={this._getContextMenuProps()}
-                onItemInvoked={this._onItemInvoked}
-                itemComparer={this._itemComparer}
-                itemFilter={this._itemFilter}
-                events={{
-                    onSearch: (searchText: string, filteredItems: WorkItem[]) => {
-                        this.updateState({filteredItems: filteredItems});
-                    },
-                    onSort: (sortColumn: GridColumn, sortOrder: SortOrder, filteredItems: WorkItem[]) => {
-                        this.updateState({filteredItems: filteredItems, sortColumn: sortColumn, sortOrder: sortOrder});
-                    }
-                }}
+                onItemInvoked={this._onItemInvoked}                
             />
         );    
     }
 
     private _mapFieldsToColumn(fields: WorkItemField[]): GridColumn[] {
-        let columns = fields.map(f => {
-            const columnSize = WorkItemHelpers.getColumnSize(f);
+        let columns = fields.map(field => {
+            const columnSize = WorkItemHelpers.getColumnSize(field);
 
             return {
-                key: f.referenceName,
-                name: f.name,
+                key: field.referenceName,
+                name: field.name,
                 minWidth: columnSize.minWidth,
-                maxWidth: columnSize.maxWidth,
-                sortable: true,
+                maxWidth: columnSize.maxWidth,                
                 resizable: true,
-                data: {field: f},
-                onRenderCell: (item: WorkItem) => WorkItemHelpers.workItemFieldCellRenderer(item, f, {workItemTypeAndStateColors: this.fluxContext.stores.workItemColorStore.getAll()})
+                sortFunction: (item1: WorkItem, item2: WorkItem, sortOrder: SortOrder) => this._itemComparer(item1, item2, field, sortOrder),
+                filterFunction: (item: WorkItem, filterText: string) => `${item.id}` === filterText || this._itemFilter(item, filterText, field),
+                data: {field: field},
+                onRenderCell: (item: WorkItem) => WorkItemHelpers.workItemFieldCellRenderer(item, field)
             } as GridColumn
         });
 
@@ -92,7 +76,7 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IWorkItemGri
     private _getCommandBarProps(): ICommandBarProps {        
         let menuItems: IContextualMenuItem[] = [{
             key: "OpenQuery", name: "Open as query", title: "Open all workitems as a query", iconProps: {iconName: "OpenInNewWindow"}, 
-            disabled: !this.state.filteredItems || this.state.filteredItems.length === 0,
+            disabled: !this.props.workItems || this.props.workItems.length === 0,
             onClick: async (event?: React.MouseEvent<HTMLElement>, menuItem?: IContextualMenuItem) => {
                 const url = `${VSS.getWebContext().host.uri}/${VSS.getWebContext().project.id}/_workitems?_a=query&wiql=${encodeURIComponent(this._getWiql())}`;
                 window.open(url, "_blank");
@@ -106,7 +90,6 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IWorkItemGri
         return {
             hideSearchBox: this.props.commandBarProps && this.props.commandBarProps.hideSearchBox,
             hideCommandBar: this.props.commandBarProps && this.props.commandBarProps.hideCommandBar,
-            refreshItems: this.props.commandBarProps && this.props.commandBarProps.refreshItems,
             menuItems: menuItems,
             farMenuItems: this.props.commandBarProps && this.props.commandBarProps.farMenuItems
         };
@@ -142,36 +125,20 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IWorkItemGri
         WorkItemHelpers.openWorkItemDialog(null, workItem);
     }   
 
-    @autobind
-    private _itemComparer(workItem1: WorkItem, workItem2: WorkItem, sortColumn: GridColumn, sortOrder: SortOrder): number {
-        return WorkItemHelpers.workItemFieldValueComparer(workItem1, workItem2, sortColumn.key, sortOrder);
+    private _itemComparer(workItem1: WorkItem, workItem2: WorkItem, field: WorkItemField, sortOrder: SortOrder): number {
+        return WorkItemHelpers.workItemFieldValueComparer(workItem1, workItem2, field, sortOrder);
     }
 
-    @autobind
-    private _itemFilter(workItem: WorkItem, filterText: string): boolean {
-        if(`${workItem.id}` === filterText) {
-            return true;
-        }
-
-        for (const field of this.props.fields) {
-            if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : `${workItem.fields[field.referenceName]}`, filterText)) {
-                return true;
-            }
-        }
-
-        return false;
+    private _itemFilter(workItem: WorkItem, filterText: string, field: WorkItemField): boolean {
+        return Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : `${workItem.fields[field.referenceName]}`, filterText);
     }
 
     private _getWiql(workItems?: WorkItem[]): string {
         const fieldStr = this.props.fields.map(f => `[${f.referenceName}]`).join(",");
-        const ids = (workItems || this.state.filteredItems).map(w => w.id).join(",");
-        const sortColumn = this.state.sortColumn ? this.state.sortColumn.key : "System.CreatedDate";
-        const sortOrder = (this.state.sortOrder && this.state.sortOrder === SortOrder.DESC) ? "DESC" : "";
+        const ids = (workItems || this.props.workItems).map(w => w.id).join(",");
 
         return `SELECT ${fieldStr}
                  FROM WorkItems 
-                 WHERE [System.TeamProject] = @project 
-                 AND [System.ID] IN (${ids}) 
-                 ORDER BY [${sortColumn}] ${sortOrder}`;
+                 WHERE [System.ID] IN (${ids})`;
     }
 }

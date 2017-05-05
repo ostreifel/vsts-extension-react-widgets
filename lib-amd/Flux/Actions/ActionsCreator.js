@@ -65,9 +65,13 @@ define(["require", "exports", "VSS/Flux/Action", "TFS/WorkItemTracking/RestClien
                             if (!this._workItemFieldStore.isLoaded()) return [3, 1];
                             this._actionsHub.InitializeWorkItemFields.invoke(null);
                             return [3, 3];
-                        case 1: return [4, WitClient.getClient().getFields(VSS.getWebContext().project.id)];
+                        case 1:
+                            if (!!this._workItemFieldStore.isLoading()) return [3, 3];
+                            this._workItemFieldStore.setLoading(true);
+                            return [4, WitClient.getClient().getFields(VSS.getWebContext().project.id)];
                         case 2:
                             fields = _a.sent();
+                            this._workItemFieldStore.setLoading(false);
                             this._actionsHub.InitializeWorkItemFields.invoke(fields);
                             _a.label = 3;
                         case 3: return [2];
@@ -84,9 +88,13 @@ define(["require", "exports", "VSS/Flux/Action", "TFS/WorkItemTracking/RestClien
                             if (!this._workItemTemplateStore.isLoaded()) return [3, 1];
                             this._actionsHub.InitializeWorkItemTemplates.invoke(null);
                             return [3, 3];
-                        case 1: return [4, WitClient.getClient().getTemplates(VSS.getWebContext().project.id, VSS.getWebContext().team.id)];
+                        case 1:
+                            if (!!this._workItemTemplateStore.isLoading()) return [3, 3];
+                            this._workItemTemplateStore.setLoading(true);
+                            return [4, WitClient.getClient().getTemplates(VSS.getWebContext().project.id, VSS.getWebContext().team.id)];
                         case 2:
                             templates = _a.sent();
+                            this._workItemTemplateStore.setLoading(false);
                             this._actionsHub.InitializeWorkItemTemplates.invoke(templates);
                             _a.label = 3;
                         case 3: return [2];
@@ -103,9 +111,13 @@ define(["require", "exports", "VSS/Flux/Action", "TFS/WorkItemTracking/RestClien
                             if (!this._workItemTypeStore.isLoaded()) return [3, 1];
                             this._actionsHub.InitializeWorkItemTypes.invoke(null);
                             return [3, 3];
-                        case 1: return [4, WitClient.getClient().getWorkItemTypes(VSS.getWebContext().project.id)];
+                        case 1:
+                            if (!!this._workItemTypeStore.isLoading()) return [3, 3];
+                            this._workItemTypeStore.setLoading(true);
+                            return [4, WitClient.getClient().getWorkItemTypes(VSS.getWebContext().project.id)];
                         case 2:
                             workItemTypes = _a.sent();
+                            this._workItemTypeStore.setLoading(false);
                             this._actionsHub.InitializeWorkItemTypes.invoke(workItemTypes);
                             _a.label = 3;
                         case 3: return [2];
@@ -124,6 +136,8 @@ define(["require", "exports", "VSS/Flux/Action", "TFS/WorkItemTracking/RestClien
                             this._actionsHub.InitializeWorkItemColors.invoke(null);
                             return [3, 4];
                         case 1:
+                            if (!!this._workItemColorsStore.isLoading()) return [3, 4];
+                            this._workItemColorsStore.setLoading(true);
                             workItemTypeAndStateColors_1 = {};
                             projectId_1 = VSS.getWebContext().project.id;
                             return [4, this.initializeWorkItemTypes()];
@@ -148,6 +162,7 @@ define(["require", "exports", "VSS/Flux/Action", "TFS/WorkItemTracking/RestClien
                                 }); }))];
                         case 3:
                             _a.sent();
+                            this._workItemColorsStore.setLoading(false);
                             this._actionsHub.InitializeWorkItemColors.invoke(workItemTypeAndStateColors_1);
                             _a.label = 4;
                         case 4: return [2];

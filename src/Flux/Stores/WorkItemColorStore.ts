@@ -8,17 +8,17 @@ export interface WorkItemColorStoreKey {
 
 export class WorkItemColorStore extends BaseStore<IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>, string, WorkItemColorStoreKey> {
 
-    protected registerListeners(actions: ActionsHub): void {
+    protected registerListeners(actions: ActionsHub): void {        
         actions.InitializeWorkItemColors.addListener((items: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>) => {            
             if (items) {
-                this._items = items;
+                this.items = items;
             }
             this.emitChanged();          
         });
     }
 
     protected getItemByKey(key: WorkItemColorStoreKey): string {
-        const workItemType = this._items[key.workItemType];
+        const workItemType = this.items[key.workItemType];
         if (workItemType) {
             if (key.stateName) {
                 return workItemType.stateColors[key.stateName];

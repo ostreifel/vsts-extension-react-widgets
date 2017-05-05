@@ -26,14 +26,14 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "./BaseStor
             });
         };
         WorkItemFieldStore.prototype.getItemByKey = function (refName) {
-            return Utils_Array.first(this._items, function (item) { return Utils_String.equals(item.referenceName, refName, true); });
+            return Utils_Array.first(this.items, function (item) { return Utils_String.equals(item.referenceName, refName, true); });
         };
         WorkItemFieldStore.prototype._onAdd = function (items) {
             if (!items) {
                 return;
             }
-            if (!this._items) {
-                this._items = [];
+            if (!this.items) {
+                this.items = [];
             }
             if (Array.isArray(items)) {
                 for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
@@ -47,12 +47,12 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "./BaseStor
             this.emitChanged();
         };
         WorkItemFieldStore.prototype._addItem = function (item) {
-            var existingItemIndex = Utils_Array.findIndex(this._items, function (existingItem) { return Utils_String.equals(item.referenceName, existingItem.referenceName, true); });
+            var existingItemIndex = Utils_Array.findIndex(this.items, function (existingItem) { return Utils_String.equals(item.referenceName, existingItem.referenceName, true); });
             if (existingItemIndex != -1) {
-                this._items[existingItemIndex] = item;
+                this.items[existingItemIndex] = item;
             }
             else {
-                this._items.push(item);
+                this.items.push(item);
             }
         };
         return WorkItemFieldStore;

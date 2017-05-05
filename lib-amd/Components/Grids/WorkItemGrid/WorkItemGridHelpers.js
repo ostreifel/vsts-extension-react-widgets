@@ -33,24 +33,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "VSS/Utils/Date", "OfficeFabric/Tooltip", "OfficeFabric/Label", "../Grid.Props", "../../WorkItemControls/IdentityView", "../../WorkItemControls/TagsView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Utils_Date, Tooltip_1, Label_1, Grid_Props_1, IdentityView_1, TagsView_1) {
+define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/Services", "VSS/Utils/String", "VSS/Utils/Date", "OfficeFabric/Tooltip", "OfficeFabric/Label", "../Grid.Props", "../../WorkItemControls/IdentityView", "../../WorkItemControls/TagsView", "../../WorkItemControls/TitleView", "../../WorkItemControls/StateView"], function (require, exports, React, Contracts_1, Services_1, Utils_String, Utils_Date, Tooltip_1, Label_1, Grid_Props_1, IdentityView_1, TagsView_1, TitleView_1, StateView_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function workItemFieldValueComparer(w1, w2, fieldRefName, sortOrder) {
-        if (Utils_String.equals(fieldRefName, "System.Id", true)) {
-            return sortOrder === Grid_Props_1.SortOrder.DESC ? ((w1.id > w2.id) ? -1 : 1) : ((w1.id > w2.id) ? 1 : -1);
+    function workItemFieldValueComparer(w1, w2, field, sortOrder) {
+        var v1 = w1.fields[field.referenceName];
+        var v2 = w2.fields[field.referenceName];
+        var compareValue;
+        if (Utils_String.equals(field.referenceName, "System.Id", true)) {
+            compareValue = (w1.id > w2.id) ? 1 : -1;
+        }
+        else if (field.type === Contracts_1.FieldType.DateTime) {
+            var date1 = new Date(v1 || null);
+            var date2 = new Date(v2 || null);
+            compareValue = Utils_Date.defaultComparer(date1, date2);
+        }
+        else if (field.type === Contracts_1.FieldType.Boolean) {
+            var b1 = v1 == null ? "" : (!v1 ? "False" : "True");
+            var b2 = v2 == null ? "" : (!v2 ? "False" : "True");
+            compareValue = Utils_String.ignoreCaseComparer(b1, b2);
+        }
+        else if (field.type === Contracts_1.FieldType.Integer || field.type === Contracts_1.FieldType.Double) {
+            if (v1 == null && v2 == null) {
+                compareValue = 0;
+            }
+            else if (v1 == null && v2 != null) {
+                compareValue = -1;
+            }
+            else if (v1 != null && v2 == null) {
+                compareValue = 1;
+            }
+            else {
+                compareValue = (v1 > v2) ? 1 : -1;
+            }
         }
         else {
-            var v1 = w1.fields[fieldRefName];
-            var v2 = w2.fields[fieldRefName];
-            return sortOrder === Grid_Props_1.SortOrder.DESC ? -1 * Utils_String.ignoreCaseComparer(v1, v2) : Utils_String.ignoreCaseComparer(v1, v2);
+            compareValue = Utils_String.ignoreCaseComparer(v1, v2);
         }
+        return sortOrder === Grid_Props_1.SortOrder.DESC ? -1 * compareValue : compareValue;
     }
     exports.workItemFieldValueComparer = workItemFieldValueComparer;
-    function workItemFieldCellRenderer(item, field, extraData) {
-        var text = item.fields[field.referenceName] || "";
+    function workItemFieldCellRenderer(item, field) {
+        var text = item.fields[field.referenceName] != null ? item.fields[field.referenceName] : "";
         var className = "work-item-grid-cell";
         var innerElement;
+        var alwaysShowTooltip = false;
         if (field.type === Contracts_1.FieldType.DateTime) {
             var dateStr = item.fields[field.referenceName];
             if (!dateStr) {
@@ -67,6 +94,11 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
             text = boolValue == null ? "" : (!boolValue ? "False" : "True");
             innerElement = React.createElement(Label_1.Label, { className: className }, text);
         }
+        else if (field.isIdentity) {
+            text = item.fields[field.referenceName] || "";
+            innerElement = React.createElement(IdentityView_1.IdentityView, { identityDistinctName: text });
+            alwaysShowTooltip = true;
+        }
         else {
             switch (field.referenceName.toLowerCase()) {
                 case "system.id":
@@ -74,26 +106,10 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                     innerElement = React.createElement(Label_1.Label, { className: className }, text);
                     break;
                 case "system.title":
-                    var witColor = extraData && extraData.workItemTypeAndStateColors &&
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
-                        extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].color;
-                    innerElement = (React.createElement(Label_1.Label, { className: className + " title-cell", onClick: function (e) { return openWorkItemDialog(e, item); }, style: { borderColor: witColor ? "#" + witColor : "#000" } }, item.fields[field.referenceName]));
+                    innerElement = React.createElement(TitleView_1.TitleView, { className: className, title: item.fields["System.Title"], workItemType: item.fields["System.WorkItemType"] });
                     break;
                 case "system.state":
-                    innerElement = (React.createElement(Label_1.Label, { className: className + " state-cell" },
-                        extraData &&
-                            extraData.workItemTypeAndStateColors &&
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]] &&
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors &&
-                            extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]] &&
-                            React.createElement("span", { className: "work-item-type-state-color", style: {
-                                    backgroundColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]],
-                                    borderColor: "#" + extraData.workItemTypeAndStateColors[item.fields["System.WorkItemType"]].stateColors[item.fields["System.State"]]
-                                } }),
-                        React.createElement("span", { className: "state-name" }, item.fields[field.referenceName])));
-                    break;
-                case "system.assignedto":
-                    innerElement = React.createElement(IdentityView_1.IdentityView, { identityDistinctName: item.fields[field.referenceName] });
+                    innerElement = React.createElement(StateView_1.StateView, { className: className, state: item.fields["System.State"], workItemType: item.fields["System.WorkItemType"] });
                     break;
                 case "system.tags":
                     var tagsArr = (item.fields[field.referenceName] || "").split(";");
@@ -104,7 +120,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                     break;
             }
         }
-        return (React.createElement(Tooltip_1.TooltipHost, { content: text, delay: Tooltip_1.TooltipDelay.zero, overflowMode: Tooltip_1.TooltipOverflowMode.Parent, directionalHint: Tooltip_1.DirectionalHint.bottomLeftEdge }, innerElement));
+        return (React.createElement(Tooltip_1.TooltipHost, { content: text, delay: Tooltip_1.TooltipDelay.medium, overflowMode: alwaysShowTooltip ? undefined : Tooltip_1.TooltipOverflowMode.Parent, directionalHint: Tooltip_1.DirectionalHint.bottomLeftEdge }, innerElement));
     }
     exports.workItemFieldCellRenderer = workItemFieldCellRenderer;
     function getColumnSize(field) {
@@ -145,7 +161,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
     exports.getColumnSize = getColumnSize;
     function openWorkItemDialog(e, item) {
         return __awaiter(this, void 0, void 0, function () {
-            var newTab, workItemNavSvc;
+            var newTab, workItemNavSvc, workItem;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -153,8 +169,10 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                         return [4, Services_1.WorkItemFormNavigationService.getService()];
                     case 1:
                         workItemNavSvc = _a.sent();
-                        workItemNavSvc.openWorkItem(item.id, newTab);
-                        return [2];
+                        return [4, workItemNavSvc.openWorkItem(item.id, newTab)];
+                    case 2:
+                        workItem = _a.sent();
+                        return [2, null];
                 }
             });
         });

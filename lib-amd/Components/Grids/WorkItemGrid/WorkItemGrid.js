@@ -49,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/String", "./WorkItemGrid.Props", "../Grid", "../Grid.Props", "./WorkItemGridHelpers", "../../Common/BaseComponent", "../../../css/WorkItemsGrid.scss"], function (require, exports, React, Utilities_1, Utils_String, WorkItemGrid_Props_1, Grid_1, Grid_Props_1, WorkItemHelpers, BaseComponent_1) {
+define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/String", "./WorkItemGrid.Props", "../Grid", "./WorkItemGridHelpers", "../../Common/BaseComponent", "../../../css/WorkItemsGrid.scss"], function (require, exports, React, Utilities_1, Utils_String, WorkItemGrid_Props_1, Grid_1, WorkItemHelpers, BaseComponent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemGrid = (function (_super) {
@@ -57,44 +57,29 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
         function WorkItemGrid() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        WorkItemGrid.prototype.getStoresToLoad = function () {
-            return [this.fluxContext.stores.workItemColorStore];
-        };
-        WorkItemGrid.prototype.initialize = function () {
-            this.fluxContext.actionsCreator.initializeWorkItemColors();
-        };
         WorkItemGrid.prototype.initializeState = function () {
-            this.state = {
-                filteredItems: this.props.items.slice()
-            };
+            this.state = {};
         };
         WorkItemGrid.prototype.getDefaultClassName = function () {
             return "work-item-grid";
         };
         WorkItemGrid.prototype.render = function () {
-            var _this = this;
-            return (React.createElement(Grid_1.Grid, { className: this.getClassName(), items: this.props.items.slice(), columns: this._mapFieldsToColumn(this.props.fields), selectionMode: this.props.selectionMode, commandBarProps: this._getCommandBarProps(), contextMenuProps: this._getContextMenuProps(), onItemInvoked: this._onItemInvoked, itemComparer: this._itemComparer, itemFilter: this._itemFilter, events: {
-                    onSearch: function (searchText, filteredItems) {
-                        _this.updateState({ filteredItems: filteredItems });
-                    },
-                    onSort: function (sortColumn, sortOrder, filteredItems) {
-                        _this.updateState({ filteredItems: filteredItems, sortColumn: sortColumn, sortOrder: sortOrder });
-                    }
-                } }));
+            return (React.createElement(Grid_1.Grid, { className: this.getClassName(), items: this.props.workItems, columns: this._mapFieldsToColumn(this.props.fields), selectionMode: this.props.selectionMode, commandBarProps: this._getCommandBarProps(), contextMenuProps: this._getContextMenuProps(), onItemInvoked: this._onItemInvoked }));
         };
         WorkItemGrid.prototype._mapFieldsToColumn = function (fields) {
             var _this = this;
-            var columns = fields.map(function (f) {
-                var columnSize = WorkItemHelpers.getColumnSize(f);
+            var columns = fields.map(function (field) {
+                var columnSize = WorkItemHelpers.getColumnSize(field);
                 return {
-                    key: f.referenceName,
-                    name: f.name,
+                    key: field.referenceName,
+                    name: field.name,
                     minWidth: columnSize.minWidth,
                     maxWidth: columnSize.maxWidth,
-                    sortable: true,
                     resizable: true,
-                    data: { field: f },
-                    onRenderCell: function (item) { return WorkItemHelpers.workItemFieldCellRenderer(item, f, { workItemTypeAndStateColors: _this.fluxContext.stores.workItemColorStore.getAll() }); }
+                    sortFunction: function (item1, item2, sortOrder) { return _this._itemComparer(item1, item2, field, sortOrder); },
+                    filterFunction: function (item, filterText) { return "" + item.id === filterText || _this._itemFilter(item, filterText, field); },
+                    data: { field: field },
+                    onRenderCell: function (item) { return WorkItemHelpers.workItemFieldCellRenderer(item, field); }
                 };
             });
             var extraColumns = this.props.extraColumns || [];
@@ -112,7 +97,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
             var _this = this;
             var menuItems = [{
                     key: "OpenQuery", name: "Open as query", title: "Open all workitems as a query", iconProps: { iconName: "OpenInNewWindow" },
-                    disabled: !this.state.filteredItems || this.state.filteredItems.length === 0,
+                    disabled: !this.props.workItems || this.props.workItems.length === 0,
                     onClick: function (event, menuItem) { return __awaiter(_this, void 0, void 0, function () {
                         var url;
                         return __generator(this, function (_a) {
@@ -128,7 +113,6 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
             return {
                 hideSearchBox: this.props.commandBarProps && this.props.commandBarProps.hideSearchBox,
                 hideCommandBar: this.props.commandBarProps && this.props.commandBarProps.hideCommandBar,
-                refreshItems: this.props.commandBarProps && this.props.commandBarProps.refreshItems,
                 menuItems: menuItems,
                 farMenuItems: this.props.commandBarProps && this.props.commandBarProps.farMenuItems
             };
@@ -163,38 +147,21 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
                 });
             });
         };
-        WorkItemGrid.prototype._itemComparer = function (workItem1, workItem2, sortColumn, sortOrder) {
-            return WorkItemHelpers.workItemFieldValueComparer(workItem1, workItem2, sortColumn.key, sortOrder);
+        WorkItemGrid.prototype._itemComparer = function (workItem1, workItem2, field, sortOrder) {
+            return WorkItemHelpers.workItemFieldValueComparer(workItem1, workItem2, field, sortOrder);
         };
-        WorkItemGrid.prototype._itemFilter = function (workItem, filterText) {
-            if ("" + workItem.id === filterText) {
-                return true;
-            }
-            for (var _i = 0, _a = this.props.fields; _i < _a.length; _i++) {
-                var field = _a[_i];
-                if (Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : "" + workItem.fields[field.referenceName], filterText)) {
-                    return true;
-                }
-            }
-            return false;
+        WorkItemGrid.prototype._itemFilter = function (workItem, filterText, field) {
+            return Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : "" + workItem.fields[field.referenceName], filterText);
         };
         WorkItemGrid.prototype._getWiql = function (workItems) {
             var fieldStr = this.props.fields.map(function (f) { return "[" + f.referenceName + "]"; }).join(",");
-            var ids = (workItems || this.state.filteredItems).map(function (w) { return w.id; }).join(",");
-            var sortColumn = this.state.sortColumn ? this.state.sortColumn.key : "System.CreatedDate";
-            var sortOrder = (this.state.sortOrder && this.state.sortOrder === Grid_Props_1.SortOrder.DESC) ? "DESC" : "";
-            return "SELECT " + fieldStr + "\n                 FROM WorkItems \n                 WHERE [System.TeamProject] = @project \n                 AND [System.ID] IN (" + ids + ") \n                 ORDER BY [" + sortColumn + "] " + sortOrder;
+            var ids = (workItems || this.props.workItems).map(function (w) { return w.id; }).join(",");
+            return "SELECT " + fieldStr + "\n                 FROM WorkItems \n                 WHERE [System.ID] IN (" + ids + ")";
         };
         return WorkItemGrid;
     }(BaseComponent_1.BaseComponent));
     __decorate([
         Utilities_1.autobind
     ], WorkItemGrid.prototype, "_onItemInvoked", null);
-    __decorate([
-        Utilities_1.autobind
-    ], WorkItemGrid.prototype, "_itemComparer", null);
-    __decorate([
-        Utilities_1.autobind
-    ], WorkItemGrid.prototype, "_itemFilter", null);
     exports.WorkItemGrid = WorkItemGrid;
 });

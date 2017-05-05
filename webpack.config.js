@@ -6,22 +6,6 @@ var CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = {
     target: "web",
     entry: {
-        BaseComponent: "./src/Components/Common/BaseComponent.tsx",
-        InfoLabel: "./src/Components/Common/InfoLabel.tsx",
-        InputError: "./src/Components/Common/InputError.tsx",
-        Loading: "./src/Components/Common/Loading.tsx",
-        
-        AutoResizableComponent: "./src/Components/WorkItemControls/AutoResizableComponent.tsx",
-        FieldControl: "./src/Components/WorkItemControls/FieldControl.tsx",    
-        IdentityView: "./src/Components/WorkItemControls/IdentityView.tsx",
-        TagsView: "./src/Components/WorkItemControls/TagsView.tsx",
-        
-        Grid: "./src/Components/Grids/Grid.tsx",
-        WorkItemGrid: "./src/Components/Grids/WorkItemGrid/WorkItemGrid.tsx",
-        QueryResultGrid: "./src/Components/Grids/WorkItemGrid/QueryResultGrid.tsx",
-
-        ExtensionDataManager: "./src/Utilities/ExtensionDataManager.ts",
-
         "vsts-extension-react-widgets.min": "./src/index.ts"
     },
     output: {

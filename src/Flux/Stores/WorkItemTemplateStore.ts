@@ -7,7 +7,7 @@ import { ActionsHub } from "../Actions/ActionsCreator";
 
 export class WorkItemTemplateStore extends BaseStore<WorkItemTemplateReference[], WorkItemTemplateReference, string> {
     
-    protected registerListeners(actions: ActionsHub): void {
+    protected registerListeners(actions: ActionsHub): void {        
         actions.InitializeWorkItemTemplates.addListener((items: WorkItemTemplateReference[]) => {
             if (!items) {
                 this.emitChanged();
@@ -17,7 +17,7 @@ export class WorkItemTemplateStore extends BaseStore<WorkItemTemplateReference[]
     }
 
     protected getItemByKey(id: string): WorkItemTemplateReference {  
-        return Utils_Array.first(this._items, (item: WorkItemTemplateReference) => Utils_String.equals(item.id, id, true));
+        return Utils_Array.first(this.items, (item: WorkItemTemplateReference) => Utils_String.equals(item.id, id, true));
     }
 
     private _onAdd(items: WorkItemTemplateReference | WorkItemTemplateReference[]): void {
@@ -25,8 +25,8 @@ export class WorkItemTemplateStore extends BaseStore<WorkItemTemplateReference[]
             return;
         }
 
-        if (!this._items) {
-            this._items = [];
+        if (!this.items) {
+            this.items = [];
         }
 
         if (Array.isArray(items)) {
@@ -42,13 +42,13 @@ export class WorkItemTemplateStore extends BaseStore<WorkItemTemplateReference[]
     }
 
     private _addItem(item: WorkItemTemplateReference): void {
-        let existingItemIndex = Utils_Array.findIndex(this._items, (existingItem: WorkItemTemplateReference) => Utils_String.equals(item.id, existingItem.id, true));
+        let existingItemIndex = Utils_Array.findIndex(this.items, (existingItem: WorkItemTemplateReference) => Utils_String.equals(item.id, existingItem.id, true));
         if (existingItemIndex != -1) {
             // Overwrite the item data
-            this._items[existingItemIndex] = item;
+            this.items[existingItemIndex] = item;
         }
         else {
-            this._items.push(item);
+            this.items.push(item);
         }
     }
 }

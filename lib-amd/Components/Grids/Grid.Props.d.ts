@@ -9,13 +9,10 @@ export interface IGridProps extends IBaseComponentProps {
     commandBarProps?: ICommandBarProps;
     contextMenuProps?: IContextMenuProps;
     onItemInvoked?: (item: any, index: number) => void;
-    itemComparer?: (item1: any, item2: any, sortColumn: GridColumn, sortOrder: SortOrder) => number;
-    itemFilter?: (item: any, filterText: string) => boolean;
     events?: IGridEvents;
 }
 export interface IGridState extends IBaseComponentState {
     filteredItems?: any[];
-    items?: any[];
     loading?: boolean;
     isContextMenuVisible?: boolean;
     contextMenuTarget?: MouseEvent;
@@ -28,15 +25,15 @@ export interface GridColumn {
     name: string;
     minWidth: number;
     maxWidth?: number;
-    sortable?: boolean;
     resizable?: boolean;
+    sortFunction?: (item1: any, item2: any, sortOrder: SortOrder) => number;
+    filterFunction?: (item: any, filterText: string) => boolean;
     onRenderCell?: (item?: any, index?: number) => JSX.Element;
     data?: any;
 }
 export interface ICommandBarProps {
     hideSearchBox?: boolean;
     hideCommandBar?: boolean;
-    refreshItems?: () => Promise<any[]>;
     menuItems?: IContextualMenuItem[];
     farMenuItems?: IContextualMenuItem[];
 }

@@ -82,39 +82,36 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                 return React.createElement(Loading_1.Loading, null);
             }
             else {
-                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { items: this.state.workItems, fields: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), commandBarProps: this.props.commandBarProps, contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode, extraColumns: this.props.extraColumns }));
+                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { workItems: this.state.workItems, fields: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), commandBarProps: this._getCommandBarProps(), contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode, extraColumns: this.props.extraColumns }));
             }
         };
         QueryResultGrid.prototype._getCommandBarProps = function () {
             var _this = this;
+            var menuItems = [
+                {
+                    key: "refresh", name: "Refresh", title: "Refresh items", iconProps: { iconName: "Refresh" },
+                    onClick: function (event, menuItem) {
+                        _this._runQuery(_this.props);
+                    }
+                }
+            ];
+            if (this.props.commandBarProps && this.props.commandBarProps.menuItems && this.props.commandBarProps.menuItems.length > 0) {
+                menuItems = menuItems.concat(this.props.commandBarProps.menuItems);
+            }
             return {
                 hideSearchBox: this.props.commandBarProps && this.props.commandBarProps.hideSearchBox,
                 hideCommandBar: this.props.commandBarProps && this.props.commandBarProps.hideCommandBar,
-                refreshItems: function () { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        if (this.props.commandBarProps && this.props.commandBarProps.refreshItems) {
-                            return [2, this.props.commandBarProps.refreshItems()];
-                        }
-                        else {
-                            return [2, this._runQuery(this.props, false)];
-                        }
-                        return [2];
-                    });
-                }); },
-                menuItems: this.props.commandBarProps && this.props.commandBarProps.menuItems,
+                menuItems: menuItems,
                 farMenuItems: this.props.commandBarProps && this.props.commandBarProps.farMenuItems
             };
         };
-        QueryResultGrid.prototype._runQuery = function (props, updateState) {
-            if (updateState === void 0) { updateState = true; }
+        QueryResultGrid.prototype._runQuery = function (props) {
             return __awaiter(this, void 0, void 0, function () {
                 var queryResult, workItemIds, workItems;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            if (updateState) {
-                                this.updateState({ workItems: null, fieldColumns: null });
-                            }
+                            this.updateState({ workItems: null, fieldColumns: null });
                             return [4, WitClient.getClient().queryByWiql({ query: props.wiql }, props.project, null, false, this.props.top)];
                         case 1:
                             queryResult = _a.sent();
@@ -126,10 +123,8 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                             workItems = _a.sent();
                             _a.label = 3;
                         case 3:
-                            if (updateState) {
-                                this.updateState({ workItems: workItems, fieldColumns: queryResult.columns });
-                            }
-                            return [2, workItems];
+                            this.updateState({ workItems: workItems, fieldColumns: queryResult.columns });
+                            return [2];
                     }
                 });
             });

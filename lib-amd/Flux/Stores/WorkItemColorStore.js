@@ -20,13 +20,13 @@ define(["require", "exports", "./BaseStore"], function (require, exports, BaseSt
             var _this = this;
             actions.InitializeWorkItemColors.addListener(function (items) {
                 if (items) {
-                    _this._items = items;
+                    _this.items = items;
                 }
                 _this.emitChanged();
             });
         };
         WorkItemColorStore.prototype.getItemByKey = function (key) {
-            var workItemType = this._items[key.workItemType];
+            var workItemType = this.items[key.workItemType];
             if (workItemType) {
                 if (key.stateName) {
                     return workItemType.stateColors[key.stateName];

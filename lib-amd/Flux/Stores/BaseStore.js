@@ -15,12 +15,19 @@ define(["require", "exports", "VSS/Flux/Store"], function (require, exports, Sto
         __extends(BaseStore, _super);
         function BaseStore(actions) {
             var _this = _super.call(this) || this;
-            _this._items = null;
+            _this.items = null;
+            _this.isStoreLoading = false;
             _this.registerListeners(actions);
             return _this;
         }
         BaseStore.prototype.isLoaded = function () {
-            return this._items ? true : false;
+            return this.items ? true : false;
+        };
+        BaseStore.prototype.setLoading = function (loading) {
+            this.isStoreLoading = loading;
+        };
+        BaseStore.prototype.isLoading = function () {
+            return !this.isLoaded() && this.isStoreLoading;
         };
         BaseStore.prototype.itemExists = function (key) {
             if (!this.isLoaded()) {
@@ -32,10 +39,10 @@ define(["require", "exports", "VSS/Flux/Store"], function (require, exports, Sto
             if (!this.isLoaded()) {
                 return null;
             }
-            this.getItemByKey(key);
+            return this.getItemByKey(key);
         };
         BaseStore.prototype.getAll = function () {
-            return this._items;
+            return this.items;
         };
         BaseStore.prototype.getItemByKey = function (key) {
             throw "Not Implemented";

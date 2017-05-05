@@ -33,8 +33,11 @@ export class ActionsCreator {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemFields.invoke(null);
         }
-        else {            
+        else if (!this._workItemFieldStore.isLoading()) {
+            this._workItemFieldStore.setLoading(true);
             let fields = await WitClient.getClient().getFields(VSS.getWebContext().project.id);
+            this._workItemFieldStore.setLoading(false);
+
             this._actionsHub.InitializeWorkItemFields.invoke(fields);
         }
     }
@@ -44,8 +47,11 @@ export class ActionsCreator {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemTemplates.invoke(null);
         }
-        else {            
+        else if (!this._workItemTemplateStore.isLoading()) {
+            this._workItemTemplateStore.setLoading(true);
             let templates = await WitClient.getClient().getTemplates(VSS.getWebContext().project.id, VSS.getWebContext().team.id);
+            this._workItemTemplateStore.setLoading(false);
+
             this._actionsHub.InitializeWorkItemTemplates.invoke(templates);
         }
     }
@@ -55,8 +61,11 @@ export class ActionsCreator {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemTypes.invoke(null);
         }
-        else {            
+        else if (!this._workItemTypeStore.isLoading()) {
+            this._workItemTypeStore.setLoading(true);
             let workItemTypes = await WitClient.getClient().getWorkItemTypes(VSS.getWebContext().project.id);
+            this._workItemTypeStore.setLoading(false);
+
             this._actionsHub.InitializeWorkItemTypes.invoke(workItemTypes);
         }
     }
@@ -66,7 +75,9 @@ export class ActionsCreator {
             // Do nothing if query hierarchy data is already loaded
             this._actionsHub.InitializeWorkItemColors.invoke(null);
         }
-        else {
+        else if (!this._workItemColorsStore.isLoading()) {
+            this._workItemColorsStore.setLoading(true);
+
             let workItemTypeAndStateColors: IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}> = {};
             const projectId = VSS.getWebContext().project.id;
             
@@ -81,6 +92,8 @@ export class ActionsCreator {
                 let stateColors = await WitClient.getClient().getWorkItemTypeStates(projectId, wit.name);
                 stateColors.forEach((stateColor: WorkItemStateColor) => workItemTypeAndStateColors[wit.name].stateColors[stateColor.name] = stateColor.color);
             }));
+
+            this._workItemColorsStore.setLoading(false);
 
             this._actionsHub.InitializeWorkItemColors.invoke(workItemTypeAndStateColors);
         }

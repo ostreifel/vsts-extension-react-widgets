@@ -7,7 +7,7 @@ import { ActionsHub } from "../Actions/ActionsCreator";
 
 export class WorkItemFieldStore extends BaseStore<WorkItemField[], WorkItemField, string> {
     
-    protected registerListeners(actions: ActionsHub): void {
+    protected registerListeners(actions: ActionsHub): void {        
         actions.InitializeWorkItemFields.addListener((items: WorkItemField[]) => {
             if (!items) {
                 this.emitChanged();
@@ -17,7 +17,7 @@ export class WorkItemFieldStore extends BaseStore<WorkItemField[], WorkItemField
     }
 
     protected getItemByKey(refName: string): WorkItemField {
-        return Utils_Array.first(this._items, (item: WorkItemField) => Utils_String.equals(item.referenceName, refName, true));
+        return Utils_Array.first(this.items, (item: WorkItemField) => Utils_String.equals(item.referenceName, refName, true));
     }
 
     private _onAdd(items: WorkItemField | WorkItemField[]): void {
@@ -25,8 +25,8 @@ export class WorkItemFieldStore extends BaseStore<WorkItemField[], WorkItemField
             return;
         }
 
-        if (!this._items) {
-            this._items = [];
+        if (!this.items) {
+            this.items = [];
         }
 
         if (Array.isArray(items)) {
@@ -42,13 +42,13 @@ export class WorkItemFieldStore extends BaseStore<WorkItemField[], WorkItemField
     }
 
     private _addItem(item: WorkItemField): void {
-        let existingItemIndex = Utils_Array.findIndex(this._items, (existingItem: WorkItemField) => Utils_String.equals(item.referenceName, existingItem.referenceName, true));
+        let existingItemIndex = Utils_Array.findIndex(this.items, (existingItem: WorkItemField) => Utils_String.equals(item.referenceName, existingItem.referenceName, true));
         if (existingItemIndex != -1) {
             // Overwrite the item data
-            this._items[existingItemIndex] = item;
+            this.items[existingItemIndex] = item;
         }
         else {
-            this._items.push(item);
+            this.items.push(item);
         }
     }
 }

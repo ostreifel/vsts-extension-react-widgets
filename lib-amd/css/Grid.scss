@@ -1,0 +1,35 @@
+@import "mixins";
+
+.base-grid {
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+
+    .menu-bar-container {
+        display: flex;
+        flex-direction: row;            
+        margin-bottom: 10px;
+        min-height: 40px;
+        max-height: 40px;
+
+        .searchbox {
+            margin-bottom: 1px;
+            margin-top: 1px;
+            height: inherit;
+        }
+        
+        .menu-bar {
+            flex: 1;
+        }
+    }
+
+    & > .ms-Viewport {
+        display: flex;
+        flex: 1;
+    }
+
+    .grid {
+        overflow: auto;
+        flex: 1;        
+    }
+}

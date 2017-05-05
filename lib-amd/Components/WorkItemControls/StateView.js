@@ -1,0 +1,43 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComponent", "../../css/StateView.scss"], function (require, exports, React, Label_1, BaseComponent_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var StateView = (function (_super) {
+        __extends(StateView, _super);
+        function StateView() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        StateView.prototype.getStoresToLoad = function () {
+            return [this.fluxContext.stores.workItemColorStore];
+        };
+        StateView.prototype.initialize = function () {
+            this.fluxContext.actionsCreator.initializeWorkItemColors();
+        };
+        StateView.prototype.initializeState = function () {
+            this.state = {};
+        };
+        StateView.prototype.getDefaultClassName = function () {
+            return "work-item-state-view";
+        };
+        StateView.prototype.render = function () {
+            var stateColor = this.fluxContext.stores.workItemColorStore.isLoaded() ? this.fluxContext.stores.workItemColorStore.getItem({ workItemType: this.props.workItemType, stateName: this.props.state }) : "#FFFFFF";
+            return (React.createElement(Label_1.Label, { className: this.getClassName() },
+                React.createElement("span", { className: "work-item-type-state-color", style: {
+                        backgroundColor: "#" + stateColor,
+                        borderColor: "#" + stateColor
+                    } }),
+                React.createElement("span", { className: "state-name" }, this.props.state)));
+        };
+        return StateView;
+    }(BaseComponent_1.BaseComponent));
+    exports.StateView = StateView;
+});

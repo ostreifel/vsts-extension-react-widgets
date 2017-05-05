@@ -1,4 +1,5 @@
 import * as React from "react";
+import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
@@ -53,7 +54,7 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
         else {                    
             return (
                 <WorkItemGrid 
-                    items={this.state.workItems}
+                    workItems={this.state.workItems}
                     fields={this.state.fieldColumns.map(fr => this.state.fieldsMap[fr.referenceName.toLowerCase()]).filter(f => f != null)}
                     commandBarProps={this._getCommandBarProps()}
                     contextMenuProps={this.props.contextMenuProps}
@@ -64,27 +65,30 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
         }
     }
 
-    private _getCommandBarProps(): ICommandBarProps {
+    private _getCommandBarProps(): ICommandBarProps {        
+        let menuItems: IContextualMenuItem[] = [             
+            {
+                key: "refresh", name: "Refresh", title: "Refresh items", iconProps: {iconName: "Refresh"},
+                onClick: (event?: React.MouseEvent<HTMLElement>, menuItem?: IContextualMenuItem) => {
+                    this._runQuery(this.props);
+                }
+            }
+        ];
+                
+        if (this.props.commandBarProps && this.props.commandBarProps.menuItems && this.props.commandBarProps.menuItems.length > 0) {
+            menuItems = menuItems.concat(this.props.commandBarProps.menuItems);
+        }
+        
         return {
             hideSearchBox: this.props.commandBarProps && this.props.commandBarProps.hideSearchBox,
             hideCommandBar: this.props.commandBarProps && this.props.commandBarProps.hideCommandBar,
-            refreshItems: async () => {
-                if (this.props.commandBarProps && this.props.commandBarProps.refreshItems) {
-                    return this.props.commandBarProps.refreshItems();
-                }
-                else {
-                    return this._runQuery(this.props, false);
-                }
-            },
-            menuItems: this.props.commandBarProps && this.props.commandBarProps.menuItems,
+            menuItems: menuItems,
             farMenuItems: this.props.commandBarProps && this.props.commandBarProps.farMenuItems
-        }
+        };
     }
 
-    private async _runQuery(props: IQueryResultGridProps, updateState: boolean = true): Promise<WorkItem[]> {
-        if (updateState) {
-            this.updateState({workItems: null, fieldColumns: null});
-        }
+    private async _runQuery(props: IQueryResultGridProps) {
+        this.updateState({workItems: null, fieldColumns: null});
 
         let queryResult = await WitClient.getClient().queryByWiql({ query: props.wiql }, props.project, null, false, this.props.top);
         let workItemIds = queryResult.workItems.map(workItem => workItem.id);
@@ -94,11 +98,7 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
             workItems = await WitClient.getClient().getWorkItems(workItemIds);
         }
 
-        if (updateState) {
-            this.updateState({workItems: workItems, fieldColumns: queryResult.columns});
-        }
-
-        return workItems;
+        this.updateState({workItems: workItems, fieldColumns: queryResult.columns});
     }    
 
     private _isDataLoaded(): boolean {
