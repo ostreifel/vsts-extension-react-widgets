@@ -172,7 +172,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                         return [4, workItemNavSvc.openWorkItem(item.id, newTab)];
                     case 2:
                         workItem = _a.sent();
-                        return [2, null];
+                        return [2, workItem];
                 }
             });
         });

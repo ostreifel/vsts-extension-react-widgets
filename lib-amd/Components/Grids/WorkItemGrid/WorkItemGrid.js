@@ -141,9 +141,17 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
         };
         WorkItemGrid.prototype._onItemInvoked = function (workItem, index, ev) {
             return __awaiter(this, void 0, void 0, function () {
+                var updatedWorkItem;
                 return __generator(this, function (_a) {
-                    WorkItemHelpers.openWorkItemDialog(null, workItem);
-                    return [2];
+                    switch (_a.label) {
+                        case 0: return [4, WorkItemHelpers.openWorkItemDialog(null, workItem)];
+                        case 1:
+                            updatedWorkItem = _a.sent();
+                            if (updatedWorkItem.rev !== workItem.rev && this.props.onWorkItemUpdated) {
+                                this.props.onWorkItemUpdated(updatedWorkItem);
+                            }
+                            return [2];
+                    }
                 });
             });
         };

@@ -8,6 +8,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -43,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "../../Common/Loading", "../../Common/BaseComponent", "./WorkItemGrid"], function (require, exports, React, WitClient, Utils_String, Loading_1, BaseComponent_1, WorkItemGrid_1) {
+define(["require", "exports", "react", "OfficeFabric/Utilities", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "VSS/Utils/Array", "../../Common/Loading", "../../Common/BaseComponent", "./WorkItemGrid"], function (require, exports, React, Utilities_1, WitClient, Utils_String, Utils_Array, Loading_1, BaseComponent_1, WorkItemGrid_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var QueryResultGrid = (function (_super) {
@@ -69,6 +75,9 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
         QueryResultGrid.prototype.initializeState = function () {
             this.state = {};
         };
+        QueryResultGrid.prototype.getDefaultClassName = function () {
+            return "query-results-grid";
+        };
         QueryResultGrid.prototype.componentWillReceiveProps = function (nextProps, nextContext) {
             if (!Utils_String.equals(this.props.wiql, nextProps.wiql, true) ||
                 !Utils_String.equals(this.props.project, nextProps.project, true) ||
@@ -82,7 +91,16 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
                 return React.createElement(Loading_1.Loading, null);
             }
             else {
-                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { workItems: this.state.workItems, fields: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), commandBarProps: this._getCommandBarProps(), contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode, extraColumns: this.props.extraColumns }));
+                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { className: this.getClassName(), workItems: this.state.workItems, fields: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), commandBarProps: this._getCommandBarProps(), contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode, extraColumns: this.props.extraColumns, onWorkItemUpdated: this._onWorkItemUpdated }));
+            }
+        };
+        QueryResultGrid.prototype._onWorkItemUpdated = function (updatedWorkItem) {
+            var newList = this.state.workItems.slice();
+            var index = Utils_Array.findIndex(this.state.workItems, function (w) { return w.id === updatedWorkItem.id; });
+            if (index !== -1) {
+                newList[index].fields = updatedWorkItem.fields;
+                newList[index].rev = updatedWorkItem.rev;
+                this.updateState({ workItems: newList });
             }
         };
         QueryResultGrid.prototype._getCommandBarProps = function () {
@@ -134,5 +152,8 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/RestClient", "VSS/U
         };
         return QueryResultGrid;
     }(BaseComponent_1.BaseComponent));
+    __decorate([
+        Utilities_1.autobind
+    ], QueryResultGrid.prototype, "_onWorkItemUpdated", null);
     exports.QueryResultGrid = QueryResultGrid;
 });

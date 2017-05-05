@@ -1,9 +1,11 @@
 import * as React from "react";
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
+import { autobind } from "OfficeFabric/Utilities";
 
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
 import Utils_String = require("VSS/Utils/String");
+import Utils_Array = require("VSS/Utils/Array");
 
 import { Loading } from "../../Common/Loading";
 import { BaseComponent } from "../../Common/BaseComponent"; 
@@ -38,6 +40,10 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
         };
     }
 
+    protected getDefaultClassName(): string {
+        return "query-results-grid";
+    }
+
     public componentWillReceiveProps(nextProps: Readonly<IQueryResultGridProps>, nextContext: any): void {
         if (!Utils_String.equals(this.props.wiql, nextProps.wiql, true) || 
             !Utils_String.equals(this.props.project, nextProps.project, true) || 
@@ -54,14 +60,27 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
         else {                    
             return (
                 <WorkItemGrid 
+                    className={this.getClassName()}
                     workItems={this.state.workItems}
                     fields={this.state.fieldColumns.map(fr => this.state.fieldsMap[fr.referenceName.toLowerCase()]).filter(f => f != null)}
                     commandBarProps={this._getCommandBarProps()}
                     contextMenuProps={this.props.contextMenuProps}
                     selectionMode={this.props.selectionMode}
                     extraColumns={this.props.extraColumns}
+                    onWorkItemUpdated={this._onWorkItemUpdated}
                 />                        
             );
+        }
+    }
+
+    @autobind
+    private _onWorkItemUpdated(updatedWorkItem: WorkItem) {
+        let newList = this.state.workItems.slice();
+        const index = Utils_Array.findIndex(this.state.workItems, w => w.id === updatedWorkItem.id);
+        if (index !== -1) {
+            newList[index].fields = updatedWorkItem.fields;
+            newList[index].rev = updatedWorkItem.rev;
+            this.updateState({workItems: newList});
         }
     }
 

@@ -13,7 +13,8 @@ export interface BaseWorkItemGridProps extends IBaseComponentProps {
 
 export interface IWorkItemGridProps extends BaseWorkItemGridProps {    
     workItems: WorkItem[];
-    fields: WorkItemField[];    
+    fields: WorkItemField[];
+    onWorkItemUpdated?: (updatedWorkItem: WorkItem) => void;
 }
 
 export interface IQueryResultGridProps extends BaseWorkItemGridProps {

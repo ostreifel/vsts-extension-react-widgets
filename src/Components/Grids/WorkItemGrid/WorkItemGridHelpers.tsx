@@ -149,10 +149,10 @@ export function getColumnSize(field: WorkItemField): {minWidth: number, maxWidth
     }
 }
 
-export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<WorkItem> {
+export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<any> { // change cast m116 sdk is released
     let newTab = e ? e.ctrlKey : false;
     let workItemNavSvc = await WorkItemFormNavigationService.getService();
     const workItem = await workItemNavSvc.openWorkItem(item.id, newTab);
 
-    return null; // change once m116 sdk is released
+    return workItem; 
 }

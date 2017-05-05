@@ -121,8 +121,11 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
 
     @autobind
     private async _onItemInvoked(workItem: WorkItem, index: number, ev?: Event) {
-        // fire a workitem changed event here so parent can listem to it to update work items
-        WorkItemHelpers.openWorkItemDialog(null, workItem);
+        // fire a workitem changed event here so parent can listen to it to update work items
+        const updatedWorkItem: WorkItem = await WorkItemHelpers.openWorkItemDialog(null, workItem);
+        if (updatedWorkItem.rev !== workItem.rev && this.props.onWorkItemUpdated) {
+            this.props.onWorkItemUpdated(updatedWorkItem);
+        }
     }   
 
     private _itemComparer(workItem1: WorkItem, workItem2: WorkItem, field: WorkItemField, sortOrder: SortOrder): number {
