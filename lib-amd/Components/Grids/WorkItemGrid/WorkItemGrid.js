@@ -147,7 +147,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
                         case 0: return [4, WorkItemHelpers.openWorkItemDialog(null, workItem)];
                         case 1:
                             updatedWorkItem = _a.sent();
-                            if (updatedWorkItem.rev !== workItem.rev && this.props.onWorkItemUpdated) {
+                            if (updatedWorkItem.rev > workItem.rev && this.props.onWorkItemUpdated) {
                                 this.props.onWorkItemUpdated(updatedWorkItem);
                             }
                             return [2];
