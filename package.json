@@ -1,6 +1,6 @@
 {
     "name": "vsts-extension-react-widgets",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Reusable React components based on office fabric for building VSTS extensions.",
     "main": "lib-amd/index.js",
     "typings": "lib-amd/index.d.ts",
@@ -19,26 +19,26 @@
         "postinstall": "typings install"
     },
     "devDependencies": {
-        "@types/react": "^15.0.23",
+        "@types/react": "^15.0.24",
         "@types/react-dom": "^15.5.0",
         "@types/jquery": "^2.0.41",
-        "webpack": "^2.4.1",
+        "webpack": "^2.5.0",
         "webpack-dev-server": "^2.4.5",
         "rimraf": "^2.6.1",
         "sass-loader": "^6.0.3",
-        "style-loader": "^0.16.1",
-        "css-loader": "^0.28.0",
+        "style-loader": "^0.17.0",
+        "css-loader": "^0.28.1",
         "ts-loader": "^2.0.3",
         "node-sass": "^4.5.2",
         "typescript": "^2.3.2",
-        "typings": "^2.1.1",
-        "vss-web-extension-sdk": "^2.115.0",
-        "uglifyjs-webpack-plugin": "^0.4.3",
-        "es6-promise": "^4.1.0",
+        "typings": "^2.1.1",        
+        "uglifyjs-webpack-plugin": "^0.4.3",        
         "copy-webpack-plugin": "4.0.1",
         "tfx-cli": "^0.4.5"
     },
     "dependencies": {
-        "office-ui-fabric-react": "^2.24.2"
+        "es6-promise": "^4.1.0",
+        "vss-web-extension-sdk": "^2.115.0",
+        "office-ui-fabric-react": "^2.25.1"
     }
 }
