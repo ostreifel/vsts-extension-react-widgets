@@ -1,9 +1,9 @@
 import Utils_String = require("VSS/Utils/String");
 import Utils_Array = require("VSS/Utils/Array");
 import { WorkItemTemplate } from "TFS/WorkItemTracking/Contracts";
+import * as WitClient from "TFS/WorkItemTracking/RestClient";
 
 import { BaseStore } from "./BaseStore";
-import { ActionsHub } from "../Actions/ActionsCreator";
 
 export interface IWorkItemTemplateItemStore {
     itemExists(id: string): boolean;
@@ -11,21 +11,41 @@ export interface IWorkItemTemplateItemStore {
 }
 
 export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], WorkItemTemplate, string> {
-
-    constructor(actions: ActionsHub) {
-        super(actions);
-
+    constructor() {
+        super();
         this.items = [];    
     }
 
-    protected registerListeners(actions: ActionsHub): void {
-        actions.WorkItemTemplateItemAdded.addListener((items: WorkItemTemplate | WorkItemTemplate[]) => {
-            this._onAdd(items);
-        });
-    }
-    
     protected getItemByKey(id: string): WorkItemTemplate {
          return Utils_Array.first(this.items, (item: WorkItemTemplate) => Utils_String.equals(item.id, id, true));
+    }
+
+    protected async initializeItems(): Promise<void> {
+        return;
+    }
+
+    public getKey(): string {
+        return "WorkItemTemplateItemStore";
+    }    
+
+    public async ensureTemplateItem(id: string): Promise<boolean> {
+        if (!this.itemExists(id)) {
+            try {
+                let template = await WitClient.getClient().getTemplate(VSS.getWebContext().project.id, VSS.getWebContext().team.id, id)
+                if (template) {
+                    this._onAdd(template);
+                    return true;
+                }
+            }
+            catch (e) {
+                return false;
+            }
+
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     private _onAdd(items: WorkItemTemplate | WorkItemTemplate[]): void {

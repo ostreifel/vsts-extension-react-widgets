@@ -49,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "OfficeFabric/Utilities", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "VSS/Utils/Array", "../../Common/Loading", "../../Common/BaseComponent", "./WorkItemGrid"], function (require, exports, React, Utilities_1, WitClient, Utils_String, Utils_Array, Loading_1, BaseComponent_1, WorkItemGrid_1) {
+define(["require", "exports", "react", "OfficeFabric/Utilities", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "VSS/Utils/Array", "../../Common/Loading", "../../Common/BaseComponent", "./WorkItemGrid", "../../../Stores/BaseStore", "../../../Stores/WorkItemFieldStore"], function (require, exports, React, Utilities_1, WitClient, Utils_String, Utils_Array, Loading_1, BaseComponent_1, WorkItemGrid_1, BaseStore_1, WorkItemFieldStore_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var QueryResultGrid = (function (_super) {
@@ -58,15 +58,16 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "TFS/WorkItemTr
             return _super !== null && _super.apply(this, arguments) || this;
         }
         QueryResultGrid.prototype.getStoresToLoad = function () {
-            return [this.fluxContext.stores.workItemFieldStore];
+            return [WorkItemFieldStore_1.WorkItemFieldStore];
         };
         QueryResultGrid.prototype.initialize = function () {
-            this.fluxContext.actionsCreator.initializeWorkItemFields();
+            BaseStore_1.StoreFactory.getInstance(WorkItemFieldStore_1.WorkItemFieldStore).initialize();
             this._runQuery(this.props);
         };
         QueryResultGrid.prototype.onStoreChanged = function () {
-            if (!this.state.fieldsMap && this.fluxContext.stores.workItemFieldStore.isLoaded()) {
-                var fields = this.fluxContext.stores.workItemFieldStore.getAll();
+            var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemFieldStore_1.WorkItemFieldStore);
+            if (!this.state.fieldsMap && storeInstance.isLoaded()) {
+                var fields = storeInstance.getAll();
                 var fieldsMap_1 = {};
                 fields.forEach(function (f) { return fieldsMap_1[f.referenceName.toLowerCase()] = f; });
                 this.updateState({ fieldsMap: fieldsMap_1 });

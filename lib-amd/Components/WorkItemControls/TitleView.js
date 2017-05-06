@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComponent", "../../css/TitleView.scss"], function (require, exports, React, Label_1, BaseComponent_1) {
+define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComponent", "../../Stores/BaseStore", "../../Stores/WorkItemColorStore", "../../css/TitleView.scss"], function (require, exports, React, Label_1, BaseComponent_1, BaseStore_1, WorkItemColorStore_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var TitleView = (function (_super) {
@@ -17,10 +17,10 @@ define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComp
             return _super !== null && _super.apply(this, arguments) || this;
         }
         TitleView.prototype.getStoresToLoad = function () {
-            return [this.fluxContext.stores.workItemColorStore];
+            return [WorkItemColorStore_1.WorkItemColorStore];
         };
         TitleView.prototype.initialize = function () {
-            this.fluxContext.actionsCreator.initializeWorkItemColors();
+            BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore).initialize();
         };
         TitleView.prototype.initializeState = function () {
             this.state = {};
@@ -29,7 +29,8 @@ define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComp
             return "work-item-title-view";
         };
         TitleView.prototype.render = function () {
-            var witColor = this.fluxContext.stores.workItemColorStore.isLoaded() ? this.fluxContext.stores.workItemColorStore.getItem({ workItemType: this.props.workItemType }) : "#FFFFFF";
+            var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore);
+            var witColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType }) : "#FFFFFF";
             return (React.createElement(Label_1.Label, { className: this.getClassName(), style: { borderColor: witColor ? "#" + witColor : "#000" } }, this.props.title));
         };
         return TitleView;

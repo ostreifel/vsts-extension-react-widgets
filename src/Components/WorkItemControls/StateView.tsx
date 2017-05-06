@@ -5,7 +5,8 @@ import * as React from "react";
 import { Label } from "OfficeFabric/Label";
 
 import { BaseComponent, IBaseComponentState, IBaseComponentProps } from "../Common/BaseComponent"; 
-import { BaseStore } from "../../Flux/Stores/BaseStore";
+import { BaseStore, StoreFactory } from "../../Stores/BaseStore";
+import { WorkItemColorStore } from "../../Stores/WorkItemColorStore";
 
 export interface IStateViewProps extends IBaseComponentProps {
     state: string;
@@ -17,12 +18,12 @@ export interface IStateViewState extends IBaseComponentState {
 }
 
 export class StateView extends BaseComponent<IStateViewProps, IStateViewState> {
-    protected getStoresToLoad(): BaseStore<any, any, any>[] {
-        return [this.fluxContext.stores.workItemColorStore];
+    protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
+        return [WorkItemColorStore];
     }
 
     protected initialize() {
-        this.fluxContext.actionsCreator.initializeWorkItemColors();        
+        StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore).initialize();
     }
 
     protected initializeState(): void {
@@ -36,7 +37,8 @@ export class StateView extends BaseComponent<IStateViewProps, IStateViewState> {
     }
 
     public render(): JSX.Element {
-        let stateColor = this.fluxContext.stores.workItemColorStore.isLoaded() ? this.fluxContext.stores.workItemColorStore.getItem({workItemType: this.props.workItemType, stateName: this.props.state}) : "#FFFFFF";
+        const storeInstance = StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore);
+        let stateColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType, stateName: this.props.state}) : "#FFFFFF";
         
         return (
             <Label className={this.getClassName()}>

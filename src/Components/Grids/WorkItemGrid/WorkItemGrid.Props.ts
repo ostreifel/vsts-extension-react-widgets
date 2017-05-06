@@ -1,7 +1,6 @@
-import * as React from "react";
 import { WorkItem, WorkItemField, WorkItemFieldReference } from "TFS/WorkItemTracking/Contracts";
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
-import { ICommandBarProps, IContextMenuProps, GridColumn, SortOrder } from "../Grid.Props";
+import { ICommandBarProps, IContextMenuProps, GridColumn } from "../Grid.Props";
 import { IBaseComponentProps, IBaseComponentState } from "../../Common/BaseComponent"; 
 
 export interface BaseWorkItemGridProps extends IBaseComponentProps {

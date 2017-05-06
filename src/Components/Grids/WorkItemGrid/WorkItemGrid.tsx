@@ -3,7 +3,6 @@ import "../../../css/WorkItemsGrid.scss";
 import * as React from "react";
 
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
-import { SelectionMode } from "OfficeFabric/utilities/selection";
 import { autobind } from "OfficeFabric/Utilities";
 
 import Utils_String = require("VSS/Utils/String");
@@ -14,7 +13,6 @@ import { IWorkItemGridProps, ColumnPosition } from "./WorkItemGrid.Props";
 import { Grid } from "../Grid";
 import { SortOrder, GridColumn, ICommandBarProps, IContextMenuProps } from "../Grid.Props";
 import * as WorkItemHelpers from "./WorkItemGridHelpers";
-import { BaseStore } from "../../../Flux/Stores/BaseStore";
 import { BaseComponent } from "../../Common/BaseComponent"; 
 
 export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseComponentState> {

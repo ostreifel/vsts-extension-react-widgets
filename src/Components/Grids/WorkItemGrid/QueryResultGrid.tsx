@@ -10,23 +10,26 @@ import Utils_Array = require("VSS/Utils/Array");
 import { Loading } from "../../Common/Loading";
 import { BaseComponent } from "../../Common/BaseComponent"; 
 import { WorkItemGrid } from "./WorkItemGrid";
-import { BaseStore } from "../../../Flux/Stores/BaseStore";
+import { BaseStore, StoreFactory } from "../../../Stores/BaseStore";
+import { WorkItemFieldStore } from "../../../Stores/WorkItemFieldStore";
 import { IQueryResultGridProps, IQueryResultGridState } from "./WorkItemGrid.Props";
 import { ICommandBarProps } from "../Grid.Props";
 
 export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQueryResultGridState> {
-    protected getStoresToLoad(): BaseStore<any, any, any>[] {
-        return [this.fluxContext.stores.workItemFieldStore];
+    protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
+        return [WorkItemFieldStore];
     }
 
     protected initialize() {
-        this.fluxContext.actionsCreator.initializeWorkItemFields();
+        StoreFactory.getInstance<WorkItemFieldStore>(WorkItemFieldStore).initialize();
         this._runQuery(this.props);
     }
 
     protected onStoreChanged() {
-         if (!this.state.fieldsMap && this.fluxContext.stores.workItemFieldStore.isLoaded()) {
-            const fields = this.fluxContext.stores.workItemFieldStore.getAll();
+        const storeInstance = StoreFactory.getInstance<WorkItemFieldStore>(WorkItemFieldStore);
+        
+         if (!this.state.fieldsMap && storeInstance.isLoaded()) {
+            const fields = storeInstance.getAll();
             let fieldsMap = {};
             fields.forEach(f => fieldsMap[f.referenceName.toLowerCase()] = f);
 

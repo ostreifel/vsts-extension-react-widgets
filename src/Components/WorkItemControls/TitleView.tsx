@@ -5,7 +5,8 @@ import * as React from "react";
 import { Label } from "OfficeFabric/Label";
 
 import { BaseComponent, IBaseComponentState, IBaseComponentProps } from "../Common/BaseComponent"; 
-import { BaseStore } from "../../Flux/Stores/BaseStore";
+import { BaseStore, StoreFactory } from "../../Stores/BaseStore";
+import { WorkItemColorStore } from "../../Stores/WorkItemColorStore";
 
 export interface ITitleViewProps extends IBaseComponentProps {
     title: string;
@@ -17,12 +18,12 @@ export interface ITitleViewState extends IBaseComponentState {
 }
 
 export class TitleView extends BaseComponent<ITitleViewProps, ITitleViewState> {
-    protected getStoresToLoad(): BaseStore<any, any, any>[] {
-        return [this.fluxContext.stores.workItemColorStore];
+    protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
+        return [WorkItemColorStore];
     }
 
     protected initialize() {
-        this.fluxContext.actionsCreator.initializeWorkItemColors();        
+        StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore).initialize();
     }
 
     protected initializeState(): void {
@@ -36,7 +37,9 @@ export class TitleView extends BaseComponent<ITitleViewProps, ITitleViewState> {
     }
 
     public render(): JSX.Element {
-        let witColor = this.fluxContext.stores.workItemColorStore.isLoaded() ? this.fluxContext.stores.workItemColorStore.getItem({workItemType: this.props.workItemType}) : "#FFFFFF";
+        const storeInstance = StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore);
+        let witColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType}) : "#FFFFFF";
+
         return (
             <Label className={this.getClassName()} style={{borderColor: witColor ? "#" + witColor : "#000"}}>
                 {this.props.title}

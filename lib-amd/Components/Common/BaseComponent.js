@@ -22,14 +22,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "react", "OfficeFabric/Utilities", "../../Flux/FluxContext"], function (require, exports, React, Utilities_1, FluxContext_1) {
+define(["require", "exports", "react", "../../Stores/BaseStore", "OfficeFabric/Utilities"], function (require, exports, React, BaseStore_1, Utilities_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var BaseComponent = (function (_super) {
         __extends(BaseComponent, _super);
         function BaseComponent(props, context) {
             var _this = _super.call(this, props, context) || this;
-            _this.fluxContext = FluxContext_1.FluxContext.get();
             _this.initializeState();
             return _this;
         }
@@ -37,7 +36,8 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "../../Flux/Flu
             var stores = this.getStoresToLoad() || [];
             for (var _i = 0, stores_1 = stores; _i < stores_1.length; _i++) {
                 var store = stores_1[_i];
-                store.addChangedListener(this._onStoreChanged);
+                var instance = BaseStore_1.StoreFactory.getInstance(store);
+                instance.addChangedListener(this._onStoreChanged);
             }
             this.initialize();
         };
@@ -45,7 +45,8 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "../../Flux/Flu
             var stores = this.getStoresToLoad() || [];
             for (var _i = 0, stores_2 = stores; _i < stores_2.length; _i++) {
                 var store = stores_2[_i];
-                store.removeChangedListener(this._onStoreChanged);
+                var instance = BaseStore_1.StoreFactory.getInstance(store);
+                instance.removeChangedListener(this._onStoreChanged);
             }
         };
         BaseComponent.prototype.getStoresToLoad = function () {
@@ -77,7 +78,8 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "../../Flux/Flu
             var allStoresLoaded = true;
             for (var _i = 0, stores_3 = stores; _i < stores_3.length; _i++) {
                 var store = stores_3[_i];
-                if (!store.isLoaded()) {
+                var storeInstance = BaseStore_1.StoreFactory.getInstance(store);
+                if (!storeInstance.isLoaded()) {
                     allStoresLoaded = false;
                     break;
                 }

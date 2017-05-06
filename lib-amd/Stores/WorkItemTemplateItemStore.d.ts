@@ -1,14 +1,15 @@
 import { WorkItemTemplate } from "TFS/WorkItemTracking/Contracts";
 import { BaseStore } from "./BaseStore";
-import { ActionsHub } from "../Actions/ActionsCreator";
 export interface IWorkItemTemplateItemStore {
     itemExists(id: string): boolean;
     getItem(id: string): WorkItemTemplate;
 }
 export declare class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], WorkItemTemplate, string> {
-    constructor(actions: ActionsHub);
-    protected registerListeners(actions: ActionsHub): void;
+    constructor();
     protected getItemByKey(id: string): WorkItemTemplate;
+    protected initializeItems(): Promise<void>;
+    getKey(): string;
+    ensureTemplateItem(id: string): Promise<boolean>;
     private _onAdd(items);
     private _addItem(item);
 }

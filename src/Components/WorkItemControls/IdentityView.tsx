@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { Label } from "OfficeFabric/Label";
 import { Persona, PersonaSize } from "OfficeFabric/Persona";
 
 import Utils_String = require("VSS/Utils/String");

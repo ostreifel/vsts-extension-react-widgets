@@ -1,8 +1,7 @@
 import * as React from "react";
 
-import { BaseStore } from "../../Flux/Stores/BaseStore";
+import { BaseStore, StoreFactory } from "../../Stores/BaseStore";
 import { autobind } from "OfficeFabric/Utilities";
-import { FluxContext } from "../../Flux/FluxContext";
 
 export interface IBaseComponentProps {
     className?: string;
@@ -13,19 +12,17 @@ export interface IBaseComponentState {
 }
 
 export abstract class BaseComponent<TProps extends IBaseComponentProps, TState extends IBaseComponentState> extends React.Component<TProps, TState> {
-    protected fluxContext: FluxContext;
-
     constructor(props: TProps, context?: any) {
         super(props, context);
 
-        this.fluxContext = FluxContext.get();
         this.initializeState();
     }
 
     public componentDidMount() {
         const stores = this.getStoresToLoad() || [];
         for (const store of stores) {
-            store.addChangedListener(this._onStoreChanged);
+            const instance = StoreFactory.getInstance(store);
+            instance.addChangedListener(this._onStoreChanged);
         }
         
         this.initialize();
@@ -34,11 +31,12 @@ export abstract class BaseComponent<TProps extends IBaseComponentProps, TState e
     public componentWillUnmount() {
         const stores = this.getStoresToLoad() || [];
         for (const store of stores) {
-            store.removeChangedListener(this._onStoreChanged);
+            const instance = StoreFactory.getInstance(store);
+            instance.removeChangedListener(this._onStoreChanged);
         }
     }
 
-    protected getStoresToLoad(): BaseStore<any, any, any>[] {
+    protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
         return null;
     }
 
@@ -76,7 +74,8 @@ export abstract class BaseComponent<TProps extends IBaseComponentProps, TState e
         const stores = this.getStoresToLoad() || [];
         let allStoresLoaded = true;
         for (const store of stores) {
-            if (!store.isLoaded()) {
+            const storeInstance = StoreFactory.getInstance(store);
+            if (!storeInstance.isLoaded()) {
                 allStoresLoaded = false;
                 break;
             }
