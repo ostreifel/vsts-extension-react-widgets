@@ -26,12 +26,12 @@ export class LazyLoad extends React.Component<ILazyLoadProps, ILazyLoadState> {
 
     public componentDidMount() {
         this._isMounted = true;
-        this._load();
+        this._load(this.props.module);
     }
 
-    public componentDidUpdate(previousProps: ILazyLoadProps) {        
-        if (this.props.module !== previousProps.module) {
-            this._load();
+    public componentWillReceiveProps(nextProps: ILazyLoadProps) {
+        if (this.props.module !== nextProps.module) {
+            this._load(nextProps.module);
         }
     }
 
@@ -39,13 +39,15 @@ export class LazyLoad extends React.Component<ILazyLoadProps, ILazyLoadState> {
         this._isMounted = false;
     }
 
-    private _load() {
+    private _load(moduleName: string) {
         this.setState({
-            isLoaded: false,
+            isLoaded: false
         });
 
-        requirejs([this.props.module], (result) => {
-            this.setState({ fetchedModule: result, isLoaded: true });
+        requirejs([moduleName], (result) => {
+            if (this._isMounted) {
+                this.setState({ fetchedModule: result, isLoaded: true });
+            }            
         })
     }
 

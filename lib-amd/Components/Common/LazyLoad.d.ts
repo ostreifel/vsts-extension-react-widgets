@@ -12,8 +12,8 @@ export declare class LazyLoad extends React.Component<ILazyLoadProps, ILazyLoadS
     private _isMounted;
     constructor(props: ILazyLoadProps, context?: any);
     componentDidMount(): void;
-    componentDidUpdate(previousProps: ILazyLoadProps): void;
+    componentWillReceiveProps(nextProps: ILazyLoadProps): void;
     componentWillUnmount(): void;
-    private _load();
+    private _load(moduleName);
     render(): JSX.Element;
 }

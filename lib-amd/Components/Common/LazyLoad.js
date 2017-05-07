@@ -24,23 +24,25 @@ define(["require", "exports", "react", "./Loading"], function (require, exports,
         }
         LazyLoad.prototype.componentDidMount = function () {
             this._isMounted = true;
-            this._load();
+            this._load(this.props.module);
         };
-        LazyLoad.prototype.componentDidUpdate = function (previousProps) {
-            if (this.props.module !== previousProps.module) {
-                this._load();
+        LazyLoad.prototype.componentWillReceiveProps = function (nextProps) {
+            if (this.props.module !== nextProps.module) {
+                this._load(nextProps.module);
             }
         };
         LazyLoad.prototype.componentWillUnmount = function () {
             this._isMounted = false;
         };
-        LazyLoad.prototype._load = function () {
+        LazyLoad.prototype._load = function (moduleName) {
             var _this = this;
             this.setState({
-                isLoaded: false,
+                isLoaded: false
             });
-            requirejs([this.props.module], function (result) {
-                _this.setState({ fetchedModule: result, isLoaded: true });
+            requirejs([moduleName], function (result) {
+                if (_this._isMounted) {
+                    _this.setState({ fetchedModule: result, isLoaded: true });
+                }
             });
         };
         LazyLoad.prototype.render = function () {
