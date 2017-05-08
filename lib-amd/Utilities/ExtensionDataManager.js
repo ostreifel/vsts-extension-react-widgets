@@ -87,7 +87,35 @@ define(["require", "exports"], function (require, exports) {
                 });
             });
         };
-        ExtensionDataManager.writeDocument = function (key, data, isPrivate) {
+        ExtensionDataManager.createDocument = function (key, data, isPrivate) {
+            return __awaiter(this, void 0, void 0, function () {
+                var dataService;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 1:
+                            dataService = _a.sent();
+                            return [4, dataService.createDocument(key, data, isPrivate ? { scopeType: "User" } : undefined)];
+                        case 2: return [2, _a.sent()];
+                    }
+                });
+            });
+        };
+        ExtensionDataManager.updateDocument = function (key, data, isPrivate) {
+            return __awaiter(this, void 0, void 0, function () {
+                var dataService;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, VSS.getService(VSS.ServiceIds.ExtensionData)];
+                        case 1:
+                            dataService = _a.sent();
+                            return [4, dataService.updateDocument(key, data, isPrivate ? { scopeType: "User" } : undefined)];
+                        case 2: return [2, _a.sent()];
+                    }
+                });
+            });
+        };
+        ExtensionDataManager.addOrUpdateDocument = function (key, data, isPrivate) {
             return __awaiter(this, void 0, void 0, function () {
                 var dataService;
                 return __generator(this, function (_a) {

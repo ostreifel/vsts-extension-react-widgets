@@ -2,7 +2,7 @@ import Service = require("VSS/Service");
 
 export class ExtensionDataManager {
     /**
-    * Read user/account scoped rules for given project and work item type
+    * Read user/account scoped documents
     */
     public static async readDocuments<T>(key: string, isPrivate?: boolean): Promise<T[]> {       
         let dataService: IExtensionDataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
@@ -19,7 +19,7 @@ export class ExtensionDataManager {
     }
 
     /**
-    * Read a specific user/account scoped rule
+    * Read a specific user/account scoped document
     */
     public static async readDocument<T>(key: string, id: string, defaultValue?: T, isPrivate?: boolean): Promise<T> {
         let dataService: IExtensionDataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
@@ -35,15 +35,31 @@ export class ExtensionDataManager {
     }
 
     /**
-    * Write user/account scoped rule
+    * Create user/account scoped document
     */
-    public static async writeDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
+    public static async createDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
+        let dataService: IExtensionDataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
+        return await dataService.createDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
+    }
+
+    /**
+    * Update user/account scoped document
+    */
+    public static async updateDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
+        let dataService: IExtensionDataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
+        return await dataService.updateDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
+    }
+
+    /**
+    * Add or Update user/account scoped document
+    */
+    public static async addOrUpdateDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
         let dataService: IExtensionDataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
         return await dataService.setDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
     }
 
     /**
-    * Delete user/account scoped rule
+    * Delete user/account scoped document
     */
     public static async deleteDocument<T>(key: string, id: string, isPrivate?: boolean): Promise<void> {
         let dataService: IExtensionDataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
@@ -51,8 +67,7 @@ export class ExtensionDataManager {
     }
 
     /**
-    * Read user extension data for a particular work item type
-    * @param workItemType
+    * Read user extension settings
     */
     public static async readUserSetting<T>(key: string, defaultValue?: T, isPrivate?: boolean): Promise<T> {
         const dataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
@@ -66,7 +81,7 @@ export class ExtensionDataManager {
     }
 
     /**
-    * Write user extension data for a particular work item type
+    * Write user extension settings
     */
     public static async writeUserSetting<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
         const dataService = await VSS.getService<IExtensionDataService>(VSS.ServiceIds.ExtensionData);
