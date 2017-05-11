@@ -9,7 +9,7 @@ export declare class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplat
     protected getItemByKey(id: string): WorkItemTemplate;
     protected initializeItems(): Promise<void>;
     getKey(): string;
-    ensureTemplateItem(id: string): Promise<boolean>;
+    ensureTemplateItem(id: string, teamId?: string): Promise<boolean>;
     private _onAdd(items);
     private _addItem(item);
 }

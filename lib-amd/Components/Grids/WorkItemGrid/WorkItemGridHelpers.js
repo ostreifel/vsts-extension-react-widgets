@@ -161,7 +161,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
     exports.getColumnSize = getColumnSize;
     function openWorkItemDialog(e, item) {
         return __awaiter(this, void 0, void 0, function () {
-            var newTab, workItemNavSvc, workItem;
+            var newTab, workItemNavSvc;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -170,9 +170,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                     case 1:
                         workItemNavSvc = _a.sent();
                         return [4, workItemNavSvc.openWorkItem(item.id, newTab)];
-                    case 2:
-                        workItem = _a.sent();
-                        return [2, workItem];
+                    case 2: return [2, _a.sent()];
                 }
             });
         });

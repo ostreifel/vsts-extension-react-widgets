@@ -75,7 +75,7 @@ export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField):
         text = boolValue == null ? "" : (!boolValue ? "False" : "True");
         innerElement = <Label className={className}>{text}</Label>;
     }
-    else if ((field as any).isIdentity) {  // remove cast after m116 sdk 
+    else if (field.isIdentity) {
         text = item.fields[field.referenceName] || "";
         innerElement = <IdentityView identityDistinctName={text} />;
         alwaysShowTooltip = true;
@@ -149,10 +149,8 @@ export function getColumnSize(field: WorkItemField): {minWidth: number, maxWidth
     }
 }
 
-export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<any> { // change cast m116 sdk is released
+export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<WorkItem> {
     let newTab = e ? e.ctrlKey : false;
     let workItemNavSvc = await WorkItemFormNavigationService.getService();
-    const workItem = await workItemNavSvc.openWorkItem(item.id, newTab);
-
-    return workItem; 
+    return await workItemNavSvc.openWorkItem(item.id, newTab);
 }

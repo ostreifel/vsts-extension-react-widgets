@@ -28,10 +28,10 @@ export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], Wor
         return "WorkItemTemplateItemStore";
     }    
 
-    public async ensureTemplateItem(id: string): Promise<boolean> {
+    public async ensureTemplateItem(id: string, teamId?: string): Promise<boolean> {
         if (!this.itemExists(id)) {
             try {
-                let template = await WitClient.getClient().getTemplate(VSS.getWebContext().project.id, VSS.getWebContext().team.id, id)
+                let template = await WitClient.getClient().getTemplate(VSS.getWebContext().project.id, teamId || VSS.getWebContext().team.id, id);
                 if (template) {
                     this._onAdd(template);
                     return true;

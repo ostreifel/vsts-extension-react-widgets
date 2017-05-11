@@ -8,4 +8,4 @@ export declare function getColumnSize(field: WorkItemField): {
     minWidth: number;
     maxWidth: number;
 };
-export declare function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<any>;
+export declare function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<WorkItem>;

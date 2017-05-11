@@ -66,7 +66,7 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "TFS/WorkIt
         WorkItemTemplateItemStore.prototype.getKey = function () {
             return "WorkItemTemplateItemStore";
         };
-        WorkItemTemplateItemStore.prototype.ensureTemplateItem = function (id) {
+        WorkItemTemplateItemStore.prototype.ensureTemplateItem = function (id, teamId) {
             return __awaiter(this, void 0, void 0, function () {
                 var template, e_1;
                 return __generator(this, function (_a) {
@@ -76,7 +76,7 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "TFS/WorkIt
                             _a.label = 1;
                         case 1:
                             _a.trys.push([1, 3, , 4]);
-                            return [4, WitClient.getClient().getTemplate(VSS.getWebContext().project.id, VSS.getWebContext().team.id, id)];
+                            return [4, WitClient.getClient().getTemplate(VSS.getWebContext().project.id, teamId || VSS.getWebContext().team.id, id)];
                         case 2:
                             template = _a.sent();
                             if (template) {
