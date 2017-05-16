@@ -13,11 +13,7 @@ export interface IStateViewProps extends IBaseComponentProps {
     workItemType: string;
 }
 
-export interface IStateViewState extends IBaseComponentState {
-    
-}
-
-export class StateView extends BaseComponent<IStateViewProps, IStateViewState> {
+export class StateView extends BaseComponent<IStateViewProps, IBaseComponentState> {
     protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
         return [WorkItemColorStore];
     }

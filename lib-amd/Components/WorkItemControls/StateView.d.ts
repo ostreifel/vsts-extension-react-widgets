@@ -6,9 +6,7 @@ export interface IStateViewProps extends IBaseComponentProps {
     state: string;
     workItemType: string;
 }
-export interface IStateViewState extends IBaseComponentState {
-}
-export declare class StateView extends BaseComponent<IStateViewProps, IStateViewState> {
+export declare class StateView extends BaseComponent<IStateViewProps, IBaseComponentState> {
     protected getStoresToLoad(): {
         new (): BaseStore<any, any, any>;
     }[];

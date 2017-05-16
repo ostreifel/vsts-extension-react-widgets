@@ -29,9 +29,14 @@ define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComp
             return "work-item-title-view";
         };
         TitleView.prototype.render = function () {
+            var _this = this;
             var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore);
             var witColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType }) : "#FFFFFF";
-            return (React.createElement(Label_1.Label, { className: this.getClassName(), style: { borderColor: witColor ? "#" + witColor : "#000" } }, this.props.title));
+            return (React.createElement(Label_1.Label, { className: this.getClassName(), style: { borderColor: witColor ? "#" + witColor : "#000" }, onClick: function (e) {
+                    if (_this.props.onClick) {
+                        _this.props.onClick();
+                    }
+                } }, this.props.title));
         };
         return TitleView;
     }(BaseComponent_1.BaseComponent));

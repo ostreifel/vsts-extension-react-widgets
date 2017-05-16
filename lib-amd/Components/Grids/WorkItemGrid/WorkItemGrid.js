@@ -79,7 +79,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
                     sortFunction: function (item1, item2, sortOrder) { return _this._itemComparer(item1, item2, field, sortOrder); },
                     filterFunction: function (item, filterText) { return "" + item.id === filterText || _this._itemFilter(item, filterText, field); },
                     data: { field: field },
-                    onRenderCell: function (item) { return WorkItemHelpers.workItemFieldCellRenderer(item, field); }
+                    onRenderCell: function (item) { return WorkItemHelpers.workItemFieldCellRenderer(item, field, field.referenceName === "System.Title" ? { onClick: function () { return _this._onItemInvoked(item); } } : null); }
                 };
             });
             var extraColumns = this.props.extraColumns || [];

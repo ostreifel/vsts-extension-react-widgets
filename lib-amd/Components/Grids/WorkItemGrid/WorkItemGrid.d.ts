@@ -10,7 +10,7 @@ export declare class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBas
     private _mapFieldsToColumn(fields);
     private _getCommandBarProps();
     private _getContextMenuProps();
-    private _onItemInvoked(workItem, index, ev?);
+    private _onItemInvoked(workItem, index?, ev?);
     private _itemComparer(workItem1, workItem2, field, sortOrder);
     private _itemFilter(workItem, filterText, field);
     private _getWiql(workItems?);

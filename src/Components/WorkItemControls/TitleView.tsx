@@ -11,13 +11,10 @@ import { WorkItemColorStore } from "../../Stores/WorkItemColorStore";
 export interface ITitleViewProps extends IBaseComponentProps {
     title: string;
     workItemType: string;
+    onClick?: () => void;
 }
 
-export interface ITitleViewState extends IBaseComponentState {
-    
-}
-
-export class TitleView extends BaseComponent<ITitleViewProps, ITitleViewState> {
+export class TitleView extends BaseComponent<ITitleViewProps, IBaseComponentState> {
     protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
         return [WorkItemColorStore];
     }
@@ -41,7 +38,14 @@ export class TitleView extends BaseComponent<ITitleViewProps, ITitleViewState> {
         let witColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType}) : "#FFFFFF";
 
         return (
-            <Label className={this.getClassName()} style={{borderColor: witColor ? "#" + witColor : "#000"}}>
+            <Label className={this.getClassName()} 
+                style={{borderColor: witColor ? "#" + witColor : "#000"}}
+                onClick={(e) => {
+                    if (this.props.onClick) {
+                        this.props.onClick();
+                    }
+                }}>
+
                 {this.props.title}
             </Label>
         )

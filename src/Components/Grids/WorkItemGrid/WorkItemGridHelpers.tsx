@@ -14,6 +14,10 @@ import { TagsView } from "../../WorkItemControls/TagsView";
 import { TitleView } from "../../WorkItemControls/TitleView";
 import { StateView } from "../../WorkItemControls/StateView";
 
+export interface ICellRenderOptions {
+    onClick: () => void;
+}
+
 export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, field: WorkItemField, sortOrder: SortOrder): number {
     const v1 = w1.fields[field.referenceName];
     const v2 = w2.fields[field.referenceName];
@@ -53,7 +57,7 @@ export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, field: Wo
     return sortOrder === SortOrder.DESC ? -1 * compareValue : compareValue;
 }
 
-export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField): JSX.Element {
+export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField, options?: ICellRenderOptions): JSX.Element {
     let text: string = item.fields[field.referenceName] != null ? item.fields[field.referenceName] : "";
     let className = "work-item-grid-cell";
     let innerElement: JSX.Element;
@@ -87,7 +91,7 @@ export function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField):
                 innerElement = <Label className={className}>{text}</Label>;            
                 break;
             case "system.title":
-                innerElement = <TitleView className={className} title={item.fields["System.Title"]} workItemType={item.fields["System.WorkItemType"]} />
+                innerElement = <TitleView className={className} onClick={options && options.onClick} title={item.fields["System.Title"]} workItemType={item.fields["System.WorkItemType"]} />
                 break;
             case "system.state":
                 innerElement = <StateView className={className} state={item.fields["System.State"]} workItemType={item.fields["System.WorkItemType"]} />

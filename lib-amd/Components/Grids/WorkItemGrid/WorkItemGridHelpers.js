@@ -73,7 +73,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
         return sortOrder === Grid_Props_1.SortOrder.DESC ? -1 * compareValue : compareValue;
     }
     exports.workItemFieldValueComparer = workItemFieldValueComparer;
-    function workItemFieldCellRenderer(item, field) {
+    function workItemFieldCellRenderer(item, field, options) {
         var text = item.fields[field.referenceName] != null ? item.fields[field.referenceName] : "";
         var className = "work-item-grid-cell";
         var innerElement;
@@ -106,7 +106,7 @@ define(["require", "exports", "react", "TFS/WorkItemTracking/Contracts", "TFS/Wo
                     innerElement = React.createElement(Label_1.Label, { className: className }, text);
                     break;
                 case "system.title":
-                    innerElement = React.createElement(TitleView_1.TitleView, { className: className, title: item.fields["System.Title"], workItemType: item.fields["System.WorkItemType"] });
+                    innerElement = React.createElement(TitleView_1.TitleView, { className: className, onClick: options && options.onClick, title: item.fields["System.Title"], workItemType: item.fields["System.WorkItemType"] });
                     break;
                 case "system.state":
                     innerElement = React.createElement(StateView_1.StateView, { className: className, state: item.fields["System.State"], workItemType: item.fields["System.WorkItemType"] });
