@@ -12,7 +12,6 @@ export interface IRichEditorProps {
 }
 export declare class RichEditor extends React.Component<IRichEditorProps, {}> {
     private _richEditorContainer;
-    constructor(props: IRichEditorProps, context: any);
     componentDidMount(): void;
     componentWillUnmount(): void;
     componentWillReceiveProps(nextProps: IRichEditorProps): void;

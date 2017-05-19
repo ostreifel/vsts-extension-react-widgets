@@ -13,10 +13,8 @@ define(["require", "exports", "react", "trumbowyg/dist/trumbowyg", "./PasteImage
     Object.defineProperty(exports, "__esModule", { value: true });
     var RichEditor = (function (_super) {
         __extends(RichEditor, _super);
-        function RichEditor(props, context) {
-            var _this = _super.call(this) || this;
-            $.trumbowyg.svgPath = "/css/libs/icons.svg";
-            return _this;
+        function RichEditor() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         RichEditor.prototype.componentDidMount = function () {
             var _this = this;

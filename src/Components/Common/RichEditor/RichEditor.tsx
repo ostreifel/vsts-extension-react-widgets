@@ -15,11 +15,6 @@ export interface IRichEditorProps {
 export class RichEditor extends React.Component<IRichEditorProps, {}> {
     private _richEditorContainer: any;
 
-    constructor(props: IRichEditorProps, context) {
-        super();
-        ($ as any).trumbowyg.svgPath = "/css/libs/icons.svg";
-    }
-
     public componentDidMount() {
         this._richEditorContainer = $("#" + this.props.containerId);
         this._richEditorContainer.trumbowyg(this.props.editorOptions || {})
