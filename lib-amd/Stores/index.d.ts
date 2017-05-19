@@ -4,3 +4,4 @@ export * from "./WorkItemFieldStore";
 export * from "./WorkItemTemplateStore";
 export * from "./WorkItemTemplateItemStore";
 export * from "./WorkItemTypeStore";
+export * from "./AreaPathStore";
