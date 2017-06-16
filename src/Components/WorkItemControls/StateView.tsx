@@ -34,15 +34,21 @@ export class StateView extends BaseComponent<IStateViewProps, IBaseComponentStat
 
     public render(): JSX.Element {
         const storeInstance = StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore);
-        let stateColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType, stateName: this.props.state}) : "#FFFFFF";
-        
+        let stateColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType, stateName: this.props.state}) : null;
+        if (stateColor) {
+            stateColor = "#" + stateColor.substring(stateColor.length - 6);
+        }
+        else {
+            stateColor = "#000000";
+        }
+
         return (
             <Label className={this.getClassName()}>
                 <span 
-                    className="work-item-type-state-color" 
+                    className="work-item-type-state-color"
                     style={{
-                        backgroundColor: "#" + stateColor,
-                        borderColor: "#" + stateColor
+                        backgroundColor: stateColor,
+                        borderColor: stateColor
                     }} 
                 />
                 <span className="state-name">{this.props.state}</span>

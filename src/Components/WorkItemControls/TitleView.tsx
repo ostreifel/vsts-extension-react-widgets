@@ -35,11 +35,17 @@ export class TitleView extends BaseComponent<ITitleViewProps, IBaseComponentStat
 
     public render(): JSX.Element {
         const storeInstance = StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore);
-        let witColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType}) : "#FFFFFF";
-
+        let witColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType}) : null;
+        if (witColor) {
+            witColor = witColor.substring(witColor.length - 6);
+        }
+        else {
+            witColor = "#000000";
+        }
+        
         return (
             <Label className={this.getClassName()} 
-                style={{borderColor: witColor ? "#" + witColor : "#000"}}
+                style={{borderColor: witColor}}
                 onClick={(e) => {
                     if (this.props.onClick) {
                         this.props.onClick();
