@@ -30,11 +30,17 @@ define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComp
         };
         StateView.prototype.render = function () {
             var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore);
-            var stateColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType, stateName: this.props.state }) : "#FFFFFF";
+            var stateColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType, stateName: this.props.state }) : null;
+            if (stateColor) {
+                stateColor = "#" + stateColor.substring(stateColor.length - 6);
+            }
+            else {
+                stateColor = "#000000";
+            }
             return (React.createElement(Label_1.Label, { className: this.getClassName() },
                 React.createElement("span", { className: "work-item-type-state-color", style: {
-                        backgroundColor: "#" + stateColor,
-                        borderColor: "#" + stateColor
+                        backgroundColor: stateColor,
+                        borderColor: stateColor
                     } }),
                 React.createElement("span", { className: "state-name" }, this.props.state)));
         };

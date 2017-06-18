@@ -1,9 +1,8 @@
 /// <reference types="react" />
-import * as Combos from "VSS/Controls/Combos";
 import { BaseComponent, IBaseComponentProps, IBaseComponentState } from "../BaseComponent";
 export interface IComboBoxProps extends IBaseComponentProps {
     value?: string;
-    options?: Combos.IComboOptions;
+    options?: any;
     onChange: (newValue: string) => void;
 }
 export declare class ComboBox extends BaseComponent<IComboBoxProps, IBaseComponentState> {

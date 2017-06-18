@@ -5,7 +5,7 @@ import { BaseComponent, IBaseComponentProps, IBaseComponentState } from "../Base
 
 export interface IComboBoxProps extends IBaseComponentProps {
     value?: string;
-    options?: Combos.IComboOptions;
+    options?: any;
     onChange: (newValue: string) => void;
 }
 

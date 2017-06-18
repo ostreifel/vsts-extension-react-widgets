@@ -1,7 +1,6 @@
 /// <reference types="react" />
 import * as React from "react";
 import "trumbowyg/dist/trumbowyg";
-import "./PasteImagePlugin";
 import "trumbowyg/dist/ui/trumbowyg.min.css";
 export interface IRichEditorProps {
     containerId: string;

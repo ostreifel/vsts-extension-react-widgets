@@ -31,8 +31,14 @@ define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComp
         TitleView.prototype.render = function () {
             var _this = this;
             var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore);
-            var witColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType }) : "#FFFFFF";
-            return (React.createElement(Label_1.Label, { className: this.getClassName(), style: { borderColor: witColor ? "#" + witColor : "#000" }, onClick: function (e) {
+            var witColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType }) : null;
+            if (witColor) {
+                witColor = "#" + witColor.substring(witColor.length - 6);
+            }
+            else {
+                witColor = "#000000";
+            }
+            return (React.createElement(Label_1.Label, { className: this.getClassName(), style: { borderColor: witColor }, onClick: function (e) {
                     if (_this.props.onClick) {
                         _this.props.onClick();
                     }

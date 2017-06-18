@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "react", "trumbowyg/dist/trumbowyg", "./PasteImagePlugin", "trumbowyg/dist/ui/trumbowyg.min.css"], function (require, exports, React) {
+define(["require", "exports", "react", "trumbowyg/dist/trumbowyg", "trumbowyg/dist/ui/trumbowyg.min.css"], function (require, exports, React) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RichEditor = (function (_super) {

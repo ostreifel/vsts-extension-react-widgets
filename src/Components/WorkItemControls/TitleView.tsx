@@ -37,7 +37,7 @@ export class TitleView extends BaseComponent<ITitleViewProps, IBaseComponentStat
         const storeInstance = StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore);
         let witColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType}) : null;
         if (witColor) {
-            witColor = witColor.substring(witColor.length - 6);
+            witColor = "#" + witColor.substring(witColor.length - 6);
         }
         else {
             witColor = "#000000";
