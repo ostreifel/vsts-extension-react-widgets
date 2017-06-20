@@ -64,7 +64,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
             return "work-item-grid";
         };
         WorkItemGrid.prototype.render = function () {
-            return (React.createElement(Grid_1.Grid, { className: this.getClassName(), items: this.props.workItems, columns: this._mapFieldsToColumn(this.props.fields), selectionMode: this.props.selectionMode, commandBarProps: this._getCommandBarProps(), contextMenuProps: this._getContextMenuProps(), onItemInvoked: this._onItemInvoked }));
+            return (React.createElement(Grid_1.Grid, { className: this.getClassName(), items: this.props.workItems, columns: this._mapFieldsToColumn(this.props.fields), selectionMode: this.props.selectionMode, commandBarProps: this._getCommandBarProps(), contextMenuProps: this._getContextMenuProps(), onItemInvoked: this._onItemInvoked, noResultsText: this.props.noResultsText }));
         };
         WorkItemGrid.prototype._mapFieldsToColumn = function (fields) {
             var _this = this;

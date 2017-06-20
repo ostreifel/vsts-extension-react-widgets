@@ -35,7 +35,8 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
                 selectionMode={this.props.selectionMode}
                 commandBarProps={this._getCommandBarProps()}
                 contextMenuProps={this._getContextMenuProps()}
-                onItemInvoked={this._onItemInvoked}                
+                onItemInvoked={this._onItemInvoked}
+                noResultsText={this.props.noResultsText}
             />
         );    
     }

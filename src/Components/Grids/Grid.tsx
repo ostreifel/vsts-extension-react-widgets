@@ -8,10 +8,10 @@ import { autobind } from "OfficeFabric/Utilities";
 import { ContextualMenu, IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 import { CommandBar } from "OfficeFabric/CommandBar";
 import { SearchBox } from "OfficeFabric/SearchBox";
-import { MessageBar, MessageBarType } from 'OfficeFabric/MessageBar';
 
 import Utils_String = require("VSS/Utils/String");
 
+import { MessagePanel, MessageType } from "../Common/MessagePanel";
 import { BaseComponent } from "../Common/BaseComponent"; 
 import { Loading } from "../Common/Loading";
 import { IGridProps, IGridState, SortOrder, GridColumn } from "./Grid.Props";
@@ -116,7 +116,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
             return <Loading />;
         }
         else if (this.state.filteredItems.length === 0) {
-            return <MessageBar messageBarType={MessageBarType.info}>No results</MessageBar>;
+            return <MessagePanel messageType={MessageType.Info} message={this.props.noResultsText || "No results."} />
         }
         else {
             return <DetailsList 

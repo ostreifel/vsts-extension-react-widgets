@@ -6,6 +6,7 @@ import { IBaseComponentProps, IBaseComponentState } from "../Common/BaseComponen
 export interface IGridProps extends IBaseComponentProps {
     items: any[];
     columns: GridColumn[];
+    noResultsText?: string;
     selectionMode?: SelectionMode;
     commandBarProps?: ICommandBarProps;
     contextMenuProps?: IContextMenuProps;
