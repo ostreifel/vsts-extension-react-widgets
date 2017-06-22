@@ -127,7 +127,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
                         checkboxVisibility={this.props.selectionMode === SelectionMode.none ? CheckboxVisibility.hidden : CheckboxVisibility.onHover}
                         columns={this._prepareColumns()}
                         items={this.state.filteredItems}
-                        className="grid"
+                        className="grid-container"
                         onItemInvoked={this._onItemInvoked}
                         selection={this._selection}
                         onItemContextMenu={this._showContextMenu}
