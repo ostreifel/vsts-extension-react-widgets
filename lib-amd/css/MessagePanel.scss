@@ -1,8 +1,6 @@
 .message-panel {
     padding: 16px;
     display: flex;
-    justify-content: center;
-    position: relative;
 
     .close-icon {
         position: absolute;
@@ -18,6 +16,7 @@
         word-wrap: break-word;
         font-size: 12px;
         line-height: 13px;
+        flex: 1;
     }
 
     &.message-info {
