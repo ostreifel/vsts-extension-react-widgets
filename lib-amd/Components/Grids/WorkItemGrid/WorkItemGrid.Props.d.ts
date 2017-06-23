@@ -8,6 +8,8 @@ export interface BaseWorkItemGridProps extends IBaseComponentProps {
     commandBarProps?: ICommandBarProps;
     contextMenuProps?: IContextMenuProps;
     noResultsText?: string;
+    setKey?: string;
+    selectionPreservedOnEmptyClick?: boolean;
 }
 export interface IWorkItemGridProps extends BaseWorkItemGridProps {
     workItems: WorkItem[];

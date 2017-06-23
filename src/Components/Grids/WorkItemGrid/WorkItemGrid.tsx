@@ -29,6 +29,8 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
     public render(): JSX.Element {
         return (
             <Grid
+                setKey={this.props.setKey}
+                selectionPreservedOnEmptyClick={this.props.selectionPreservedOnEmptyClick || false}
                 className={this.getClassName()}
                 items={this.props.workItems}
                 columns={this._mapFieldsToColumn(this.props.fields)}

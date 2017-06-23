@@ -92,7 +92,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "TFS/WorkItemTr
                 return React.createElement(Loading_1.Loading, null);
             }
             else {
-                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { className: this.getClassName(), workItems: this.state.workItems, fields: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), commandBarProps: this._getCommandBarProps(), contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode, extraColumns: this.props.extraColumns, onWorkItemUpdated: this._onWorkItemUpdated, noResultsText: this.props.noResultsText || "Query returned no results." }));
+                return (React.createElement(WorkItemGrid_1.WorkItemGrid, { className: this.getClassName(), workItems: this.state.workItems, fields: this.state.fieldColumns.map(function (fr) { return _this.state.fieldsMap[fr.referenceName.toLowerCase()]; }).filter(function (f) { return f != null; }), commandBarProps: this._getCommandBarProps(), contextMenuProps: this.props.contextMenuProps, selectionMode: this.props.selectionMode, extraColumns: this.props.extraColumns, setKey: this.props.setKey, selectionPreservedOnEmptyClick: this.props.selectionPreservedOnEmptyClick || false, onWorkItemUpdated: this._onWorkItemUpdated, noResultsText: this.props.noResultsText || "Query returned no results." }));
             }
         };
         QueryResultGrid.prototype._onWorkItemUpdated = function (updatedWorkItem) {

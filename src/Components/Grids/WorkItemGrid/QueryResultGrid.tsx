@@ -70,6 +70,8 @@ export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQuery
                     contextMenuProps={this.props.contextMenuProps}
                     selectionMode={this.props.selectionMode}
                     extraColumns={this.props.extraColumns}
+                    setKey={this.props.setKey}
+                    selectionPreservedOnEmptyClick={this.props.selectionPreservedOnEmptyClick || false}
                     onWorkItemUpdated={this._onWorkItemUpdated}
                     noResultsText={this.props.noResultsText || "Query returned no results."}
                 />                        

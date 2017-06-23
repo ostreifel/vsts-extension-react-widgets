@@ -12,6 +12,7 @@ export interface IGridProps extends IBaseComponentProps {
     onItemInvoked?: (item: any, index: number) => void;
     events?: IGridEvents;
     setKey?: string;
+    selectionPreservedOnEmptyClick?: boolean;
 }
 export interface IGridState extends IBaseComponentState {
     filteredItems?: any[];
