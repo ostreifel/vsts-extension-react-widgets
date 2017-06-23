@@ -120,6 +120,7 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
         }
         else {
             return <DetailsList 
+                        setKey={this.props.setKey}
                         layoutMode={DetailsListLayoutMode.justified}
                         constrainMode={ConstrainMode.horizontalConstrained}
                         selectionMode={this.props.selectionMode || SelectionMode.multiple}

@@ -12,6 +12,7 @@ export interface IGridProps extends IBaseComponentProps {
     contextMenuProps?: IContextMenuProps;
     onItemInvoked?: (item: any, index: number) => void;
     events?: IGridEvents;
+    setKey?: string;
 }
 
 export interface IGridState extends IBaseComponentState {
