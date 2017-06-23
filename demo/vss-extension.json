@@ -3,7 +3,7 @@
     "id": "react-widgets-demo",
     "version": "1.0.0",
     "name": "React widgets demo",
-    "publisher": "mohitbagra",
+    "publisher": "mohitbagra-dev",
     "public": false,
     "baseUri": "https://localhost:8888",
     "scopes": [ 
