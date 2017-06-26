@@ -65,8 +65,8 @@ export abstract class BaseComponent<TProps extends IBaseComponentProps, TState e
         this.state = {} as TState;
     }
 
-    protected updateState(updatedStates: TState) {
-        this.setState({...this.state as any, ...updatedStates as any});  // Typescript doesnt support spread for generic types yet. Thats why state object is cast to any
+    protected updateState(updatedStates: TState, callback?: () => void) {
+        this.setState({...this.state as any, ...updatedStates as any}, callback);  // Typescript doesnt support spread for generic types yet. Thats why state object is cast to any
     }
 
     @autobind

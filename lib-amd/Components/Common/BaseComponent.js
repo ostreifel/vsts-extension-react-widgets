@@ -70,8 +70,8 @@ define(["require", "exports", "react", "../../Stores/BaseStore", "OfficeFabric/U
         BaseComponent.prototype.initializeState = function () {
             this.state = {};
         };
-        BaseComponent.prototype.updateState = function (updatedStates) {
-            this.setState(__assign({}, this.state, updatedStates));
+        BaseComponent.prototype.updateState = function (updatedStates, callback) {
+            this.setState(__assign({}, this.state, updatedStates), callback);
         };
         BaseComponent.prototype._onStoreChanged = function () {
             var stores = this.getStoresToLoad() || [];

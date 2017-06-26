@@ -19,6 +19,6 @@ export declare abstract class BaseComponent<TProps extends IBaseComponentProps, 
     protected getDefaultClassName(): string;
     protected getClassName(): string;
     protected initializeState(): void;
-    protected updateState(updatedStates: TState): void;
+    protected updateState(updatedStates: TState, callback?: () => void): void;
     private _onStoreChanged();
 }
