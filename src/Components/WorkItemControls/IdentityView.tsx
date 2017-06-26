@@ -26,7 +26,7 @@ export var IdentityView: React.StatelessComponent<IIdentityViewProps> =
                 />
     }; 
 
-function parseUniquefiedIdentityName(name: string): {displayName: string, uniqueName: string, imageUrl: string} {
+export function parseUniquefiedIdentityName(name: string): {displayName: string, uniqueName: string, imageUrl: string} {
     if (!name) { 
         return {
             displayName: "",

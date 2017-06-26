@@ -50,6 +50,7 @@ define(["require", "exports", "react", "OfficeFabric/Persona", "VSS/Utils/String
             imageUrl: imageUrl
         };
     }
+    exports.parseUniquefiedIdentityName = parseUniquefiedIdentityName;
     function getVsIdFromGroupUniqueName(str) {
         var leftPart;
         if (!str) {
