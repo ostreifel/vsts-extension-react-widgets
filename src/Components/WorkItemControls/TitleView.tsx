@@ -6,7 +6,7 @@ import { Label } from "OfficeFabric/Label";
 
 import { BaseComponent, IBaseComponentState, IBaseComponentProps } from "../Common/BaseComponent"; 
 import { BaseStore, StoreFactory } from "../../Stores/BaseStore";
-import { WorkItemColorStore } from "../../Stores/WorkItemColorStore";
+import { WorkItemTypeStore } from "../../Stores/WorkItemTypeStore";
 
 export interface ITitleViewProps extends IBaseComponentProps {
     title: string;
@@ -16,11 +16,11 @@ export interface ITitleViewProps extends IBaseComponentProps {
 
 export class TitleView extends BaseComponent<ITitleViewProps, IBaseComponentState> {
     protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
-        return [WorkItemColorStore];
+        return [WorkItemTypeStore];
     }
 
     protected initialize() {
-        StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore).initialize();
+        StoreFactory.getInstance<WorkItemTypeStore>(WorkItemTypeStore).initialize();
     }
 
     protected initializeState(): void {
@@ -34,8 +34,12 @@ export class TitleView extends BaseComponent<ITitleViewProps, IBaseComponentStat
     }
 
     public render(): JSX.Element {
-        const storeInstance = StoreFactory.getInstance<WorkItemColorStore>(WorkItemColorStore);
-        let witColor = storeInstance.isLoaded() ? storeInstance.getItem({workItemType: this.props.workItemType}) : null;
+        const storeInstance = StoreFactory.getInstance<WorkItemTypeStore>(WorkItemTypeStore);
+        const wit = storeInstance.isLoaded() ? storeInstance.getItem(this.props.workItemType) : null;
+        let witColor = wit ? wit.color : null;
+        const witIcon = wit ? (wit as any).icon : null;
+        let witIconUrl = (witIcon && witIcon.id) ? witIcon.url : null;
+
         if (witColor) {
             witColor = "#" + witColor.substring(witColor.length - 6);
         }
@@ -43,15 +47,15 @@ export class TitleView extends BaseComponent<ITitleViewProps, IBaseComponentStat
             witColor = "#000000";
         }
         
-        return (
-            <Label className={this.getClassName()} 
-                style={{borderColor: witColor}}
+        return (            
+            <Label className={`${this.getClassName()} ${(witIconUrl || !wit) ? "no-color" : ""}`}
+                style={(witIconUrl || !wit) ? undefined : {borderColor: witColor}}
                 onClick={(e) => {
                     if (this.props.onClick) {
                         this.props.onClick();
                     }
                 }}>
-
+                {witIconUrl && <img src={witIconUrl} />}
                 {this.props.title}
             </Label>
         )

@@ -3,8 +3,8 @@
 .base-grid {
     display: flex;
     flex-direction: column;
-    height: inherit;
-
+    height: 100%;
+    
     .menu-bar-container {
         display: flex;
         flex-direction: row;            
@@ -21,15 +21,16 @@
         .menu-bar {
             flex: 1;
         }
-    }
-
-    & > .ms-Viewport {
-        display: flex;
-        flex: 1;
-    }
+    }    
 
     .grid-container {
         overflow: auto;
-        flex: 1;        
-    }
+        flex: 1;  
+        position: relative;
+
+        .grid-list {
+            overflow-x: initial;
+            overflow-y: initial;
+        }
+    }        
 }

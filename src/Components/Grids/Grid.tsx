@@ -119,7 +119,8 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
             return <MessagePanel messageType={MessageType.Info} message={this.props.noResultsText || "No results."} />
         }
         else {
-            return <DetailsList 
+            return <div className="grid-container">
+                <DetailsList 
                         setKey={this.props.setKey}
                         selectionPreservedOnEmptyClick={this.props.selectionPreservedOnEmptyClick || false}
                         layoutMode={DetailsListLayoutMode.justified}
@@ -129,11 +130,12 @@ export abstract class Grid extends BaseComponent<IGridProps, IGridState> {
                         checkboxVisibility={this.props.selectionMode === SelectionMode.none ? CheckboxVisibility.hidden : CheckboxVisibility.onHover}
                         columns={this._prepareColumns()}
                         items={this.state.filteredItems}
-                        className="grid-container"
+                        className="grid-list"
                         onItemInvoked={this._onItemInvoked}
                         selection={this._selection}
                         onItemContextMenu={this._showContextMenu}
-                    />;
+                    />
+            </div>;
         }
     }
 

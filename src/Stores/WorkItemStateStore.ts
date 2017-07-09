@@ -3,13 +3,13 @@ import { WorkItemTypeStore } from "./WorkItemTypeStore";
 import { WorkItemStateColor, WorkItemType } from "TFS/WorkItemTracking/Contracts";
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
 
-export interface WorkItemColorStoreKey {
+export interface WorkItemStateStoreKey {
     workItemType: string;
     stateName?: string;
 }
 
-export class WorkItemColorStore extends BaseStore<IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>, string, WorkItemColorStoreKey> {
-    protected getItemByKey(key: WorkItemColorStoreKey): string {
+export class WorkItemStateStore extends BaseStore<IDictionaryStringTo<{color: string, stateColors: IDictionaryStringTo<string>}>, string, WorkItemStateStoreKey> {
+    protected getItemByKey(key: WorkItemStateStoreKey): string {
         const workItemType = this.items[key.workItemType];
         if (workItemType) {
             if (key.stateName) {
@@ -46,6 +46,6 @@ export class WorkItemColorStore extends BaseStore<IDictionaryStringTo<{color: st
     }
 
     public getKey(): string {
-        return "WorkItemColorStore";
+        return "WorkItemStateStore";
     }
 }
