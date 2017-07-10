@@ -1,12 +1,13 @@
 /// <reference types="react" />
 import "../../css/TitleView.scss";
+import * as React from "react";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 import { BaseComponent, IBaseComponentState, IBaseComponentProps } from "../Common/BaseComponent";
 import { BaseStore } from "../../Flux/Stores/BaseStore";
 export interface ITitleViewProps extends IBaseComponentProps {
     title: string;
     workItemType: string;
-    onClick?: () => void;
+    onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 export interface ITitleViewState extends IBaseComponentState {
     workItemType: WorkItemType;

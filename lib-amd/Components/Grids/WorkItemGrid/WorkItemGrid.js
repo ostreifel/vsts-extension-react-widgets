@@ -79,7 +79,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
                     sortFunction: function (item1, item2, sortOrder) { return _this._itemComparer(item1, item2, field, sortOrder); },
                     filterFunction: function (item, filterText) { return "" + item.id === filterText || _this._itemFilter(item, filterText, field); },
                     data: { field: field },
-                    onRenderCell: function (item) { return WorkItemHelpers.workItemFieldCellRenderer(item, field, field.referenceName === "System.Title" ? { onClick: function () { return _this._onItemInvoked(item); } } : null); }
+                    onRenderCell: function (item) { return WorkItemHelpers.workItemFieldCellRenderer(item, field, field.referenceName === "System.Title" ? { onClick: function (ev) { return _this._onItemInvoked(item, 0, ev); } } : null); }
                 };
             });
             var extraColumns = this.props.extraColumns || [];
@@ -144,7 +144,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities", "VSS/Utils/Stri
                 var updatedWorkItem;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4, WorkItemHelpers.openWorkItemDialog(null, workItem)];
+                        case 0: return [4, WorkItemHelpers.openWorkItemDialog(ev, workItem)];
                         case 1:
                             updatedWorkItem = _a.sent();
                             if (updatedWorkItem.rev > workItem.rev && this.props.onWorkItemUpdated) {

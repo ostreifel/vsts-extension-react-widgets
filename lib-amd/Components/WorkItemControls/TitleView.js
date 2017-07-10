@@ -50,7 +50,7 @@ define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComp
             }
             return (React.createElement(Label_1.Label, { className: this.getClassName() + " " + ((witIconUrl || !wit) ? "no-color" : ""), style: (witIconUrl || !wit) ? undefined : { borderColor: witColor }, onClick: function (e) {
                     if (_this.props.onClick) {
-                        _this.props.onClick();
+                        _this.props.onClick(e);
                     }
                 } },
                 witIconUrl && React.createElement("img", { src: witIconUrl }),

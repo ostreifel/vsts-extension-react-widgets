@@ -3,7 +3,7 @@ import * as React from "react";
 import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 import { SortOrder } from "../Grid.Props";
 export interface ICellRenderOptions {
-    onClick: () => void;
+    onClick: (ev: React.MouseEvent<HTMLElement>) => void;
 }
 export declare function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, field: WorkItemField, sortOrder: SortOrder): number;
 export declare function workItemFieldCellRenderer(item: WorkItem, field: WorkItemField, options?: ICellRenderOptions): JSX.Element;
