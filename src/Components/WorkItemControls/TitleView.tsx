@@ -14,7 +14,7 @@ import { WorkItemTypeActions } from "../../Flux/Actions/WorkItemTypeActions";
 export interface ITitleViewProps extends IBaseComponentProps {
     title: string;
     workItemType: string;
-    onClick?: () => void;
+    onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 export interface ITitleViewState extends IBaseComponentState {
@@ -49,7 +49,7 @@ export class TitleView extends BaseComponent<ITitleViewProps, ITitleViewState> {
 
     public render(): JSX.Element {
         const wit = this.state.workItemType;
-        
+
         let witColor = wit ? wit.color : null;
         const witIcon = wit ? (wit as any).icon : null;
         let witIconUrl = (witIcon && witIcon.id) ? witIcon.url : null;
@@ -64,9 +64,9 @@ export class TitleView extends BaseComponent<ITitleViewProps, ITitleViewState> {
         return (            
             <Label className={`${this.getClassName()} ${(witIconUrl || !wit) ? "no-color" : ""}`}
                 style={(witIconUrl || !wit) ? undefined : {borderColor: witColor}}
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent<HTMLLabelElement>) => {
                     if (this.props.onClick) {
-                        this.props.onClick();
+                        this.props.onClick(e);
                     }
                 }}>
                 {witIconUrl && <img src={witIconUrl} />}

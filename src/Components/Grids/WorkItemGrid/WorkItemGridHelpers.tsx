@@ -15,7 +15,7 @@ import { TitleView } from "../../WorkItemControls/TitleView";
 import { StateView } from "../../WorkItemControls/StateView";
 
 export interface ICellRenderOptions {
-    onClick: () => void;
+    onClick: (ev: React.MouseEvent<HTMLElement>) => void;
 }
 
 export function workItemFieldValueComparer(w1: WorkItem, w2: WorkItem, field: WorkItemField, sortOrder: SortOrder): number {

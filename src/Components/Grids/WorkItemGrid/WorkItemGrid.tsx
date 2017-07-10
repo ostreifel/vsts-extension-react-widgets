@@ -56,7 +56,7 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
                 sortFunction: (item1: WorkItem, item2: WorkItem, sortOrder: SortOrder) => this._itemComparer(item1, item2, field, sortOrder),
                 filterFunction: (item: WorkItem, filterText: string) => `${item.id}` === filterText || this._itemFilter(item, filterText, field),
                 data: {field: field},
-                onRenderCell: (item: WorkItem) => WorkItemHelpers.workItemFieldCellRenderer(item, field, field.referenceName === "System.Title" ? {onClick: () => this._onItemInvoked(item)} : null)
+                onRenderCell: (item: WorkItem) => WorkItemHelpers.workItemFieldCellRenderer(item, field, field.referenceName === "System.Title" ? {onClick: (ev: React.MouseEvent<HTMLElement>) => this._onItemInvoked(item, 0, ev)} : null)
             } as GridColumn
         });
 
@@ -121,9 +121,9 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
     }
 
     @autobind
-    private async _onItemInvoked(workItem: WorkItem, index?: number, ev?: Event) {
+    private async _onItemInvoked(workItem: WorkItem, index?: number, ev?: React.MouseEvent<HTMLElement>) {
         // fire a workitem changed event here so parent can listen to it to update work items
-        const updatedWorkItem: WorkItem = await WorkItemHelpers.openWorkItemDialog(null, workItem);
+        const updatedWorkItem: WorkItem = await WorkItemHelpers.openWorkItemDialog(ev, workItem);
         if (updatedWorkItem.rev > workItem.rev && this.props.onWorkItemUpdated) {
             this.props.onWorkItemUpdated(updatedWorkItem);
         }
