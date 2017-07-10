@@ -5,11 +5,6 @@ import { WorkItemTemplate } from "TFS/WorkItemTracking/Contracts";
 import { BaseStore } from "./BaseStore";
 import { WorkItemTemplateItemActionsCreator } from "../Actions/ActionsCreator";
 
-export interface IWorkItemTemplateItemStore {
-    itemExists(id: string): boolean;
-    getItem(id: string): WorkItemTemplate;
-}
-
 export class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], WorkItemTemplate, string> {
     constructor() {
         super();

@@ -1,4 +1,3 @@
-import { WorkItemTemplateReference } from "TFS/WorkItemTracking/Contracts";
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
 
 import { StoreFactory } from "../Stores/BaseStore";

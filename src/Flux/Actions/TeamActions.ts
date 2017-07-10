@@ -1,5 +1,4 @@
 import * as CoreClient from "TFS/Core/RestClient";
-import { WebApiTeam } from "TFS/Core/Contracts";
 
 import { StoreFactory } from "../Stores/BaseStore";
 import { TeamStore } from "../Stores/TeamStore";

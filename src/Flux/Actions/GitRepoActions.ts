@@ -1,5 +1,4 @@
 import * as GitClient from "TFS/VersionControl/GitRestClient";
-import { GitRepository } from "TFS/VersionControl/Contracts";
 
 import { StoreFactory } from "../Stores/BaseStore";
 import { GitRepoStore } from "../Stores/GitRepoStore";

@@ -16,8 +16,8 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "./BaseStor
         function GitRepoStore() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        GitRepoStore.prototype.getItem = function (id) {
-            return Utils_Array.first(this.items || [], function (repo) { return Utils_String.equals(repo.id, id, true); });
+        GitRepoStore.prototype.getItem = function (idOrName) {
+            return Utils_Array.first(this.items || [], function (repo) { return Utils_String.equals(repo.id, idOrName, true) || Utils_String.equals(repo.name, idOrName, true); });
         };
         GitRepoStore.prototype.initializeActionListeners = function () {
             var _this = this;

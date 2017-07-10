@@ -6,8 +6,8 @@ import { BaseStore } from "./BaseStore";
 import { GitRepoActionsCreator } from "../Actions/ActionsCreator";
 
 export class GitRepoStore extends BaseStore<GitRepository[], GitRepository, string> {
-    public getItem(id: string): GitRepository {
-        return Utils_Array.first(this.items || [], (repo: GitRepository) => Utils_String.equals(repo.id, id, true));
+    public getItem(idOrName: string): GitRepository {
+        return Utils_Array.first(this.items || [], (repo: GitRepository) => Utils_String.equals(repo.id, idOrName, true) || Utils_String.equals(repo.name, idOrName, true));
     }    
 
     protected initializeActionListeners() {

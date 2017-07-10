@@ -1,6 +1,6 @@
 import { Action } from "VSS/Flux/Action";
 import { WorkItemType, WorkItemField, WorkItemTemplate, WorkItemTemplateReference, WorkItemStateColor } from "TFS/WorkItemTracking/Contracts";
-import { WebApiTeam, TeamContext } from "TFS/Core/Contracts";
+import { WebApiTeam } from "TFS/Core/Contracts";
 import { GitRepository } from "TFS/VersionControl/Contracts";
 import { TeamFieldValues } from "TFS/Work/Contracts";
 

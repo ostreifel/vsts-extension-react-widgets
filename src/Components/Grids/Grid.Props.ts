@@ -1,5 +1,5 @@
 import { SelectionMode } from "OfficeFabric/utilities/selection/interfaces";
-import { ContextualMenu, IContextualMenuItem } from "OfficeFabric/ContextualMenu";
+import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 
 import { IBaseComponentProps, IBaseComponentState } from "../Common/BaseComponent"; 
 

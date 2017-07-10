@@ -3,10 +3,10 @@ import * as React from "react";
 import * as WitExtensionContracts  from "TFS/WorkItemTracking/ExtensionContracts";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
-import {AutoResizableComponent} from "./AutoResizableComponent";
-import {IBaseComponentState} from "../Common/BaseComponent"; 
+import { AutoResizableComponent } from "./AutoResizableComponent";
+import { IBaseComponentState, IBaseComponentProps } from "../Common/BaseComponent"; 
 
-export interface IFieldControlProps {
+export interface IFieldControlProps extends IBaseComponentProps {
     fieldName: string;
 }
 

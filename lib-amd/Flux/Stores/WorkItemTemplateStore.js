@@ -17,7 +17,7 @@ define(["require", "exports", "VSS/Utils/String", "VSS/Utils/Array", "./BaseStor
             return _super !== null && _super.apply(this, arguments) || this;
         }
         WorkItemTemplateStore.prototype.getItem = function (id) {
-            return Utils_Array.first(this.items, function (item) { return Utils_String.equals(item.id, id, true); });
+            return Utils_Array.first(this.items || [], function (item) { return Utils_String.equals(item.id, id, true); });
         };
         WorkItemTemplateStore.prototype.initializeActionListeners = function () {
             var _this = this;

@@ -7,7 +7,7 @@ import { WorkItemTemplateActionsCreator } from "../Actions/ActionsCreator";
 
 export class WorkItemTemplateStore extends BaseStore<WorkItemTemplateReference[], WorkItemTemplateReference, string> {
     public getItem(id: string): WorkItemTemplateReference {  
-        return Utils_Array.first(this.items, (item: WorkItemTemplateReference) => Utils_String.equals(item.id, id, true));
+        return Utils_Array.first(this.items || [], (item: WorkItemTemplateReference) => Utils_String.equals(item.id, id, true));
     }    
 
     protected initializeActionListeners() {
