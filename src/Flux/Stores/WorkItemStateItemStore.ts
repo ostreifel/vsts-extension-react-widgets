@@ -1,6 +1,4 @@
-import Utils_String = require("VSS/Utils/String");
-import Utils_Array = require("VSS/Utils/Array");
-import { WorkItemStateColor, WorkItemType } from "TFS/WorkItemTracking/Contracts";
+import { WorkItemStateColor } from "TFS/WorkItemTracking/Contracts";
 
 import { BaseStore } from "./BaseStore";
 import { WorkItemStateItemActionsCreator } from "../Actions/ActionsCreator";

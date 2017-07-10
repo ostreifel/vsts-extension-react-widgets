@@ -38,7 +38,6 @@ define(["require", "exports", "TFS/WorkItemTracking/RestClient", "../Stores/Base
     Object.defineProperty(exports, "__esModule", { value: true });
     var WorkItemTemplateActions;
     (function (WorkItemTemplateActions) {
-        var witClient = WitClient.getClient();
         var workItemTemplateStore = BaseStore_1.StoreFactory.getInstance(WorkItemTemplateStore_1.WorkItemTemplateStore);
         function initializeWorkItemTemplates() {
             return __awaiter(this, void 0, void 0, function () {

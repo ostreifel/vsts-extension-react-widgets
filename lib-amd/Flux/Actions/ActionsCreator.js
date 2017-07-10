@@ -21,4 +21,16 @@ define(["require", "exports", "VSS/Flux/Action"], function (require, exports, Ac
     (function (WorkItemStateItemActionsCreator) {
         WorkItemStateItemActionsCreator.InitializeWorkItemStateItems = new Action_1.Action();
     })(WorkItemStateItemActionsCreator = exports.WorkItemStateItemActionsCreator || (exports.WorkItemStateItemActionsCreator = {}));
+    var TeamActionsCreator;
+    (function (TeamActionsCreator) {
+        TeamActionsCreator.InitializeTeams = new Action_1.Action();
+    })(TeamActionsCreator = exports.TeamActionsCreator || (exports.TeamActionsCreator = {}));
+    var GitRepoActionsCreator;
+    (function (GitRepoActionsCreator) {
+        GitRepoActionsCreator.InitializeGitRepos = new Action_1.Action();
+    })(GitRepoActionsCreator = exports.GitRepoActionsCreator || (exports.GitRepoActionsCreator = {}));
+    var TeamFieldActionsCreator;
+    (function (TeamFieldActionsCreator) {
+        TeamFieldActionsCreator.InitializeTeamFieldItem = new Action_1.Action();
+    })(TeamFieldActionsCreator = exports.TeamFieldActionsCreator || (exports.TeamFieldActionsCreator = {}));
 });

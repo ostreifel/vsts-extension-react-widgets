@@ -33,44 +33,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "TFS/WorkItemTracking/RestClient", "../Stores/BaseStore", "../Stores/WorkItemTemplateItemStore", "./ActionsCreator"], function (require, exports, WitClient, BaseStore_1, WorkItemTemplateItemStore_1, ActionsCreator_1) {
+define(["require", "exports", "TFS/VersionControl/GitRestClient", "../Stores/BaseStore", "../Stores/GitRepoStore", "./ActionsCreator"], function (require, exports, GitClient, BaseStore_1, GitRepoStore_1, ActionsCreator_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var WorkItemTemplateItemActions;
-    (function (WorkItemTemplateItemActions) {
-        var workItemTemplateItemStore = BaseStore_1.StoreFactory.getInstance(WorkItemTemplateItemStore_1.WorkItemTemplateItemStore);
-        function initializeWorkItemTemplateItem(teamId, id) {
+    var GitRepoActions;
+    (function (GitRepoActions) {
+        var gitRepoStore = BaseStore_1.StoreFactory.getInstance(GitRepoStore_1.GitRepoStore);
+        function initializeGitRepos() {
             return __awaiter(this, void 0, void 0, function () {
-                var workItemTemplate, e_1;
+                var gitRepos, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            if (!workItemTemplateItemStore.isLoaded(id)) return [3, 1];
-                            ActionsCreator_1.WorkItemTemplateItemActionsCreator.InitializeWorkItemTemplateItem.invoke(null);
+                            if (!gitRepoStore.isLoaded()) return [3, 1];
+                            ActionsCreator_1.GitRepoActionsCreator.InitializeGitRepos.invoke(null);
                             return [3, 5];
                         case 1:
-                            if (!!workItemTemplateItemStore.isLoading(id)) return [3, 5];
-                            workItemTemplateItemStore.setLoading(true, id);
+                            if (!!gitRepoStore.isLoading()) return [3, 5];
+                            gitRepoStore.setLoading(true);
                             _a.label = 2;
                         case 2:
                             _a.trys.push([2, 4, , 5]);
-                            return [4, WitClient.getClient().getTemplate(VSS.getWebContext().project.id, teamId, id)];
+                            return [4, GitClient.getClient().getRepositories(VSS.getWebContext().project.id)];
                         case 3:
-                            workItemTemplate = _a.sent();
-                            workItemTemplateItemStore.setLoading(false, id);
-                            workItemTemplateItemStore.setError(null, id);
-                            ActionsCreator_1.WorkItemTemplateItemActionsCreator.InitializeWorkItemTemplateItem.invoke(workItemTemplate);
+                            gitRepos = _a.sent();
+                            gitRepoStore.setLoading(false);
+                            gitRepoStore.setError(null);
+                            ActionsCreator_1.GitRepoActionsCreator.InitializeGitRepos.invoke(gitRepos);
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();
-                            workItemTemplateItemStore.setLoading(false, id);
-                            workItemTemplateItemStore.setError(e_1.message || e_1, id);
+                            gitRepoStore.setLoading(false);
+                            gitRepoStore.setError(e_1.message || e_1);
                             return [3, 5];
                         case 5: return [2];
                     }
                 });
             });
         }
-        WorkItemTemplateItemActions.initializeWorkItemTemplateItem = initializeWorkItemTemplateItem;
-    })(WorkItemTemplateItemActions = exports.WorkItemTemplateItemActions || (exports.WorkItemTemplateItemActions = {}));
+        GitRepoActions.initializeGitRepos = initializeGitRepos;
+    })(GitRepoActions = exports.GitRepoActions || (exports.GitRepoActions = {}));
 });

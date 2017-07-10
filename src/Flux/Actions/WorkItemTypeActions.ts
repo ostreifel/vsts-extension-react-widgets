@@ -6,7 +6,6 @@ import { WorkItemTypeStore } from "../Stores/WorkItemTypeStore";
 import { WorkItemTypeActionsCreator } from "./ActionsCreator";
 
 export module WorkItemTypeActions {
-    var witClient: WitClient.WorkItemTrackingHttpClient3_1 = WitClient.getClient();
     var workItemTypeStore: WorkItemTypeStore = StoreFactory.getInstance<WorkItemTypeStore>(WorkItemTypeStore);
 
     export async function initializeWorkItemTypes() {
