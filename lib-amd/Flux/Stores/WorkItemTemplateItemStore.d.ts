@@ -1,0 +1,13 @@
+import { WorkItemTemplate } from "TFS/WorkItemTracking/Contracts";
+import { BaseStore } from "./BaseStore";
+export interface IWorkItemTemplateItemStore {
+    itemExists(id: string): boolean;
+    getItem(id: string): WorkItemTemplate;
+}
+export declare class WorkItemTemplateItemStore extends BaseStore<WorkItemTemplate[], WorkItemTemplate, string> {
+    constructor();
+    getItem(id: string): WorkItemTemplate;
+    protected initializeActionListeners(): void;
+    getKey(): string;
+    protected convertItemKeyToString(key: string): string;
+}

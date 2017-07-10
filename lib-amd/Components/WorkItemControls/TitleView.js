@@ -8,41 +8,53 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComponent", "../../Stores/BaseStore", "../../Stores/WorkItemColorStore", "../../css/TitleView.scss"], function (require, exports, React, Label_1, BaseComponent_1, BaseStore_1, WorkItemColorStore_1) {
+define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComponent", "../../Flux/Stores/BaseStore", "../../Flux/Stores/WorkItemTypeStore", "../../Flux/Actions/WorkItemTypeActions", "../../css/TitleView.scss"], function (require, exports, React, Label_1, BaseComponent_1, BaseStore_1, WorkItemTypeStore_1, WorkItemTypeActions_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var TitleView = (function (_super) {
         __extends(TitleView, _super);
         function TitleView() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._workItemTypeStore = BaseStore_1.StoreFactory.getInstance(WorkItemTypeStore_1.WorkItemTypeStore);
+            return _this;
         }
-        TitleView.prototype.getStoresToLoad = function () {
-            return [WorkItemColorStore_1.WorkItemColorStore];
+        TitleView.prototype.getStores = function () {
+            return [this._workItemTypeStore];
         };
-        TitleView.prototype.initialize = function () {
-            BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore).initialize();
+        TitleView.prototype.componentDidMount = function () {
+            _super.prototype.componentDidMount.call(this);
+            WorkItemTypeActions_1.WorkItemTypeActions.initializeWorkItemTypes();
         };
         TitleView.prototype.initializeState = function () {
-            this.state = {};
+            this.state = { workItemType: null };
         };
         TitleView.prototype.getDefaultClassName = function () {
             return "work-item-title-view";
         };
+        TitleView.prototype.getStoresState = function () {
+            return {
+                workItemType: this._workItemTypeStore.isLoaded() ? this._workItemTypeStore.getItem(this.props.workItemType) : null
+            };
+        };
         TitleView.prototype.render = function () {
             var _this = this;
-            var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore);
-            var witColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType }) : null;
+            var wit = this.state.workItemType;
+            var witColor = wit ? wit.color : null;
+            var witIcon = wit ? wit.icon : null;
+            var witIconUrl = (witIcon && witIcon.id) ? witIcon.url : null;
             if (witColor) {
                 witColor = "#" + witColor.substring(witColor.length - 6);
             }
             else {
                 witColor = "#000000";
             }
-            return (React.createElement(Label_1.Label, { className: this.getClassName(), style: { borderColor: witColor }, onClick: function (e) {
+            return (React.createElement(Label_1.Label, { className: this.getClassName() + " " + ((witIconUrl || !wit) ? "no-color" : ""), style: (witIconUrl || !wit) ? undefined : { borderColor: witColor }, onClick: function (e) {
                     if (_this.props.onClick) {
                         _this.props.onClick();
                     }
-                } }, this.props.title));
+                } },
+                witIconUrl && React.createElement("img", { src: witIconUrl }),
+                this.props.title));
         };
         return TitleView;
     }(BaseComponent_1.BaseComponent));

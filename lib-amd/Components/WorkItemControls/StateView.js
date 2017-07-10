@@ -8,31 +8,40 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "react", "OfficeFabric/Label", "../Common/BaseComponent", "../../Stores/BaseStore", "../../Stores/WorkItemColorStore", "../../css/StateView.scss"], function (require, exports, React, Label_1, BaseComponent_1, BaseStore_1, WorkItemColorStore_1) {
+define(["require", "exports", "react", "OfficeFabric/Label", "VSS/Utils/String", "VSS/Utils/Array", "../Common/BaseComponent", "../../Flux/Stores/BaseStore", "../../Flux/Stores/WorkItemStateItemStore", "../../Flux/Actions/WorkItemStateItemActions", "../../css/StateView.scss"], function (require, exports, React, Label_1, Utils_String, Utils_Array, BaseComponent_1, BaseStore_1, WorkItemStateItemStore_1, WorkItemStateItemActions_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var StateView = (function (_super) {
         __extends(StateView, _super);
         function StateView() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._workItemStateItemStore = BaseStore_1.StoreFactory.getInstance(WorkItemStateItemStore_1.WorkItemStateItemStore);
+            return _this;
         }
-        StateView.prototype.getStoresToLoad = function () {
-            return [WorkItemColorStore_1.WorkItemColorStore];
+        StateView.prototype.getStores = function () {
+            return [this._workItemStateItemStore];
         };
-        StateView.prototype.initialize = function () {
-            BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore).initialize();
+        StateView.prototype.componentDidMount = function () {
+            _super.prototype.componentDidMount.call(this);
+            WorkItemStateItemActions_1.WorkItemStateItemActions.initializeWorkItemStates(this.props.workItemType);
         };
         StateView.prototype.initializeState = function () {
-            this.state = {};
+            this.state = { workItemTypeState: null };
         };
         StateView.prototype.getDefaultClassName = function () {
             return "work-item-state-view";
         };
+        StateView.prototype.getStoresState = function () {
+            var _this = this;
+            var workItemTypeStates = this._workItemStateItemStore.getItem(this.props.workItemType);
+            return {
+                workItemTypeState: workItemTypeStates ? Utils_Array.first(workItemTypeStates, function (s) { return Utils_String.equals(s.name, _this.props.state, true); }) : null
+            };
+        };
         StateView.prototype.render = function () {
-            var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemColorStore_1.WorkItemColorStore);
-            var stateColor = storeInstance.isLoaded() ? storeInstance.getItem({ workItemType: this.props.workItemType, stateName: this.props.state }) : null;
-            if (stateColor) {
-                stateColor = "#" + stateColor.substring(stateColor.length - 6);
+            var stateColor;
+            if (this.state.workItemTypeState && this.state.workItemTypeState.color) {
+                stateColor = "#" + this.state.workItemTypeState.color.substring(this.state.workItemTypeState.color.length - 6);
             }
             else {
                 stateColor = "#000000";

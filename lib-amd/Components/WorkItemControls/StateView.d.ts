@@ -1,17 +1,21 @@
 /// <reference types="react" />
 import "../../css/StateView.scss";
+import { WorkItemStateColor } from "TFS/WorkItemTracking/Contracts";
 import { BaseComponent, IBaseComponentState, IBaseComponentProps } from "../Common/BaseComponent";
-import { BaseStore } from "../../Stores/BaseStore";
+import { BaseStore } from "../../Flux/Stores/BaseStore";
 export interface IStateViewProps extends IBaseComponentProps {
     state: string;
     workItemType: string;
 }
-export declare class StateView extends BaseComponent<IStateViewProps, IBaseComponentState> {
-    protected getStoresToLoad(): {
-        new (): BaseStore<any, any, any>;
-    }[];
-    protected initialize(): void;
+export interface IStateViewState extends IBaseComponentState {
+    workItemTypeState: WorkItemStateColor;
+}
+export declare class StateView extends BaseComponent<IStateViewProps, IStateViewState> {
+    private _workItemStateItemStore;
+    protected getStores(): BaseStore<any, any, any>[];
+    componentDidMount(): void;
     protected initializeState(): void;
     protected getDefaultClassName(): string;
+    protected getStoresState(): IStateViewState;
     render(): JSX.Element;
 }

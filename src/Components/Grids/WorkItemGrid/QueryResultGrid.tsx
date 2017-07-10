@@ -10,37 +10,38 @@ import Utils_Array = require("VSS/Utils/Array");
 import { Loading } from "../../Common/Loading";
 import { BaseComponent } from "../../Common/BaseComponent"; 
 import { WorkItemGrid } from "./WorkItemGrid";
-import { BaseStore, StoreFactory } from "../../../Stores/BaseStore";
-import { WorkItemFieldStore } from "../../../Stores/WorkItemFieldStore";
+import { BaseStore, StoreFactory } from "../../../Flux/Stores/BaseStore";
+import { WorkItemFieldStore } from "../../../Flux/Stores/WorkItemFieldStore";
+import { WorkItemFieldActions } from "../../../Flux/Actions/WorkItemFieldActions";
 import { IQueryResultGridProps, IQueryResultGridState } from "./WorkItemGrid.Props";
 import { ICommandBarProps } from "../Grid.Props";
 
 export class QueryResultGrid extends BaseComponent<IQueryResultGridProps, IQueryResultGridState> {
-    protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
-        return [WorkItemFieldStore];
+    private _workItemFieldStore = StoreFactory.getInstance<WorkItemFieldStore>(WorkItemFieldStore);
+
+    protected getStores(): BaseStore<any, any, any>[] {
+        return [this._workItemFieldStore];
     }
 
-    protected initialize() {
-        StoreFactory.getInstance<WorkItemFieldStore>(WorkItemFieldStore).initialize();
+    public componentDidMount() {
+        super.componentDidMount();
+        WorkItemFieldActions.initializeWorkItemFields();
         this._runQuery(this.props);
     }
 
-    protected onStoreChanged() {
-        const storeInstance = StoreFactory.getInstance<WorkItemFieldStore>(WorkItemFieldStore);
-        
-         if (!this.state.fieldsMap && storeInstance.isLoaded()) {
-            const fields = storeInstance.getAll();
+    protected getStoresState(): IQueryResultGridState {
+        if (this._workItemFieldStore.isLoaded()) {
+            const fields = this._workItemFieldStore.getAll();
             let fieldsMap = {};
             fields.forEach(f => fieldsMap[f.referenceName.toLowerCase()] = f);
 
-            this.updateState({fieldsMap: fieldsMap});
-         }
-    }
-
-    protected initializeState(): void {
-        this.state = {
-            
-        };
+            return {
+                fieldsMap: fieldsMap
+            };
+        }
+        else {
+            return {};
+        }
     }
 
     protected getDefaultClassName(): string {

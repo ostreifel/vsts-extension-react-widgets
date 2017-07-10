@@ -84,10 +84,10 @@ export abstract class FieldControl<TP extends IFieldControlProps, TS extends IFi
     }
 
     private _setValue(value: any) {
-        this.setState({...this.state as any, value: value, error: this.getErrorMessage(value)});
+        this.updateState({value: value, error: this.getErrorMessage(value)} as any);
     }    
 
     private _onError(error: string) {
-        this.setState({...this.state as any, error: error});
+        this.updateState({error: error} as any);
     }
 }

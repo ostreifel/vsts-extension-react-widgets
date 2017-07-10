@@ -8,14 +8,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -152,10 +144,10 @@ define(["require", "exports", "TFS/WorkItemTracking/Services", "./AutoResizableC
             });
         };
         FieldControl.prototype._setValue = function (value) {
-            this.setState(__assign({}, this.state, { value: value, error: this.getErrorMessage(value) }));
+            this.updateState({ value: value, error: this.getErrorMessage(value) });
         };
         FieldControl.prototype._onError = function (error) {
-            this.setState(__assign({}, this.state, { error: error }));
+            this.updateState({ error: error });
         };
         return FieldControl;
     }(AutoResizableComponent_1.AutoResizableComponent));

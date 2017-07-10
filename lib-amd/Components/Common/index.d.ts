@@ -5,5 +5,4 @@ export * from "./LazyLoad";
 export * from "./Loading";
 export * from "./MessagePanel";
 export * from "./Combo/ComboBox";
-export * from "./Combo/AreaPathCombo";
 export * from "./RichEditor/RichEditor";

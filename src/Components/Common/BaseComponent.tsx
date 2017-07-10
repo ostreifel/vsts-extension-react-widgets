@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { BaseStore, StoreFactory } from "../../Stores/BaseStore";
+import { BaseStore } from "../../Flux/Stores/BaseStore";
 import { autobind } from "OfficeFabric/Utilities";
 
 export interface IBaseComponentProps {
@@ -8,10 +8,10 @@ export interface IBaseComponentProps {
 }
 
 export interface IBaseComponentState {
-    allStoresLoaded?: boolean;
+    
 }
 
-export abstract class BaseComponent<TProps extends IBaseComponentProps, TState extends IBaseComponentState> extends React.Component<TProps, TState> {
+export class BaseComponent<TProps extends IBaseComponentProps, TState extends IBaseComponentState> extends React.Component<TProps, TState> {
     constructor(props: TProps, context?: any) {
         super(props, context);
 
@@ -19,33 +19,29 @@ export abstract class BaseComponent<TProps extends IBaseComponentProps, TState e
     }
 
     public componentDidMount() {
-        const stores = this.getStoresToLoad() || [];
-        for (const store of stores) {
-            const instance = StoreFactory.getInstance(store);
-            instance.addChangedListener(this._onStoreChanged);
+        for (const store of this.getStores()) {
+            store.addChangedListener(this.onStoreChanged);
         }
-        
-        this.initialize();
     }
 
     public componentWillUnmount() {
-        const stores = this.getStoresToLoad() || [];
-        for (const store of stores) {
-            const instance = StoreFactory.getInstance(store);
-            instance.removeChangedListener(this._onStoreChanged);
+        for (const store of this.getStores()) {
+            store.removeChangedListener(this.onStoreChanged);
         }
     }
 
-    protected getStoresToLoad(): {new(): BaseStore<any, any, any>}[] {
-        return null;
+    protected getStores(): BaseStore<any, any, any>[] {
+        return [];
     }
 
-    protected initialize(): void {
-
-    }
-
+    @autobind
     protected onStoreChanged(): void {
+        var newStoreState = this.getStoresState();
+        this.updateState(newStoreState);
+    }
 
+    protected getStoresState(): TState {
+        return {} as TState;
     }
 
     protected getDefaultClassName(): string {
@@ -67,22 +63,5 @@ export abstract class BaseComponent<TProps extends IBaseComponentProps, TState e
 
     protected updateState(updatedStates: TState, callback?: () => void) {
         this.setState({...this.state as any, ...updatedStates as any}, callback);  // Typescript doesnt support spread for generic types yet. Thats why state object is cast to any
-    }
-
-    @autobind
-    private _onStoreChanged() {
-        const stores = this.getStoresToLoad() || [];
-        let allStoresLoaded = true;
-        for (const store of stores) {
-            const storeInstance = StoreFactory.getInstance(store);
-            if (!storeInstance.isLoaded()) {
-                allStoresLoaded = false;
-                break;
-            }
-        }
-
-        this.updateState({allStoresLoaded: allStoresLoaded} as TState);
-
-        this.onStoreChanged();
     }
 }

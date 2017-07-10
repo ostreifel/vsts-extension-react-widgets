@@ -49,32 +49,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "react", "OfficeFabric/Utilities", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "VSS/Utils/Array", "../../Common/Loading", "../../Common/BaseComponent", "./WorkItemGrid", "../../../Stores/BaseStore", "../../../Stores/WorkItemFieldStore"], function (require, exports, React, Utilities_1, WitClient, Utils_String, Utils_Array, Loading_1, BaseComponent_1, WorkItemGrid_1, BaseStore_1, WorkItemFieldStore_1) {
+define(["require", "exports", "react", "OfficeFabric/Utilities", "TFS/WorkItemTracking/RestClient", "VSS/Utils/String", "VSS/Utils/Array", "../../Common/Loading", "../../Common/BaseComponent", "./WorkItemGrid", "../../../Flux/Stores/BaseStore", "../../../Flux/Stores/WorkItemFieldStore", "../../../Flux/Actions/WorkItemFieldActions"], function (require, exports, React, Utilities_1, WitClient, Utils_String, Utils_Array, Loading_1, BaseComponent_1, WorkItemGrid_1, BaseStore_1, WorkItemFieldStore_1, WorkItemFieldActions_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var QueryResultGrid = (function (_super) {
         __extends(QueryResultGrid, _super);
         function QueryResultGrid() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._workItemFieldStore = BaseStore_1.StoreFactory.getInstance(WorkItemFieldStore_1.WorkItemFieldStore);
+            return _this;
         }
-        QueryResultGrid.prototype.getStoresToLoad = function () {
-            return [WorkItemFieldStore_1.WorkItemFieldStore];
+        QueryResultGrid.prototype.getStores = function () {
+            return [this._workItemFieldStore];
         };
-        QueryResultGrid.prototype.initialize = function () {
-            BaseStore_1.StoreFactory.getInstance(WorkItemFieldStore_1.WorkItemFieldStore).initialize();
+        QueryResultGrid.prototype.componentDidMount = function () {
+            _super.prototype.componentDidMount.call(this);
+            WorkItemFieldActions_1.WorkItemFieldActions.initializeWorkItemFields();
             this._runQuery(this.props);
         };
-        QueryResultGrid.prototype.onStoreChanged = function () {
-            var storeInstance = BaseStore_1.StoreFactory.getInstance(WorkItemFieldStore_1.WorkItemFieldStore);
-            if (!this.state.fieldsMap && storeInstance.isLoaded()) {
-                var fields = storeInstance.getAll();
+        QueryResultGrid.prototype.getStoresState = function () {
+            if (this._workItemFieldStore.isLoaded()) {
+                var fields = this._workItemFieldStore.getAll();
                 var fieldsMap_1 = {};
                 fields.forEach(function (f) { return fieldsMap_1[f.referenceName.toLowerCase()] = f; });
-                this.updateState({ fieldsMap: fieldsMap_1 });
+                return {
+                    fieldsMap: fieldsMap_1
+                };
             }
-        };
-        QueryResultGrid.prototype.initializeState = function () {
-            this.state = {};
+            else {
+                return {};
+            }
         };
         QueryResultGrid.prototype.getDefaultClassName = function () {
             return "query-results-grid";
