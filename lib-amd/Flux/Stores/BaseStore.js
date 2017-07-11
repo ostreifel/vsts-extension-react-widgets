@@ -47,7 +47,7 @@ define(["require", "exports", "VSS/Flux/Store"], function (require, exports, Sto
                 }
             }
             else {
-                return this._isLoading = loading;
+                this._isLoading = loading;
             }
         };
         BaseStore.prototype.itemExists = function (key) {

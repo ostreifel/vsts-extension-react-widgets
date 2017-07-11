@@ -6,7 +6,7 @@ export declare abstract class BaseStore<TCollection, TItem, TKey> extends Store 
     constructor();
     isLoaded(key?: TKey): boolean;
     isLoading(key?: TKey): boolean;
-    setLoading(loading: boolean, key?: TKey): boolean;
+    setLoading(loading: boolean, key?: TKey): void;
     itemExists(key: TKey): boolean;
     getAll(): TCollection;
     protected abstract initializeActionListeners(): any;
