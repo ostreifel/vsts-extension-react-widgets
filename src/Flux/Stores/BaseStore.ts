@@ -43,7 +43,7 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Store {
             }
         }
         else {
-            return this._isLoading = loading;
+            this._isLoading = loading;
         }
     }  
 
