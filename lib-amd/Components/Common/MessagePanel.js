@@ -8,14 +8,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 define(["require", "exports", "react", "OfficeFabric/Icon", "OfficeFabric/Label", "OfficeFabric/Tooltip", "../../css/MessagePanel.scss"], function (require, exports, React, Icon_1, Label_1, Tooltip_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -62,7 +54,7 @@ define(["require", "exports", "react", "OfficeFabric/Icon", "OfficeFabric/Label"
                 React.createElement(Icon_1.Icon, { className: "icon", iconName: iconName }),
                 React.createElement(Label_1.Label, { className: "message-text" }, this.props.message),
                 this.props.closeable &&
-                    React.createElement("span", { className: "close-icon", onClick: function () { return _this.setState(__assign({}, _this.state, { isClosed: true })); } },
+                    React.createElement("span", { className: "close-icon", onClick: function () { return _this.setState({ isClosed: true }); } },
                         React.createElement(Tooltip_1.TooltipHost, { content: "Close", delay: Tooltip_1.TooltipDelay.zero, directionalHint: Tooltip_1.DirectionalHint.bottomCenter },
                             React.createElement(Icon_1.Icon, { iconName: "Cancel" })))));
         };

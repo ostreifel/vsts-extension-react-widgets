@@ -63,8 +63,8 @@ define(["require", "exports", "TFS/Work/RestClient", "../Stores/BaseStore", "../
                             return [4, WorkClient.getClient().getTeamFieldValues(teamContext)];
                         case 3:
                             teamFieldValues = _a.sent();
-                            teamFieldStore.setLoading(false, teamId);
                             ActionsCreator_1.TeamFieldActionsCreator.InitializeTeamFieldItem.invoke({ teamId: teamId, teamFieldValues: teamFieldValues });
+                            teamFieldStore.setLoading(false, teamId);
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();

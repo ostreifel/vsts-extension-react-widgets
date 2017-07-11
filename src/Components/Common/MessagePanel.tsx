@@ -64,7 +64,7 @@ export class MessagePanel extends React.Component<IMessagePanelProps, IMessagePa
                 <Label className="message-text">{this.props.message}</Label>
                 { 
                     this.props.closeable &&                     
-                    <span className="close-icon" onClick={() => this.setState({...this.state, isClosed: true})}>
+                    <span className="close-icon" onClick={() => this.setState({isClosed: true})}>
                         <TooltipHost 
                             content="Close"
                             delay={ TooltipDelay.zero }

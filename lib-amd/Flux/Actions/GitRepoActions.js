@@ -57,8 +57,8 @@ define(["require", "exports", "TFS/VersionControl/GitRestClient", "../Stores/Bas
                             return [4, GitClient.getClient().getRepositories(VSS.getWebContext().project.id)];
                         case 3:
                             gitRepos = _a.sent();
-                            gitRepoStore.setLoading(false);
                             ActionsCreator_1.GitRepoActionsCreator.InitializeGitRepos.invoke(gitRepos);
+                            gitRepoStore.setLoading(false);
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();

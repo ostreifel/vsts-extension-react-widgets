@@ -8,14 +8,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -69,7 +61,7 @@ define(["require", "exports", "react", "OfficeFabric/Utilities"], function (requ
             this.state = {};
         };
         BaseComponent.prototype.updateState = function (updatedStates, callback) {
-            this.setState(__assign({}, this.state, updatedStates), callback);
+            this.setState(updatedStates, callback);
         };
         return BaseComponent;
     }(React.Component));

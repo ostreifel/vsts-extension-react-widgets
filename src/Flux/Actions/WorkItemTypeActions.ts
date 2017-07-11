@@ -15,9 +15,8 @@ export module WorkItemTypeActions {
             workItemTypeStore.setLoading(true);
             try {
                 const workItemTypes = await WitClient.getClient().getWorkItemTypes(VSS.getWebContext().project.id);
-                workItemTypeStore.setLoading(false);
-
                 WorkItemTypeActionsCreator.InitializeWorkItemTypes.invoke(workItemTypes);
+                workItemTypeStore.setLoading(false);
             }
             catch (e) {
                 workItemTypeStore.setLoading(false);

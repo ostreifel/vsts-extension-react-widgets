@@ -15,9 +15,8 @@ export module WorkItemTemplateItemActions {
             workItemTemplateItemStore.setLoading(true, id);
             try {
                 const workItemTemplate = await WitClient.getClient().getTemplate(VSS.getWebContext().project.id, teamId, id);
-                workItemTemplateItemStore.setLoading(false, id);
-
                 WorkItemTemplateItemActionsCreator.InitializeWorkItemTemplateItem.invoke(workItemTemplate);
+                workItemTemplateItemStore.setLoading(false, id);
             }
             catch (e) {
                 workItemTemplateItemStore.setLoading(false, id);

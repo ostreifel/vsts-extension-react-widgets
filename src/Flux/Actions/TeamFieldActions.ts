@@ -23,9 +23,8 @@ export module TeamFieldActions {
                 };
                 
                 const teamFieldValues = await WorkClient.getClient().getTeamFieldValues(teamContext);
-                teamFieldStore.setLoading(false, teamId);
-
                 TeamFieldActionsCreator.InitializeTeamFieldItem.invoke({teamId: teamId, teamFieldValues: teamFieldValues});
+                teamFieldStore.setLoading(false, teamId);
             }
             catch (e) {
                 teamFieldStore.setLoading(false, teamId);

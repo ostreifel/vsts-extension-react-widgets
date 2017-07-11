@@ -15,9 +15,8 @@ export module GitRepoActions {
             gitRepoStore.setLoading(true);
             try {
                 const gitRepos =  await GitClient.getClient().getRepositories(VSS.getWebContext().project.id);
-                gitRepoStore.setLoading(false);
-
                 GitRepoActionsCreator.InitializeGitRepos.invoke(gitRepos);
+                gitRepoStore.setLoading(false);
             }
             catch (e) {
                 gitRepoStore.setLoading(false);

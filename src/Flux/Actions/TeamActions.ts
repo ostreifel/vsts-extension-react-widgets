@@ -15,9 +15,8 @@ export module TeamActions {
             teamStore.setLoading(true);
             try {
                 const teams =  await CoreClient.getClient().getTeams(VSS.getWebContext().project.id, 300);
-                teamStore.setLoading(false);
-
                 TeamActionsCreator.InitializeTeams.invoke(teams);
+                teamStore.setLoading(false);
             }
             catch (e) {
                 teamStore.setLoading(false);

@@ -57,8 +57,8 @@ define(["require", "exports", "TFS/Core/RestClient", "../Stores/BaseStore", "../
                             return [4, CoreClient.getClient().getTeams(VSS.getWebContext().project.id, 300)];
                         case 3:
                             teams = _a.sent();
-                            teamStore.setLoading(false);
                             ActionsCreator_1.TeamActionsCreator.InitializeTeams.invoke(teams);
+                            teamStore.setLoading(false);
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();

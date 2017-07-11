@@ -57,8 +57,8 @@ define(["require", "exports", "TFS/WorkItemTracking/RestClient", "../Stores/Base
                             return [4, WitClient.getClient().getFields(VSS.getWebContext().project.id)];
                         case 3:
                             workItemFields = _a.sent();
-                            workItemFieldStore.setLoading(false);
                             ActionsCreator_1.WorkItemFieldActionsCreator.InitializeWorkItemFields.invoke(workItemFields);
+                            workItemFieldStore.setLoading(false);
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();

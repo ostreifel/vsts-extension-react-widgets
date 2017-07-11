@@ -45,6 +45,8 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Store {
         else {
             this._isLoading = loading;
         }
+
+        this.emitChanged();
     }  
 
     public itemExists(key: TKey): boolean {        

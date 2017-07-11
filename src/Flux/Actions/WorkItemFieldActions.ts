@@ -15,9 +15,8 @@ export module WorkItemFieldActions {
             workItemFieldStore.setLoading(true);
             try {
                 const workItemFields = await WitClient.getClient().getFields(VSS.getWebContext().project.id);
-                workItemFieldStore.setLoading(false);
-
                 WorkItemFieldActionsCreator.InitializeWorkItemFields.invoke(workItemFields);
+                workItemFieldStore.setLoading(false);
             }
             catch (e) {
                 workItemFieldStore.setLoading(false);

@@ -49,6 +49,7 @@ define(["require", "exports", "VSS/Flux/Store"], function (require, exports, Sto
             else {
                 this._isLoading = loading;
             }
+            this.emitChanged();
         };
         BaseStore.prototype.itemExists = function (key) {
             return this.getItem(key) != null ? true : false;

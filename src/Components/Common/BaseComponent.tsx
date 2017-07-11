@@ -62,6 +62,6 @@ export class BaseComponent<TProps extends IBaseComponentProps, TState extends IB
     }
 
     protected updateState(updatedStates: TState, callback?: () => void) {
-        this.setState({...this.state as any, ...updatedStates as any}, callback);  // Typescript doesnt support spread for generic types yet. Thats why state object is cast to any
+        this.setState(updatedStates, callback);
     }
 }
