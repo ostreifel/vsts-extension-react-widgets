@@ -63,7 +63,7 @@ define(["require", "exports", "TFS/VersionControl/GitRestClient", "../Stores/Bas
                         case 4:
                             e_1 = _a.sent();
                             gitRepoStore.setLoading(false);
-                            throw e_1;
+                            throw e_1.message;
                         case 5: return [2];
                     }
                 });

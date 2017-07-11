@@ -69,7 +69,7 @@ define(["require", "exports", "TFS/Work/RestClient", "../Stores/BaseStore", "../
                         case 4:
                             e_1 = _a.sent();
                             teamFieldStore.setLoading(false, teamId);
-                            throw e_1;
+                            throw e_1.message;
                         case 5: return [2];
                     }
                 });

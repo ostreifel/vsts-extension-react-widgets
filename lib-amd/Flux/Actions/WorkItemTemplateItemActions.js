@@ -63,7 +63,7 @@ define(["require", "exports", "TFS/WorkItemTracking/RestClient", "../Stores/Base
                         case 4:
                             e_1 = _a.sent();
                             workItemTemplateItemStore.setLoading(false, id);
-                            throw e_1;
+                            throw e_1.message;
                         case 5: return [2];
                     }
                 });
