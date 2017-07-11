@@ -20,7 +20,7 @@ export module WorkItemTemplateActions {
             }
             catch (e) {
                 workItemTemplateStore.setLoading(false);
-                throw e;
+                throw e.message;
             }
         }
     }

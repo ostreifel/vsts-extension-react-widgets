@@ -20,7 +20,7 @@ export module WorkItemFieldActions {
             }
             catch (e) {
                 workItemFieldStore.setLoading(false);
-                throw e;
+                throw e.message;
             }
         }
     }

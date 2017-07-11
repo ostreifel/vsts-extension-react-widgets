@@ -20,7 +20,7 @@ export module GitRepoActions {
             }
             catch (e) {
                 gitRepoStore.setLoading(false);
-                throw e;
+                throw e.message;
             }
         }
     }

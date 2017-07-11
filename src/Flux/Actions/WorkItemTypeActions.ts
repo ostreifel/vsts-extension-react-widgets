@@ -20,7 +20,7 @@ export module WorkItemTypeActions {
             }
             catch (e) {
                 workItemTypeStore.setLoading(false);
-                throw e;
+                throw e.message;
             }
         }
     }

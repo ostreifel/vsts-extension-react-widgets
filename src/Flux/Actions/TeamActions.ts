@@ -20,7 +20,7 @@ export module TeamActions {
             }
             catch (e) {
                 teamStore.setLoading(false);
-                throw e;
+                throw e.message;
             }
         }
     }

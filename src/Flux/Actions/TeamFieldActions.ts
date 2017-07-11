@@ -28,7 +28,7 @@ export module TeamFieldActions {
             }
             catch (e) {
                 teamFieldStore.setLoading(false, teamId);
-                throw e;
+                throw e.message;
             }
         }
     }
