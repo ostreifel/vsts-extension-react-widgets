@@ -16,13 +16,12 @@ export module WorkItemTypeActions {
             try {
                 const workItemTypes = await WitClient.getClient().getWorkItemTypes(VSS.getWebContext().project.id);
                 workItemTypeStore.setLoading(false);
-                workItemTypeStore.setError(null);
 
                 WorkItemTypeActionsCreator.InitializeWorkItemTypes.invoke(workItemTypes);
             }
             catch (e) {
                 workItemTypeStore.setLoading(false);
-                workItemTypeStore.setError(e.message || e);
+                throw e;
             }
         }
     }

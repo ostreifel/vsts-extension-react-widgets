@@ -58,14 +58,12 @@ define(["require", "exports", "TFS/VersionControl/GitRestClient", "../Stores/Bas
                         case 3:
                             gitRepos = _a.sent();
                             gitRepoStore.setLoading(false);
-                            gitRepoStore.setError(null);
                             ActionsCreator_1.GitRepoActionsCreator.InitializeGitRepos.invoke(gitRepos);
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();
                             gitRepoStore.setLoading(false);
-                            gitRepoStore.setError(e_1.message || e_1);
-                            return [3, 5];
+                            throw e_1;
                         case 5: return [2];
                     }
                 });

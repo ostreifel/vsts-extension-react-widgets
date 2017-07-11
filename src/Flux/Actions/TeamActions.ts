@@ -16,13 +16,12 @@ export module TeamActions {
             try {
                 const teams =  await CoreClient.getClient().getTeams(VSS.getWebContext().project.id, 300);
                 teamStore.setLoading(false);
-                teamStore.setError(null);
 
                 TeamActionsCreator.InitializeTeams.invoke(teams);
             }
             catch (e) {
                 teamStore.setLoading(false);
-                teamStore.setError(e.message || e);
+                throw e;
             }
         }
     }

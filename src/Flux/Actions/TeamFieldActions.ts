@@ -24,13 +24,12 @@ export module TeamFieldActions {
                 
                 const teamFieldValues = await WorkClient.getClient().getTeamFieldValues(teamContext);
                 teamFieldStore.setLoading(false, teamId);
-                teamFieldStore.setError(null, teamId);
 
                 TeamFieldActionsCreator.InitializeTeamFieldItem.invoke({teamId: teamId, teamFieldValues: teamFieldValues});
             }
             catch (e) {
                 teamFieldStore.setLoading(false, teamId);
-                teamFieldStore.setError(e.message || e, teamId);
+                throw e;
             }
         }
     }

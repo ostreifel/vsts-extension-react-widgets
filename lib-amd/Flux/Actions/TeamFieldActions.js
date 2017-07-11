@@ -64,14 +64,12 @@ define(["require", "exports", "TFS/Work/RestClient", "../Stores/BaseStore", "../
                         case 3:
                             teamFieldValues = _a.sent();
                             teamFieldStore.setLoading(false, teamId);
-                            teamFieldStore.setError(null, teamId);
                             ActionsCreator_1.TeamFieldActionsCreator.InitializeTeamFieldItem.invoke({ teamId: teamId, teamFieldValues: teamFieldValues });
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();
                             teamFieldStore.setLoading(false, teamId);
-                            teamFieldStore.setError(e_1.message || e_1, teamId);
-                            return [3, 5];
+                            throw e_1;
                         case 5: return [2];
                     }
                 });

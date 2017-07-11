@@ -16,13 +16,12 @@ export module GitRepoActions {
             try {
                 const gitRepos =  await GitClient.getClient().getRepositories(VSS.getWebContext().project.id);
                 gitRepoStore.setLoading(false);
-                gitRepoStore.setError(null);
 
                 GitRepoActionsCreator.InitializeGitRepos.invoke(gitRepos);
             }
             catch (e) {
                 gitRepoStore.setLoading(false);
-                gitRepoStore.setError(e.message || e);
+                throw e;
             }
         }
     }

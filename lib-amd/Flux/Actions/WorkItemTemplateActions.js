@@ -58,14 +58,12 @@ define(["require", "exports", "TFS/WorkItemTracking/RestClient", "../Stores/Base
                         case 3:
                             workItemTemplates = _a.sent();
                             workItemTemplateStore.setLoading(false);
-                            workItemTemplateStore.setError(null);
                             ActionsCreator_1.WorkItemTemplateActionsCreator.InitializeWorkItemTemplates.invoke(workItemTemplates);
                             return [3, 5];
                         case 4:
                             e_1 = _a.sent();
                             workItemTemplateStore.setLoading(false);
-                            workItemTemplateStore.setError(e_1.message || e_1);
-                            return [3, 5];
+                            throw e_1;
                         case 5: return [2];
                     }
                 });

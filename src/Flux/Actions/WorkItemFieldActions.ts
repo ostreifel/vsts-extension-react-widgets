@@ -16,13 +16,12 @@ export module WorkItemFieldActions {
             try {
                 const workItemFields = await WitClient.getClient().getFields(VSS.getWebContext().project.id);
                 workItemFieldStore.setLoading(false);
-                workItemFieldStore.setError(null);
 
                 WorkItemFieldActionsCreator.InitializeWorkItemFields.invoke(workItemFields);
             }
             catch (e) {
                 workItemFieldStore.setLoading(false);
-                workItemFieldStore.setError(e.message || e);
+                throw e;
             }
         }
     }

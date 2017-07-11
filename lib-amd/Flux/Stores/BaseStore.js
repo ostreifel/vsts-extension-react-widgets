@@ -18,8 +18,6 @@ define(["require", "exports", "VSS/Flux/Store"], function (require, exports, Sto
             _this.items = null;
             _this._isLoading = false;
             _this._isItemLoadingMap = {};
-            _this._error = null;
-            _this._itemErrorMap = {};
             _this.initializeActionListeners();
             return _this;
         }
@@ -51,31 +49,6 @@ define(["require", "exports", "VSS/Flux/Store"], function (require, exports, Sto
             else {
                 return this._isLoading = loading;
             }
-        };
-        BaseStore.prototype.hasError = function (key) {
-            return this.getError(key) != null;
-        };
-        BaseStore.prototype.getError = function (key) {
-            if (key) {
-                return this._itemErrorMap[this.convertItemKeyToString(key)] || null;
-            }
-            else {
-                return this._error || null;
-            }
-        };
-        BaseStore.prototype.setError = function (error, key) {
-            if (key) {
-                if (error) {
-                    this._itemErrorMap[this.convertItemKeyToString(key)] = error;
-                }
-                else {
-                    delete this._itemErrorMap[this.convertItemKeyToString(key)];
-                }
-            }
-            else {
-                this._error = error || null;
-            }
-            this.emitChanged();
         };
         BaseStore.prototype.itemExists = function (key) {
             return this.getItem(key) != null ? true : false;

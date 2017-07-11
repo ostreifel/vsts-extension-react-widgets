@@ -4,8 +4,6 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Store {
     protected items: TCollection;
     private _isLoading: boolean;
     private _isItemLoadingMap: IDictionaryStringTo<boolean>;
-    private _error: string;
-    private _itemErrorMap:  IDictionaryStringTo<string>;
 
     constructor() {
         super();
@@ -13,8 +11,6 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Store {
         this.items = null;
         this._isLoading = false;
         this._isItemLoadingMap = {};
-        this._error = null;
-        this._itemErrorMap = {};
 
         this.initializeActionListeners();
     }    
@@ -50,35 +46,6 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Store {
             return this._isLoading = loading;
         }
     }  
-
-    public hasError(key?: TKey): boolean {
-        return this.getError(key) != null;
-    }
-
-    public getError(key?: TKey): string {
-        if (key) {
-            return this._itemErrorMap[this.convertItemKeyToString(key)] || null;
-        }
-        else {
-            return this._error || null;
-        }
-    }
-
-    public setError(error: string, key?: TKey) {
-        if (key) {
-            if (error) {
-                this._itemErrorMap[this.convertItemKeyToString(key)] = error;
-            }
-            else {
-                delete this._itemErrorMap[this.convertItemKeyToString(key)];
-            }
-        }
-        else {
-            this._error = error || null;
-        }
-        
-        this.emitChanged();
-    }    
 
     public itemExists(key: TKey): boolean {        
         return this.getItem(key) != null ? true : false;

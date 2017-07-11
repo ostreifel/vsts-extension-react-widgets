@@ -16,13 +16,12 @@ export module WorkItemTemplateActions {
             try {
                 const workItemTemplates = await WitClient.getClient().getTemplates(VSS.getWebContext().project.id, VSS.getWebContext().team.id);
                 workItemTemplateStore.setLoading(false);
-                workItemTemplateStore.setError(null);
 
                 WorkItemTemplateActionsCreator.InitializeWorkItemTemplates.invoke(workItemTemplates);
             }
             catch (e) {
                 workItemTemplateStore.setLoading(false);
-                workItemTemplateStore.setError(e.message || e);
+                throw e;
             }
         }
     }
