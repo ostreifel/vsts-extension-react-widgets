@@ -20,24 +20,18 @@ export class BaseComponent<TProps extends IBaseComponentProps, TState extends IB
 
     public componentDidMount() {
         for (const store of this.getStores()) {
-            store.addChangedListener(this.onStoreChanged);
+            store.addChangedListener(this._onStoreChanged);
         }
     }
 
     public componentWillUnmount() {
         for (const store of this.getStores()) {
-            store.removeChangedListener(this.onStoreChanged);
+            store.removeChangedListener(this._onStoreChanged);
         }
     }
 
     protected getStores(): BaseStore<any, any, any>[] {
         return [];
-    }
-
-    @autobind
-    protected onStoreChanged(): void {
-        var newStoreState = this.getStoresState();
-        this.updateState(newStoreState);
     }
 
     protected getStoresState(): TState {
@@ -63,5 +57,11 @@ export class BaseComponent<TProps extends IBaseComponentProps, TState extends IB
 
     protected updateState(updatedStates: TState, callback?: () => void) {
         this.setState(updatedStates, callback);
+    }
+
+    @autobind
+    private _onStoreChanged(): void {
+        var newStoreState = this.getStoresState();
+        this.updateState(newStoreState);
     }
 }

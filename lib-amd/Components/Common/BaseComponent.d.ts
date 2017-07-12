@@ -11,10 +11,10 @@ export declare class BaseComponent<TProps extends IBaseComponentProps, TState ex
     componentDidMount(): void;
     componentWillUnmount(): void;
     protected getStores(): BaseStore<any, any, any>[];
-    protected onStoreChanged(): void;
     protected getStoresState(): TState;
     protected getDefaultClassName(): string;
     protected getClassName(): string;
     protected initializeState(): void;
     protected updateState(updatedStates: TState, callback?: () => void): void;
+    private _onStoreChanged();
 }

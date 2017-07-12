@@ -27,21 +27,17 @@ define(["require", "exports", "react", "OfficeFabric/Utilities"], function (requ
         BaseComponent.prototype.componentDidMount = function () {
             for (var _i = 0, _a = this.getStores(); _i < _a.length; _i++) {
                 var store = _a[_i];
-                store.addChangedListener(this.onStoreChanged);
+                store.addChangedListener(this._onStoreChanged);
             }
         };
         BaseComponent.prototype.componentWillUnmount = function () {
             for (var _i = 0, _a = this.getStores(); _i < _a.length; _i++) {
                 var store = _a[_i];
-                store.removeChangedListener(this.onStoreChanged);
+                store.removeChangedListener(this._onStoreChanged);
             }
         };
         BaseComponent.prototype.getStores = function () {
             return [];
-        };
-        BaseComponent.prototype.onStoreChanged = function () {
-            var newStoreState = this.getStoresState();
-            this.updateState(newStoreState);
         };
         BaseComponent.prototype.getStoresState = function () {
             return {};
@@ -63,10 +59,14 @@ define(["require", "exports", "react", "OfficeFabric/Utilities"], function (requ
         BaseComponent.prototype.updateState = function (updatedStates, callback) {
             this.setState(updatedStates, callback);
         };
+        BaseComponent.prototype._onStoreChanged = function () {
+            var newStoreState = this.getStoresState();
+            this.updateState(newStoreState);
+        };
         return BaseComponent;
     }(React.Component));
     __decorate([
         Utilities_1.autobind
-    ], BaseComponent.prototype, "onStoreChanged", null);
+    ], BaseComponent.prototype, "_onStoreChanged", null);
     exports.BaseComponent = BaseComponent;
 });

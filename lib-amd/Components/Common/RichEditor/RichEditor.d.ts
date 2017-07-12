@@ -2,7 +2,8 @@
 import * as React from "react";
 import "trumbowyg/dist/trumbowyg";
 import "trumbowyg/dist/ui/trumbowyg.min.css";
-export interface IRichEditorProps {
+import { IBaseComponentProps } from "../BaseComponent";
+export interface IRichEditorProps extends IBaseComponentProps {
     containerId: string;
     placeholder?: string;
     data: string;
