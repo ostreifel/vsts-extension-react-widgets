@@ -80,7 +80,7 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
 
     private _getCommandBarProps(): ICommandBarProps {        
         let menuItems: IContextualMenuItem[] = [{
-            key: "OpenQuery", name: "Open as query", title: "Open all workitems as a query", iconProps: {iconName: "OpenInNewWindow"}, 
+            key: "OpenQuery", name: "Open as query", title: "Open workitems as a query", iconProps: {iconName: "OpenInNewWindow"}, 
             disabled: !this.props.workItems || this.props.workItems.length === 0,
             onClick: async (event?: React.MouseEvent<HTMLElement>, menuItem?: IContextualMenuItem) => {
                 const wiql = this._getWiql(this.filteredWorkitems || this.props.workItems)
