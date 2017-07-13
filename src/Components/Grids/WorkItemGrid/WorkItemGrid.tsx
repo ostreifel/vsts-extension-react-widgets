@@ -16,6 +16,7 @@ import * as WorkItemHelpers from "./WorkItemGridHelpers";
 import { BaseComponent } from "../../Common/BaseComponent"; 
 
 export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseComponentState> {
+    private filteredWorkitems: WorkItem[];
     protected initializeState(): void {
         this.state = {
             
@@ -39,6 +40,9 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
                 contextMenuProps={this._getContextMenuProps()}
                 onItemInvoked={this._onItemInvoked}
                 noResultsText={this.props.noResultsText}
+                events={{
+                    onSearch:(filterText, items) => {this.filteredWorkitems = items;}
+                }}
             />
         );    
     }
@@ -79,7 +83,8 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
             key: "OpenQuery", name: "Open as query", title: "Open all workitems as a query", iconProps: {iconName: "OpenInNewWindow"}, 
             disabled: !this.props.workItems || this.props.workItems.length === 0,
             onClick: async (event?: React.MouseEvent<HTMLElement>, menuItem?: IContextualMenuItem) => {
-                const url = `${VSS.getWebContext().host.uri}/${VSS.getWebContext().project.id}/_workitems?_a=query&wiql=${encodeURIComponent(this._getWiql())}`;
+                const wiql = this._getWiql(this.filteredWorkitems || this.props.workItems)
+                const url = `${VSS.getWebContext().host.uri}/${VSS.getWebContext().project.id}/_workitems?_a=query&wiql=${encodeURIComponent(wiql)}`;
                 window.open(url, "_blank");
             }
         }];
@@ -137,9 +142,9 @@ export class WorkItemGrid extends BaseComponent<IWorkItemGridProps, IBaseCompone
         return Utils_String.caseInsensitiveContains(workItem.fields[field.referenceName] == null ? "" : `${workItem.fields[field.referenceName]}`, filterText);
     }
 
-    private _getWiql(workItems?: WorkItem[]): string {
+    private _getWiql(workItems: WorkItem[]): string {
         const fieldStr = this.props.fields.map(f => `[${f.referenceName}]`).join(",");
-        const ids = (workItems || this.props.workItems).map(w => w.id).join(",");
+        const ids = workItems.map(w => w.id).join(",");
 
         return `SELECT ${fieldStr}
                  FROM WorkItems 
